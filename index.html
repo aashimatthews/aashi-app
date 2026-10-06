@@ -106,8 +106,6 @@ textarea{
 
 /* =========================================================
    AASHIVERSE BRANDING
-   Temporary elegant serif fallback.
-   This can later be replaced with licensed Austragen.
    ========================================================= */
 
 .aashiverse-name{
@@ -745,6 +743,95 @@ main{
 .typing{
   color:var(--muted);
   font-size:12px;
+}
+
+
+/* =========================================================
+   REAL AI CHAT
+   ========================================================= */
+
+.ai-chat-box{
+  margin-top:15px;
+  border:1px solid var(--border);
+  border-radius:16px;
+  overflow:hidden;
+  background:var(--surface);
+}
+
+.ai-messages{
+  padding:14px;
+  max-height:55vh;
+  overflow-y:auto;
+}
+
+.chat-message{
+  margin-bottom:13px;
+  display:flex;
+  flex-direction:column;
+}
+
+.ai-message{
+  align-items:flex-start;
+}
+
+.user-message{
+  align-items:flex-end;
+}
+
+.message-name{
+  color:var(--muted);
+  font-size:10px;
+  font-weight:800;
+  margin-bottom:4px;
+  padding:0 5px;
+}
+
+.message-bubble{
+  max-width:85%;
+  padding:10px 13px;
+  border-radius:16px;
+  font-size:14px;
+  line-height:1.45;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+
+.ai-message .message-bubble{
+  background:var(--surface2);
+  border-bottom-left-radius:5px;
+}
+
+.user-message .message-bubble{
+  background:var(--blue);
+  color:white;
+  border-bottom-right-radius:5px;
+}
+
+.chat-input-area{
+  display:flex;
+  gap:8px;
+  padding:10px;
+  border-top:1px solid var(--border);
+  background:var(--surface);
+  align-items:flex-end;
+}
+
+.chat-input-area textarea{
+  min-height:44px;
+  max-height:120px;
+  resize:none;
+  padding:11px 12px;
+}
+
+.chat-input-area .primary{
+  width:auto;
+  min-height:44px;
+  padding:10px 15px;
+}
+
+.ai-thinking{
+  opacity:.65;
+  font-style:italic;
 }
 
 
@@ -1815,6 +1902,59 @@ main{
         </div>
 
 
+        <!-- REAL AI CHAT -->
+
+        <div
+          id="aiChatBox"
+          class="ai-chat-box hidden"
+        >
+
+          <div
+            id="aiMessages"
+            class="ai-messages"
+          >
+
+            <div class="chat-message ai-message">
+
+              <div class="message-name">
+                Aashi AI
+              </div>
+
+              <div class="message-bubble">
+                Hey! 💙 I'm Aashi AI.
+                It's nice to meet you.
+                What would you like to talk about?
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="chat-input-area">
+
+            <textarea
+              id="aiMessageInput"
+              rows="1"
+              placeholder="Message Aashi AI..."
+              maxlength="2000"
+              onkeydown="handleChatKey(event)"
+            ></textarea>
+
+
+            <button
+              id="sendAiButton"
+              class="primary"
+              onclick="sendAiMessage()"
+            >
+              Send
+            </button>
+
+          </div>
+
+        </div>
+
+
         <button
           id="startChatButton"
           class="primary full"
@@ -1832,32 +1972,6 @@ main{
         >
           View paid plans
         </button>
-
-      </div>
-
-
-      <div class="chat-preview">
-
-        <div class="bubble aashi">
-
-          Hey! 💙 I'm Aashi AI.
-          I'd love to get to know you better.
-
-        </div>
-
-
-        <div class="bubble you">
-
-          I'd love that.
-
-        </div>
-
-
-        <div class="typing">
-
-          Your private Aashi AI conversation will appear here.
-
-        </div>
 
       </div>
 
@@ -1926,8 +2040,6 @@ main{
 
         <div style="margin-top:15px">
 
-          <!-- DARK MODE -->
-
           <div class="setting">
 
             <span>
@@ -1947,8 +2059,6 @@ main{
           </div>
 
 
-          <!-- ACCOUNT -->
-
           <div class="setting">
 
             <span>
@@ -1965,8 +2075,6 @@ main{
           </div>
 
 
-          <!-- SIGN OUT -->
-
           <div class="setting">
 
             <span>
@@ -1982,8 +2090,6 @@ main{
 
           </div>
 
-
-          <!-- ABOUT -->
 
           <div class="setting">
 
@@ -2260,6 +2366,8 @@ let freeChatTimer = null;
 let freeSecondsRemaining = 1800;
 
 let freeChatRunning = false;
+
+let aiChatHistory = [];
 
 
 /* =========================================================
@@ -2550,8 +2658,6 @@ async function signupUser(event){
 
   try{
 
-    /* CHECK USERNAME */
-
     const {
       data: existing,
       error: usernameError
@@ -2577,8 +2683,6 @@ async function signupUser(event){
 
     }
 
-
-    /* CREATE AUTH USER */
 
     const {
       data,
@@ -2732,24 +2836,6 @@ async function loadUser(){
     }
 
 
-    /*
-       IMPORTANT:
-
-       Signup already collects full name,
-       username and date of birth.
-
-       If those values exist, automatically
-       mark the profile as completed.
-
-       This means:
-
-       Create account → Home
-
-       instead of:
-
-       Create account → Profile Completion
-    */
-
     if(!profile.profile_completed){
 
       const fullName =
@@ -2809,11 +2895,6 @@ async function loadUser(){
       }
 
       else{
-
-        /*
-           Only accounts with genuinely missing
-           information will see the fallback screen.
-        */
 
         document
           .getElementById("completeName")
@@ -3145,6 +3226,10 @@ function updateFreeChatUI(status){
       .getElementById("startChatButton");
 
 
+  if(!timer || !progress || !note || !button)
+    return;
+
+
   timer.textContent =
     formatSeconds(remaining);
 
@@ -3241,9 +3326,400 @@ async function startFreeChat(){
   }
 
 
+  freeChatRunning = true;
+
+
+  document
+    .getElementById("aiChatBox")
+    .classList
+    .remove("hidden");
+
+
+  document
+    .getElementById("startChatButton")
+    .classList
+    .add("hidden");
+
+
+  document
+    .getElementById("aiMessageInput")
+    .focus();
+
+
   toast(
-    "Free Aashi AI chat is ready. The full chat interface will be connected next."
+    "Aashi AI is ready to chat."
   );
+
+
+  startFreeChatTimer();
+
+}
+
+
+/* =========================================================
+   AASHI AI CHAT
+   ========================================================= */
+
+function handleChatKey(event){
+
+  if(
+    event.key === "Enter" &&
+    !event.shiftKey
+  ){
+
+    event.preventDefault();
+
+    sendAiMessage();
+
+  }
+
+}
+
+
+function addChatMessage(
+  message,
+  type
+){
+
+  const messages =
+    document.getElementById(
+      "aiMessages"
+    );
+
+
+  const wrapper =
+    document.createElement("div");
+
+
+  wrapper.className =
+    "chat-message " +
+    (
+      type === "user"
+        ? "user-message"
+        : "ai-message"
+    );
+
+
+  const name =
+    document.createElement("div");
+
+
+  name.className =
+    "message-name";
+
+
+  name.textContent =
+    type === "user"
+      ? "You"
+      : "Aashi AI";
+
+
+  const bubble =
+    document.createElement("div");
+
+
+  bubble.className =
+    "message-bubble";
+
+
+  bubble.textContent =
+    message;
+
+
+  wrapper.appendChild(name);
+
+  wrapper.appendChild(bubble);
+
+  messages.appendChild(wrapper);
+
+
+  messages.scrollTop =
+    messages.scrollHeight;
+
+}
+
+
+async function sendAiMessage(){
+
+  if(!freeChatRunning){
+
+    toast(
+      "Start your free chat first."
+    );
+
+    return;
+
+  }
+
+
+  if(freeSecondsRemaining <= 0){
+
+    toast(
+      "Your free chat time has been used."
+    );
+
+    return;
+
+  }
+
+
+  const input =
+    document.getElementById(
+      "aiMessageInput"
+    );
+
+
+  const sendButton =
+    document.getElementById(
+      "sendAiButton"
+    );
+
+
+  const message =
+    input.value.trim();
+
+
+  if(!message)
+    return;
+
+
+  input.value = "";
+
+
+  addChatMessage(
+    message,
+    "user"
+  );
+
+
+  aiChatHistory.push({
+    role:"user",
+    content:message
+  });
+
+
+  sendButton.disabled = true;
+
+  sendButton.style.opacity = ".6";
+
+  sendButton.textContent =
+    "…";
+
+
+  const thinking =
+    document.createElement("div");
+
+
+  thinking.className =
+    "chat-message ai-message";
+
+
+  thinking.innerHTML = `
+    <div class="message-name">Aashi AI</div>
+    <div class="message-bubble ai-thinking">
+      Aashi AI is typing…
+    </div>
+  `;
+
+
+  const messages =
+    document.getElementById(
+      "aiMessages"
+    );
+
+
+  messages.appendChild(
+    thinking
+  );
+
+
+  messages.scrollTop =
+    messages.scrollHeight;
+
+
+  try{
+
+    const response =
+      await fetch(
+        "/api/chat",
+        {
+          method:"POST",
+
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+
+          body:JSON.stringify({
+            messages:
+              aiChatHistory
+          })
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    thinking.remove();
+
+
+    if(!response.ok){
+
+      throw new Error(
+        data.error ||
+        "Unable to contact Aashi AI."
+      );
+
+    }
+
+
+    const reply =
+      data.reply ||
+      "I'm sorry, I couldn't reply right now.";
+
+
+    aiChatHistory.push({
+      role:"assistant",
+      content:reply
+    });
+
+
+    addChatMessage(
+      reply,
+      "assistant"
+    );
+
+
+  }
+
+  catch(error){
+
+    console.error(
+      "Aashi AI error:",
+      error
+    );
+
+
+    thinking.remove();
+
+
+    toast(
+      error.message ||
+      "Aashi AI could not reply."
+    );
+
+
+    aiChatHistory.pop();
+
+  }
+
+  finally{
+
+    sendButton.disabled = false;
+
+    sendButton.style.opacity = "1";
+
+    sendButton.textContent =
+      "Send";
+
+
+    input.focus();
+
+  }
+
+}
+
+
+/* =========================================================
+   FREE CHAT TIMER
+   ========================================================= */
+
+function startFreeChatTimer(){
+
+  clearInterval(
+    freeChatTimer
+  );
+
+
+  freeChatTimer =
+    setInterval(
+      async () => {
+
+        if(!freeChatRunning)
+          return;
+
+
+        if(freeSecondsRemaining <= 0){
+
+          clearInterval(
+            freeChatTimer
+          );
+
+
+          freeChatRunning = false;
+
+
+          updateFreeChatUI({
+            remaining_seconds:0,
+            locked:false
+          });
+
+
+          toast(
+            "Your free chat time has been used."
+          );
+
+
+          return;
+
+        }
+
+
+        freeSecondsRemaining--;
+
+
+        updateFreeChatUI({
+          remaining_seconds:
+            freeSecondsRemaining,
+          locked:false
+        });
+
+
+        /*
+           Save usage every 60 seconds.
+        */
+
+        if(
+          freeSecondsRemaining % 60 === 0
+        ){
+
+          try{
+
+            await supabaseClient.rpc(
+              "consume_free_chat_time",
+              {
+                seconds_to_consume:60
+              }
+            );
+
+          }
+
+          catch(error){
+
+            console.error(
+              "Free time update error:",
+              error
+            );
+
+          }
+
+        }
+
+      },
+      1000
+    );
 
 }
 
@@ -3465,17 +3941,24 @@ async function logoutUser(){
 
   try{
 
-    await supabaseClient.auth.signOut();
-
-    currentUser = null;
+    freeChatRunning = false;
 
     clearInterval(
       freeChatTimer
     );
 
+
+    await supabaseClient.auth.signOut();
+
+    currentUser = null;
+
+    aiChatHistory = [];
+
+
     showAuth();
 
     showAuthMode("login");
+
 
     toast(
       "You have been logged out."
