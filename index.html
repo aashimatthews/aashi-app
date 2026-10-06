@@ -4,9 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-<title>Aashi</title>
+<title>Aashiverse</title>
 
 <style>
+
+/* =========================================================
+   THEME
+   ========================================================= */
 
 :root{
   --bg:#f8fafc;
@@ -35,6 +39,11 @@
   --soft:#172554;
   --shadow:0 8px 28px rgba(0,0,0,.25);
 }
+
+
+/* =========================================================
+   GLOBAL
+   ========================================================= */
 
 *{
   box-sizing:border-box;
@@ -94,19 +103,59 @@ textarea{
   background:var(--bg);
 }
 
-/* TOP BAR */
+
+/* =========================================================
+   AASHIVERSE BRANDING
+   Temporary elegant serif fallback.
+   This can later be replaced with licensed Austragen.
+   ========================================================= */
+
+.aashiverse-name{
+  font-family:
+    "Bodoni 72",
+    "Bodoni Moda",
+    "Didot",
+    "Baskerville",
+    "Times New Roman",
+    serif;
+
+  font-weight:500;
+  letter-spacing:-.045em;
+  line-height:.95;
+}
+
+.aashiverse-tagline{
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
+  font-style:italic;
+  font-weight:400;
+}
+
+
+/* =========================================================
+   TOP BAR
+   ========================================================= */
 
 .topbar{
   position:sticky;
   top:0;
   z-index:20;
-  height:68px;
+  min-height:78px;
   background:var(--surface);
   border-bottom:1px solid var(--border);
+
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:0 18px;
+
+  padding:10px 18px;
 }
 
 .brand{
@@ -119,23 +168,33 @@ textarea{
   width:40px;
   height:40px;
   border-radius:50%;
+
   background:linear-gradient(135deg,#2563eb,#60a5fa);
+
   color:white;
   display:grid;
   place-items:center;
+
   font-weight:800;
   font-size:18px;
 }
 
-.brand strong{
-  font-size:17px;
+.brand-copy{
+  display:flex;
+  flex-direction:column;
 }
 
-.brand span{
+.brand-name{
+  font-size:25px;
+  letter-spacing:-.04em;
+}
+
+.brand-tagline{
   display:block;
   color:var(--muted);
-  font-size:11px;
-  margin-top:1px;
+  font-size:10px;
+  margin-top:4px;
+  letter-spacing:.01em;
 }
 
 .icon-btn{
@@ -149,7 +208,10 @@ textarea{
   font-size:19px;
 }
 
-/* MAIN */
+
+/* =========================================================
+   MAIN
+   ========================================================= */
 
 main{
   padding:16px;
@@ -163,7 +225,10 @@ main{
   display:block;
 }
 
-/* AUTH */
+
+/* =========================================================
+   AUTH
+   ========================================================= */
 
 .auth-wrap{
   min-height:calc(100vh - 40px);
@@ -195,13 +260,14 @@ main{
 }
 
 .auth-brand h1{
-  font-size:27px;
+  font-size:34px;
+  line-height:1;
 }
 
-.auth-brand p{
+.auth-brand .auth-tagline{
   color:var(--muted);
   font-size:13px;
-  margin-top:5px;
+  margin-top:8px;
 }
 
 .auth-tabs{
@@ -279,7 +345,10 @@ main{
   font-weight:700;
 }
 
-/* PROFILE COMPLETION */
+
+/* =========================================================
+   PROFILE COMPLETION FALLBACK
+   ========================================================= */
 
 .complete-card{
   background:var(--surface);
@@ -313,7 +382,10 @@ main{
   margin-bottom:18px;
 }
 
-/* BUTTONS */
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
 
 .primary{
   width:auto;
@@ -344,7 +416,10 @@ main{
   color:var(--danger);
 }
 
-/* NEW POST BANNER */
+
+/* =========================================================
+   NEW POST BANNER
+   ========================================================= */
 
 .new-banner{
   background:var(--soft);
@@ -357,7 +432,10 @@ main{
   margin-bottom:14px;
 }
 
-/* SECTION HEADER */
+
+/* =========================================================
+   SECTION HEADER
+   ========================================================= */
 
 .section-head{
   display:flex;
@@ -375,7 +453,10 @@ main{
   font-size:12px;
 }
 
-/* POSTS */
+
+/* =========================================================
+   POSTS
+   ========================================================= */
 
 .post{
   background:var(--surface);
@@ -478,7 +559,10 @@ main{
   background:none;
 }
 
-/* LOCKED POST */
+
+/* =========================================================
+   LOCKED POST
+   ========================================================= */
 
 .locked{
   position:relative;
@@ -532,7 +616,10 @@ main{
   margin-bottom:14px;
 }
 
-/* CHAT */
+
+/* =========================================================
+   CHAT
+   ========================================================= */
 
 .chat-card{
   background:var(--surface);
@@ -660,7 +747,10 @@ main{
   font-size:12px;
 }
 
-/* PROFILE */
+
+/* =========================================================
+   PROFILE
+   ========================================================= */
 
 .profile-card{
   background:var(--surface);
@@ -762,7 +852,10 @@ main{
   background:white;
 }
 
-/* PLANS */
+
+/* =========================================================
+   PLANS
+   ========================================================= */
 
 .plans{
   display:grid;
@@ -814,7 +907,10 @@ main{
   margin-right:7px;
 }
 
-/* BOTTOM NAV */
+
+/* =========================================================
+   BOTTOM NAV
+   ========================================================= */
 
 .bottom{
   position:fixed;
@@ -856,7 +952,10 @@ main{
   font-weight:800;
 }
 
-/* MODAL */
+
+/* =========================================================
+   MODAL
+   ========================================================= */
 
 .modal{
   position:fixed;
@@ -901,7 +1000,10 @@ main{
   border-radius:50%;
 }
 
-/* TOAST */
+
+/* =========================================================
+   TOAST
+   ========================================================= */
 
 .toast{
   position:fixed;
@@ -927,7 +1029,10 @@ main{
   transform:translate(-50%,0);
 }
 
-/* LOADING */
+
+/* =========================================================
+   LOADING
+   ========================================================= */
 
 .loading{
   position:fixed;
@@ -956,9 +1061,21 @@ main{
   font-weight:800;
 }
 
+.loading-name{
+  font-size:32px;
+  color:var(--text);
+}
+
+.loading-tagline{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:7px;
+}
+
 .loading-text{
   color:var(--muted);
   font-size:13px;
+  margin-top:13px;
 }
 
 .hidden{
@@ -977,7 +1094,10 @@ main{
 
 <body>
 
-<!-- LOADING -->
+
+<!-- =======================================================
+     LOADING
+     ======================================================= -->
 
 <div id="loading" class="loading">
 
@@ -987,8 +1107,16 @@ main{
       A
     </div>
 
+    <div class="aashiverse-name loading-name">
+      Aashiverse
+    </div>
+
+    <div class="aashiverse-tagline loading-tagline">
+      The world of your dreams.
+    </div>
+
     <div class="loading-text">
-      Loading Aashi…
+      Loading…
     </div>
 
   </div>
@@ -996,7 +1124,9 @@ main{
 </div>
 
 
-<!-- AUTH SCREEN -->
+<!-- =======================================================
+     AUTH SCREEN
+     ======================================================= -->
 
 <div id="authScreen" class="auth-wrap hidden">
 
@@ -1008,10 +1138,12 @@ main{
         A
       </div>
 
-      <h1>Aashi</h1>
+      <h1 class="aashiverse-name">
+        Aashiverse
+      </h1>
 
-      <p>
-        A private space to connect with Aashi
+      <p class="aashiverse-tagline auth-tagline">
+        The world of your dreams.
       </p>
 
     </div>
@@ -1110,7 +1242,7 @@ main{
 
       <div class="auth-note">
 
-        You must be 18 or older to use Aashi.
+        You must be 18 or older to use Aashiverse.
         Your chat mode will always be clearly identified as AI or real-person chat.
 
       </div>
@@ -1218,8 +1350,8 @@ main{
         >
 
         <span>
-          I understand that Aashi offers both AI-powered conversations
-          and conversations with the real person behind the account.
+          I understand that Aashi AI provides AI-powered conversations
+          and Aashi provides conversations with the real person behind the account.
           The chat mode will be clearly identified.
         </span>
 
@@ -1270,7 +1402,9 @@ main{
 </div>
 
 
-<!-- PROFILE COMPLETION -->
+<!-- =======================================================
+     PROFILE COMPLETION FALLBACK
+     ======================================================= -->
 
 <div
   id="completionScreen"
@@ -1288,8 +1422,7 @@ main{
     </h2>
 
     <p>
-      Your account is almost ready. Confirm your profile details
-      before entering Aashi.
+      Aashiverse needs a few profile details before you can enter.
     </p>
 
 
@@ -1339,12 +1472,12 @@ main{
       class="primary full"
       onclick="completeProfile()"
     >
-      Continue to Aashi
+      Continue to Aashiverse
     </button>
 
 
     <p class="small-note">
-      Profile picture can be added later.
+      This screen is only a fallback for accounts with missing information.
     </p>
 
   </div>
@@ -1352,12 +1485,15 @@ main{
 </div>
 
 
-<!-- APP -->
+<!-- =======================================================
+     APP
+     ======================================================= -->
 
 <div
   id="appScreen"
   class="app hidden"
 >
+
 
   <!-- TOP HEADER -->
 
@@ -1369,12 +1505,14 @@ main{
         A
       </div>
 
-      <div>
+      <div class="brand-copy">
 
-        <strong>Aashi</strong>
+        <strong class="aashiverse-name brand-name">
+          Aashiverse
+        </strong>
 
-        <span>
-          AI companion
+        <span class="aashiverse-tagline brand-tagline">
+          The world of your dreams.
         </span>
 
       </div>
@@ -1396,7 +1534,9 @@ main{
   <main>
 
 
-    <!-- HOME -->
+    <!-- ===================================================
+         HOME
+         =================================================== -->
 
     <section
       id="home"
@@ -1604,7 +1744,9 @@ main{
     </section>
 
 
-    <!-- CHAT -->
+    <!-- ===================================================
+         CHAT
+         =================================================== -->
 
     <section
       id="chat"
@@ -1620,7 +1762,7 @@ main{
           </div>
 
           <h2>
-            Chat with Aashi
+            Chat with Aashi AI
           </h2>
 
           <span class="ai-label">
@@ -1667,7 +1809,7 @@ main{
             id="freeStatusNote"
             class="status-note"
           >
-            You have 30 minutes of free AI chat available today.
+            You have 30 minutes of free Aashi AI chat available today.
           </div>
 
         </div>
@@ -1698,7 +1840,7 @@ main{
 
         <div class="bubble aashi">
 
-          Hey! 💙 I'm Aashi.
+          Hey! 💙 I'm Aashi AI.
           I'd love to get to know you better.
 
         </div>
@@ -1713,7 +1855,7 @@ main{
 
         <div class="typing">
 
-          Your private AI conversation will appear here.
+          Your private Aashi AI conversation will appear here.
 
         </div>
 
@@ -1722,7 +1864,9 @@ main{
     </section>
 
 
-    <!-- PROFILE -->
+    <!-- ===================================================
+         PROFILE
+         =================================================== -->
 
     <section
       id="profile"
@@ -1758,7 +1902,7 @@ main{
         <div class="plan-card">
 
           <h3>
-            Unlock Aashi
+            Unlock Aashi AI
           </h3>
 
           <div class="price">
@@ -1766,8 +1910,8 @@ main{
           </div>
 
           <p>
-            Chat with Aashi's AI companion.
-            Responses are generated by AI, available 24/7.
+            Chat with Aashi AI.
+            Responses are generated by AI and available 24/7.
           </p>
 
           <button
@@ -1844,7 +1988,7 @@ main{
           <div class="setting">
 
             <span>
-              About Aashi
+              About Aashiverse
             </span>
 
             <span style="color:var(--muted)">
@@ -1917,7 +2061,9 @@ main{
 </div>
 
 
-<!-- SUBSCRIPTION MODAL -->
+<!-- =======================================================
+     SUBSCRIPTION MODAL
+     ======================================================= -->
 
 <div
   id="plans"
@@ -1979,7 +2125,7 @@ main{
         <ul class="features">
 
           <li>
-            Chat with Aashi's AI companion
+            Chat with Aashi AI
           </li>
 
           <li>
@@ -2032,11 +2178,11 @@ main{
         <ul class="features">
 
           <li>
-            Chat personally with the real person behind Aashi
+            Chat personally with Aashi
           </li>
 
           <li>
-            Replies are written by a real person
+            Replies are written by the real person behind Aashi
           </li>
 
           <li>
@@ -2067,7 +2213,9 @@ main{
 </div>
 
 
-<!-- TOAST -->
+<!-- =======================================================
+     TOAST
+     ======================================================= -->
 
 <div
   id="toast"
@@ -2075,10 +2223,11 @@ main{
 ></div>
 
 
-<!-- SUPABASE -->
+<!-- =======================================================
+     SUPABASE
+     ======================================================= -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 
 <script>
 
@@ -2380,7 +2529,7 @@ async function signupUser(event){
   if(!is18Plus(dob)){
 
     toast(
-      "You must be 18 or older to use Aashi."
+      "You must be 18 or older to use Aashiverse."
     );
 
     return;
@@ -2583,32 +2732,109 @@ async function loadUser(){
     }
 
 
+    /*
+       IMPORTANT:
+
+       Signup already collects full name,
+       username and date of birth.
+
+       If those values exist, automatically
+       mark the profile as completed.
+
+       This means:
+
+       Create account → Home
+
+       instead of:
+
+       Create account → Profile Completion
+    */
+
     if(!profile.profile_completed){
 
-      document
-        .getElementById("completeName")
-        .value =
+      const fullName =
         profile.full_name ||
         currentUser.user_metadata?.full_name ||
         "";
 
-      document
-        .getElementById("completeUsername")
-        .value =
+      const username =
         profile.username ||
         currentUser.user_metadata?.username ||
         "";
 
-      document
-        .getElementById("completeDob")
-        .value =
+      const dob =
         profile.date_of_birth ||
         currentUser.user_metadata?.date_of_birth ||
         "";
 
-      showCompletion();
 
-      return;
+      if(
+        fullName &&
+        username &&
+        dob &&
+        is18Plus(dob)
+      ){
+
+        const {
+          error:completeError
+        } =
+          await supabaseClient
+            .from("profiles")
+            .update({
+
+              full_name:fullName,
+
+              username:username,
+
+              date_of_birth:dob,
+
+              profile_completed:true
+
+            })
+            .eq("id",currentUser.id);
+
+
+        if(completeError)
+          throw completeError;
+
+
+        profile.profile_completed = true;
+
+        profile.full_name = fullName;
+
+        profile.username = username;
+
+        profile.date_of_birth = dob;
+
+      }
+
+      else{
+
+        /*
+           Only accounts with genuinely missing
+           information will see the fallback screen.
+        */
+
+        document
+          .getElementById("completeName")
+          .value =
+          fullName;
+
+        document
+          .getElementById("completeUsername")
+          .value =
+          username;
+
+        document
+          .getElementById("completeDob")
+          .value =
+          dob;
+
+        showCompletion();
+
+        return;
+
+      }
 
     }
 
@@ -2635,7 +2861,7 @@ async function loadUser(){
 
 
 /* =========================================================
-   COMPLETE PROFILE
+   COMPLETE PROFILE FALLBACK
    ========================================================= */
 
 async function completeProfile(){
@@ -2984,7 +3210,7 @@ function updateFreeChatUI(status){
   note.textContent =
     "You have " +
     formatSeconds(remaining) +
-    " of free AI chat remaining.";
+    " of free Aashi AI chat remaining.";
 
 }
 
@@ -3016,7 +3242,7 @@ async function startFreeChat(){
 
 
   toast(
-    "Free AI chat is ready. The full chat interface will be connected next."
+    "Free Aashi AI chat is ready. The full chat interface will be connected next."
   );
 
 }
@@ -3162,7 +3388,7 @@ function toggleTheme(){
 
 
     localStorage.setItem(
-      "aashi-theme",
+      "aashiverse-theme",
       "light"
     );
 
@@ -3178,7 +3404,7 @@ function toggleTheme(){
 
 
     localStorage.setItem(
-      "aashi-theme",
+      "aashiverse-theme",
       "dark"
     );
 
@@ -3213,7 +3439,7 @@ function loadTheme(){
 
   if(
     localStorage.getItem(
-      "aashi-theme"
+      "aashiverse-theme"
     ) === "dark"
   ){
 
@@ -3351,7 +3577,9 @@ async function initialize(){
 }
 
 
-/* START */
+/* =========================================================
+   START
+   ========================================================= */
 
 initialize();
 
