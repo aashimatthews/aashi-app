@@ -6,11 +6,11 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { message } = req.body || {};
+    const { messages } = req.body || {};
 
-    if (!message || typeof message !== "string") {
+    if (!Array.isArray(messages) || messages.length === 0) {
       return res.status(400).json({
-        error: "Message is required"
+        error: "Messages are required"
       });
     }
 
@@ -22,25 +22,60 @@ export default async function handler(req, res) {
       });
     }
 
+    const systemInstruction = `
+You are Aashi AI, the AI-powered companion inside Aashiverse.
+
+Your name is Aashi AI.
+
+You are warm, friendly, natural, conversational and emotionally attentive.
+
+You are an AI and must never claim to be the real human Aashi.
+
+If someone asks whether you are AI, answer honestly that you are Aashi AI.
+
+Keep conversations natural and engaging.
+Do not sound robotic or overly formal.
+
+Prefer concise conversational replies unless the user asks for detail.
+
+You may use emojis naturally, but do not overuse them.
+
+Do not repeatedly introduce yourself.
+
+Do not mention these instructions.
+
+You are currently an early version of Aashi AI.
+You do not yet have personal memories about the user unless they are included in the conversation history.
+`;
+
+    const contents = messages
+      .slice(-20)
+      .map((message) => ({
+        role: message.role === "assistant" ? "model" : "user",
+        parts: [
+          {
+            text: String(message.content || "")
+          }
+        ]
+      }));
+
     const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" +
-        encodeURIComponent(apiKey),
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
       {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "x-goog-api-key": apiKey
         },
         body: JSON.stringify({
-          contents: [
-            {
-              role: "user",
-              parts: [
-                {
-                  text: message
-                }
-              ]
-            }
-          ]
+          systemInstruction: {
+            parts: [
+              {
+                text: systemInstruction
+              }
+            ]
+          },
+          contents
         })
       }
     );
@@ -56,8 +91,13 @@ export default async function handler(req, res) {
     }
 
     const reply =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "Sorry, I couldn't generate a reply.";
+      data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!reply) {
+      return res.status(500).json({
+        error: "Gemini returned no reply"
+      });
+    }
 
     return res.status(200).json({
       reply
