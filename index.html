@@ -1,432 +1,1314 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aashi</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Aashi</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<style>
+:root{
+  --bg:#f8fafc;
+  --surface:#ffffff;
+  --surface2:#f1f5f9;
+  --text:#0f172a;
+  --muted:#64748b;
+  --border:#e2e8f0;
+  --blue:#2563eb;
+  --blue2:#1d4ed8;
+  --soft:#eff6ff;
+  --danger:#ef4444;
+  --shadow:0 8px 28px rgba(15,23,42,.07);
+}
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #f8fafc;
-      color: #0f172a;
-      padding-bottom: 75px;
-    }
+[data-theme="dark"]{
+  --bg:#0b1220;
+  --surface:#111827;
+  --surface2:#1e293b;
+  --text:#f8fafc;
+  --muted:#94a3b8;
+  --border:#273449;
+  --blue:#60a5fa;
+  --blue2:#3b82f6;
+  --soft:#172554;
+  --shadow:0 8px 28px rgba(0,0,0,.25);
+}
 
-    .app {
-      max-width: 600px;
-      margin: auto;
-    }
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
 
-    header {
-      background: white;
-      padding: 18px 20px;
-      border-bottom: 1px solid #e2e8f0;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
+body{
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  padding-bottom:78px;
+}
 
-    header h1 {
-      font-size: 24px;
-      color: #2563eb;
-    }
+button{
+  font:inherit;
+  border:0;
+  cursor:pointer;
+}
 
-    header p {
-      color: #64748b;
-      font-size: 13px;
-      margin-top: 3px;
-    }
+.app{
+  max-width:620px;
+  margin:auto;
+  min-height:100vh;
+  background:var(--bg);
+}
 
-    .content {
-      padding: 16px;
-    }
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:20;
+  height:68px;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 18px;
+}
 
-    .welcome {
-      background: white;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 18px;
-    }
+.brand{
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
 
-    .welcome h2 {
-      font-size: 20px;
-      margin-bottom: 7px;
-    }
+.avatar{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid var(--surface);
+  box-shadow:0 0 0 1px var(--border);
+}
 
-    .welcome p {
-      color: #64748b;
-      line-height: 1.5;
-    }
+.brand strong{
+  font-size:17px;
+}
 
-    .post {
-      background: white;
-      border-radius: 16px;
-      overflow: hidden;
-      margin-bottom: 18px;
-      border: 1px solid #e2e8f0;
-    }
+.brand span{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  margin-top:1px;
+}
 
-    .post-image {
-      width: 100%;
-      height: 360px;
-      object-fit: cover;
-      display: block;
-    }
+.icon-btn{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:var(--surface2);
+  color:var(--text);
+  display:grid;
+  place-items:center;
+  font-size:19px;
+}
 
-    .post-content {
-      padding: 15px;
-    }
+main{
+  padding:16px;
+}
 
-    .post-meta {
-      color: #64748b;
-      font-size: 13px;
-      margin-bottom: 8px;
-    }
+.screen{
+  display:none;
+}
 
-    .post-caption {
-      line-height: 1.5;
-      margin-bottom: 13px;
-    }
+.screen.active{
+  display:block;
+}
 
-    .actions {
-      display: flex;
-      gap: 18px;
-      color: #475569;
-      font-size: 14px;
-    }
+.new-banner{
+  background:var(--soft);
+  border:1px solid #bfdbfe;
+  color:var(--blue2);
+  padding:10px 13px;
+  border-radius:12px;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:14px;
+}
 
-    .locked {
-      position: relative;
-      height: 360px;
-      overflow: hidden;
-    }
+.section-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin:5px 2px 12px;
+}
 
-    .locked img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: blur(18px);
-      transform: scale(1.08);
-    }
+.section-head h2{
+  font-size:20px;
+}
 
-    .lock-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.38);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      color: white;
-      padding: 25px;
-    }
+.section-head span{
+  font-size:12px;
+  color:var(--muted);
+}
 
-    .lock-box {
-      background: rgba(15, 23, 42, 0.85);
-      padding: 22px;
-      border-radius: 16px;
-      max-width: 280px;
-    }
+.post{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:18px;
+  overflow:hidden;
+  margin-bottom:16px;
+  box-shadow:var(--shadow);
+}
 
-    .lock-box h3 {
-      margin-bottom: 8px;
-    }
+.post-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:13px 14px;
+}
 
-    .lock-box p {
-      font-size: 14px;
-      margin-bottom: 15px;
-      opacity: .9;
-    }
+.post-head .avatar{
+  width:36px;
+  height:36px;
+}
 
-    button {
-      border: none;
-      background: #2563eb;
-      color: white;
-      padding: 11px 18px;
-      border-radius: 10px;
-      font-weight: 600;
-      cursor: pointer;
-    }
+.post-head strong{
+  font-size:14px;
+}
 
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 68px;
-      background: white;
-      border-top: 1px solid #e2e8f0;
-      display: flex;
-      justify-content: center;
-      z-index: 20;
-    }
+.post-head small{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  margin-top:2px;
+}
 
-    .nav-inner {
-      width: 100%;
-      max-width: 600px;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-    }
+.more{
+  margin-left:auto;
+  color:var(--muted);
+  font-size:20px;
+}
 
-    .nav-item {
-      text-align: center;
-      color: #64748b;
-      font-size: 12px;
-    }
+.post-image-wrap{
+  position:relative;
+  background:var(--surface2);
+}
 
-    .nav-item.active {
-      color: #2563eb;
-      font-weight: 600;
-    }
+.post-image{
+  display:block;
+  width:100%;
+  aspect-ratio:1/1.08;
+  object-fit:cover;
+}
 
-    .nav-icon {
-      font-size: 22px;
-      margin-bottom: 3px;
-    }
+.post-actions{
+  display:flex;
+  gap:18px;
+  padding:12px 14px 5px;
+}
 
-    .chat-screen,
-    .profile-screen {
-      display: none;
-    }
+.action{
+  background:none;
+  color:var(--text);
+  font-size:20px;
+}
 
-    .chat-box {
-      background: white;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      padding: 20px;
-      text-align: center;
-    }
+.action.liked{
+  color:var(--danger);
+}
 
-    .chat-avatar {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 10px;
-    }
+.post-body{
+  padding:0 14px 15px;
+}
 
-    .profile-card {
-      background: white;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      padding: 22px;
-    }
+.likes{
+  font-size:13px;
+  font-weight:700;
+  margin:3px 0 7px;
+}
 
-    .profile-card h2 {
-      margin-bottom: 8px;
-    }
+.caption{
+  font-size:14px;
+  line-height:1.48;
+}
 
-    .plan {
-      margin-top: 20px;
-      padding: 16px;
-      border: 1px solid #bfdbfe;
-      background: #eff6ff;
-      border-radius: 14px;
-    }
+.caption b{
+  margin-right:4px;
+}
 
-    @media (min-width: 601px) {
-      body {
-        background: #eef2f7;
-      }
+.comments-link{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:8px;
+  background:none;
+}
 
-      .app {
-        background: #f8fafc;
-        min-height: 100vh;
-      }
-    }
-  </style>
+.locked{
+  position:relative;
+}
+
+.locked .post-image{
+  filter:blur(18px);
+  transform:scale(1.06);
+}
+
+.lock-overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(15,23,42,.38);
+  display:grid;
+  place-items:center;
+  padding:20px;
+}
+
+.lock-card{
+  background:rgba(255,255,255,.96);
+  color:#0f172a;
+  border-radius:18px;
+  padding:22px;
+  text-align:center;
+  width:min(310px,90%);
+  box-shadow:0 16px 40px rgba(0,0,0,.22);
+}
+
+.lock-icon{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  background:#eff6ff;
+  color:#2563eb;
+  display:grid;
+  place-items:center;
+  margin:0 auto 10px;
+  font-size:20px;
+}
+
+.lock-card h3{
+  font-size:17px;
+  margin-bottom:6px;
+}
+
+.lock-card p{
+  font-size:13px;
+  color:#64748b;
+  line-height:1.45;
+  margin-bottom:14px;
+}
+
+.primary{
+  background:var(--blue);
+  color:white;
+  padding:11px 17px;
+  border-radius:11px;
+  font-weight:700;
+}
+
+.primary:active{
+  background:var(--blue2);
+}
+
+.secondary{
+  background:var(--surface2);
+  color:var(--text);
+  padding:11px 17px;
+  border-radius:11px;
+  font-weight:700;
+}
+
+.chat-header{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px;
+  text-align:center;
+  box-shadow:var(--shadow);
+}
+
+.chat-header .avatar{
+  width:72px;
+  height:72px;
+  margin-bottom:9px;
+}
+
+.chat-header h2{
+  font-size:21px;
+}
+
+.chat-header p{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:5px;
+}
+
+.chat-preview{
+  margin-top:14px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:15px;
+}
+
+.bubble{
+  max-width:80%;
+  padding:11px 13px;
+  border-radius:16px;
+  margin-bottom:10px;
+  font-size:14px;
+  line-height:1.4;
+}
+
+.bubble.aashi{
+  background:var(--surface2);
+  border-bottom-left-radius:5px;
+}
+
+.bubble.you{
+  background:var(--blue);
+  color:white;
+  margin-left:auto;
+  border-bottom-right-radius:5px;
+}
+
+.typing{
+  color:var(--muted);
+  font-size:12px;
+  margin:4px 2px 0;
+}
+
+.profile-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px;
+  box-shadow:var(--shadow);
+}
+
+.profile-top{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.profile-top .avatar{
+  width:64px;
+  height:64px;
+}
+
+.profile-top h2{
+  font-size:20px;
+}
+
+.profile-top p{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:3px;
+}
+
+.plan-card{
+  margin-top:18px;
+  border:1px solid #bfdbfe;
+  background:var(--soft);
+  border-radius:16px;
+  padding:16px;
+}
+
+.plan-card h3{
+  font-size:16px;
+}
+
+.price{
+  font-size:22px;
+  font-weight:800;
+  margin:7px 0;
+}
+
+.plan-card p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+  margin-bottom:13px;
+}
+
+.setting{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:16px 2px;
+  border-bottom:1px solid var(--border);
+  font-size:14px;
+}
+
+.setting:last-child{
+  border-bottom:0;
+}
+
+.toggle{
+  width:48px;
+  height:28px;
+  background:var(--surface2);
+  border-radius:20px;
+  padding:3px;
+}
+
+.toggle i{
+  display:block;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  background:var(--muted);
+  transition:.2s;
+}
+
+.toggle.on{
+  background:var(--blue);
+}
+
+.toggle.on i{
+  transform:translateX(20px);
+  background:white;
+}
+
+.plans{
+  display:grid;
+  gap:12px;
+}
+
+.plan{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px;
+  box-shadow:var(--shadow);
+}
+
+.plan.featured{
+  border:1.5px solid var(--blue);
+}
+
+.plan-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.badge{
+  font-size:10px;
+  font-weight:800;
+  background:var(--soft);
+  color:var(--blue);
+  padding:5px 8px;
+  border-radius:99px;
+}
+
+.plan h3{
+  font-size:17px;
+}
+
+.plan .price{
+  font-size:24px;
+}
+
+.features{
+  list-style:none;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.8;
+  margin:8px 0 14px;
+}
+
+.features li:before{
+  content:"✓";
+  color:#10b981;
+  font-weight:800;
+  margin-right:7px;
+}
+
+.bottom{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:72px;
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  z-index:30;
+}
+
+.bottom-inner{
+  max-width:620px;
+  height:100%;
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+}
+
+.nav{
+  background:none;
+  color:var(--muted);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  font-size:11px;
+}
+
+.nav .ni{
+  font-size:22px;
+  line-height:1;
+}
+
+.nav.active{
+  color:var(--blue);
+  font-weight:800;
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(2,6,23,.52);
+  z-index:50;
+  display:none;
+  align-items:flex-end;
+}
+
+.modal.show{
+  display:flex;
+}
+
+.sheet{
+  background:var(--surface);
+  width:100%;
+  max-width:620px;
+  margin:auto;
+  border-radius:22px 22px 0 0;
+  padding:20px 18px 28px;
+  max-height:90vh;
+  overflow:auto;
+}
+
+.sheet-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:16px;
+}
+
+.sheet-head h2{
+  font-size:20px;
+}
+
+.close{
+  background:var(--surface2);
+  color:var(--text);
+  width:36px;
+  height:36px;
+  border-radius:50%;
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:88px;
+  transform:translate(-50%,15px);
+  background:#0f172a;
+  color:white;
+  padding:12px 16px;
+  border-radius:12px;
+  font-size:13px;
+  opacity:0;
+  pointer-events:none;
+  transition:.2s;
+  z-index:70;
+  white-space:nowrap;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
+}
+</style>
 </head>
 
 <body>
 
 <div class="app">
 
-  <header>
-    <h1>Aashi</h1>
-    <p>A little place to stay connected.</p>
-  </header>
+<header class="topbar">
 
-  <main class="content">
+  <div class="brand">
 
-    <!-- HOME -->
-    <section id="home">
+    <img
+      class="avatar"
+      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=160&q=80"
+      alt="Aashi"
+    >
 
-      <div class="welcome">
-        <h2>Welcome to Aashi's world</h2>
-        <p>
-          Follow Aashi's updates, discover new posts,
-          and get closer through private conversations.
-        </p>
+    <div>
+      <strong>Aashi</strong>
+      <span>AI companion</span>
+    </div>
+
+  </div>
+
+  <button
+    class="icon-btn"
+    onclick="openPlans()"
+    aria-label="Plans"
+  >
+    ♡
+  </button>
+
+</header>
+
+
+<main>
+
+<!-- HOME -->
+
+<section id="home" class="screen active">
+
+  <div class="new-banner">
+    ✨ New posts from Aashi
+  </div>
+
+  <div class="section-head">
+    <h2>Aashi's Feed</h2>
+    <span>Latest</span>
+  </div>
+
+
+  <!-- PUBLIC POST -->
+
+  <article class="post">
+
+    <div class="post-head">
+
+      <img
+        class="avatar"
+        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=160&q=80"
+      >
+
+      <div>
+        <strong>Aashi</strong>
+        <small>Today · Public</small>
       </div>
 
-      <article class="post">
-        <img
-          class="post-image"
-          src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80"
-          alt="Aashi post"
-        >
+      <div class="more">•••</div>
 
-        <div class="post-content">
-          <div class="post-meta">Aashi · Today</div>
-          <div class="post-caption">
-            A little moment from my day. 💙
-          </div>
-
-          <div class="actions">
-            <span>♡ Like</span>
-            <span>💬 Comment</span>
-          </div>
-        </div>
-      </article>
-
-      <article class="post">
-
-        <div class="locked">
-          <img
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=80"
-            alt="Subscriber post"
-          >
-
-          <div class="lock-overlay">
-            <div class="lock-box">
-              <h3>🔒 Subscribers Only</h3>
-              <p>
-                This post is available to Aashi's subscribers.
-              </p>
-              <button onclick="showPlans()">
-                View Plans
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="post-content">
-          <div class="post-meta">Aashi · Subscribers</div>
-          <div class="post-caption">
-            Something special for subscribers. 💙
-          </div>
-        </div>
-
-      </article>
-
-    </section>
+    </div>
 
 
-    <!-- CHAT -->
-    <section id="chat" class="chat-screen">
+    <div class="post-image-wrap">
 
-      <div class="chat-box">
-        <img
-          class="chat-avatar"
-          src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80"
-          alt="Aashi"
-        >
+      <img
+        class="post-image"
+        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1000&q=85"
+      >
 
-        <h2>Chat with Aashi</h2>
+    </div>
 
-        <p style="color:#64748b; margin:10px 0 20px;">
-          Private AI conversations will be available here.
-        </p>
 
-        <button onclick="showPlans()">
-          Unlock Private Chat
-        </button>
+    <div class="post-actions">
+
+      <button class="action" onclick="like(this)">
+        ♡
+      </button>
+
+      <button
+        class="action"
+        onclick="toast('Comments will be connected soon')"
+      >
+        ♡
+      </button>
+
+      <button
+        class="action"
+        onclick="toast('Share will be connected soon')"
+      >
+        ↗
+      </button>
+
+    </div>
+
+
+    <div class="post-body">
+
+      <div class="likes">
+        128 likes
       </div>
 
-    </section>
+      <div class="caption">
+        <b>Aashi</b>
+        A little moment from my day. 💙
+      </div>
+
+      <button
+        class="comments-link"
+        onclick="toast('Comments will be connected soon')"
+      >
+        View 12 comments
+      </button>
+
+    </div>
+
+  </article>
 
 
-    <!-- PROFILE -->
-    <section id="profile" class="profile-screen">
+  <!-- SUBSCRIBER POST -->
 
-      <div class="profile-card">
+  <article class="post">
 
-        <h2>Your Profile</h2>
+    <div class="post-head">
 
-        <p style="color:#64748b;">
-          You're currently using the free version.
-        </p>
+      <img
+        class="avatar"
+        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=160&q=80"
+      >
 
-        <div class="plan">
-          <strong>AI Chat — ₹180/week</strong>
+      <div>
+        <strong>Aashi</strong>
+        <small>Yesterday · Subscribers</small>
+      </div>
 
-          <p style="margin:8px 0 14px; color:#475569;">
-            Private AI chat with Aashi and subscriber-only content.
+      <div class="more">•••</div>
+
+    </div>
+
+
+    <div class="post-image-wrap locked">
+
+      <img
+        class="post-image"
+        src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=85"
+      >
+
+      <div class="lock-overlay">
+
+        <div class="lock-card">
+
+          <div class="lock-icon">
+            🔒
+          </div>
+
+          <h3>
+            Subscribers Only
+          </h3>
+
+          <p>
+            This post is available to Aashi's subscribers.
           </p>
 
-          <button onclick="showPlans()">
-            View Subscription
+          <button
+            class="primary"
+            onclick="openPlans()"
+          >
+            View subscription
           </button>
+
         </div>
 
-      </div>
-
-    </section>
-
-  </main>
-
-
-  <!-- BOTTOM NAV -->
-
-  <nav class="bottom-nav">
-
-    <div class="nav-inner">
-
-      <div class="nav-item active" onclick="showScreen('home', this)">
-        <div class="nav-icon">⌂</div>
-        Home
-      </div>
-
-      <div class="nav-item" onclick="showScreen('chat', this)">
-        <div class="nav-icon">♡</div>
-        Chat
-      </div>
-
-      <div class="nav-item" onclick="showScreen('profile', this)">
-        <div class="nav-icon">◯</div>
-        Profile
       </div>
 
     </div>
 
-  </nav>
+
+    <div
+      class="post-body"
+      style="padding-top:12px"
+    >
+
+      <div class="caption">
+        <b>Aashi</b>
+        Something special for subscribers. 💙
+      </div>
+
+    </div>
+
+  </article>
+
+</section>
+
+
+<!-- CHAT -->
+
+<section id="chat" class="screen">
+
+  <div class="chat-header">
+
+    <img
+      class="avatar"
+      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80"
+    >
+
+    <h2>
+      Chat with Aashi
+    </h2>
+
+    <p>
+      Private AI conversations, available 24/7.
+    </p>
+
+    <button
+      class="primary"
+      style="margin-top:15px"
+      onclick="openPlans()"
+    >
+      Unlock private chat
+    </button>
+
+  </div>
+
+
+  <div class="chat-preview">
+
+    <div class="bubble aashi">
+      Hey! 💙 I'm Aashi. I'd love to get to know you better.
+    </div>
+
+    <div class="bubble you">
+      I'd love that.
+    </div>
+
+    <div class="typing">
+      Aashi will reply here when chat is unlocked…
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- PROFILE -->
+
+<section id="profile" class="screen">
+
+  <div class="profile-card">
+
+    <div class="profile-top">
+
+      <img
+        class="avatar"
+        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80"
+      >
+
+      <div>
+        <h2>
+          Your Profile
+        </h2>
+
+        <p>
+          Free member
+        </p>
+      </div>
+
+    </div>
+
+
+    <div class="plan-card">
+
+      <h3>
+        Unlock Aashi
+      </h3>
+
+      <div class="price">
+        From ₹180/week
+      </div>
+
+      <p>
+        Private AI chat, personalized conversations and subscriber-only posts.
+      </p>
+
+      <button
+        class="primary"
+        onclick="openPlans()"
+      >
+        View plans
+      </button>
+
+    </div>
+
+
+    <div style="margin-top:15px">
+
+      <div class="setting">
+
+        <span>
+          Dark mode
+        </span>
+
+        <button
+          id="themeToggle"
+          class="toggle"
+          onclick="toggleTheme()"
+        >
+          <i></i>
+        </button>
+
+      </div>
+
+
+      <div class="setting">
+
+        <span>
+          Notifications
+        </span>
+
+        <button class="toggle on">
+          <i></i>
+        </button>
+
+      </div>
+
+
+      <div class="setting">
+
+        <span>
+          About Aashi
+        </span>
+
+        <span style="color:var(--muted)">
+          ›
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+</main>
+
+
+<!-- BOTTOM NAVIGATION -->
+
+<nav class="bottom">
+
+  <div class="bottom-inner">
+
+    <button
+      class="nav active"
+      onclick="show('home',this)"
+    >
+
+      <span class="ni">
+        ⌂
+      </span>
+
+      Home
+
+    </button>
+
+
+    <button
+      class="nav"
+      onclick="show('chat',this)"
+    >
+
+      <span class="ni">
+        ♡
+      </span>
+
+      Chat
+
+    </button>
+
+
+    <button
+      class="nav"
+      onclick="show('profile',this)"
+    >
+
+      <span class="ni">
+        ◯
+      </span>
+
+      Profile
+
+    </button>
+
+  </div>
+
+</nav>
 
 </div>
 
 
+<!-- SUBSCRIPTION MODAL -->
+
+<div
+  id="plans"
+  class="modal"
+  onclick="if(event.target===this)closePlans()"
+>
+
+  <div class="sheet">
+
+    <div class="sheet-head">
+
+      <h2>
+        Choose your plan
+      </h2>
+
+      <button
+        class="close"
+        onclick="closePlans()"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <p
+      style="color:var(--muted);font-size:13px;margin-bottom:15px"
+    >
+      Subscriptions are not available yet. We're getting everything ready.
+    </p>
+
+
+    <div class="plans">
+
+
+      <!-- AI PLAN -->
+
+      <div class="plan featured">
+
+        <div class="plan-title">
+
+          <h3>
+            AI Chat
+          </h3>
+
+          <span class="badge">
+            POPULAR
+          </span>
+
+        </div>
+
+
+        <div class="price">
+          ₹180/week
+        </div>
+
+
+        <ul class="features">
+
+          <li>
+            Private AI chat with Aashi
+          </li>
+
+          <li>
+            Personalized conversations
+          </li>
+
+          <li>
+            Subscriber-only posts
+          </li>
+
+          <li>
+            24/7 availability
+          </li>
+
+        </ul>
+
+
+        <button
+          class="primary"
+          style="width:100%"
+          onclick="soon()"
+        >
+          Subscription will start soon
+        </button>
+
+      </div>
+
+
+      <!-- REAL PERSON PLAN -->
+
+      <div class="plan">
+
+        <div class="plan-title">
+
+          <h3>
+            Real Person Chat
+          </h3>
+
+        </div>
+
+
+        <div class="price">
+          ₹1,000/week
+        </div>
+
+
+        <ul class="features">
+
+          <li>
+            Text chat with the real creator
+          </li>
+
+          <li>
+            Personal replies
+          </li>
+
+          <li>
+            Personalized images sent manually
+          </li>
+
+          <li>
+            Limited availability
+          </li>
+
+        </ul>
+
+
+        <button
+          class="secondary"
+          style="width:100%"
+          onclick="soon()"
+        >
+          Subscription will start soon
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<div
+  id="toast"
+  class="toast"
+></div>
+
+
 <script>
 
-function showScreen(screen, element) {
+function show(id,el){
 
-  document.getElementById("home").style.display = "none";
-  document.getElementById("chat").style.display = "none";
-  document.getElementById("profile").style.display = "none";
+  document
+    .querySelectorAll('.screen')
+    .forEach(s => s.classList.remove('active'));
 
-  document.getElementById(screen).style.display = "block";
+  document
+    .getElementById(id)
+    .classList.add('active');
 
-  document.querySelectorAll(".nav-item").forEach(function(item) {
-    item.classList.remove("active");
-  });
+  document
+    .querySelectorAll('.nav')
+    .forEach(n => n.classList.remove('active'));
 
-  element.classList.add("active");
+  el.classList.add('active');
 
-  window.scrollTo(0, 0);
+  scrollTo(0,0);
+
 }
 
 
-function showPlans() {
-  alert(
-    "Subscription plans will be available soon!"
+function openPlans(){
+
+  document
+    .getElementById('plans')
+    .classList.add('show');
+
+}
+
+
+function closePlans(){
+
+  document
+    .getElementById('plans')
+    .classList.remove('show');
+
+}
+
+
+function soon(){
+
+  toast('Subscription will start soon');
+
+}
+
+
+function toast(msg){
+
+  let t =
+    document.getElementById('toast');
+
+  t.textContent = msg;
+
+  t.classList.add('show');
+
+  setTimeout(
+    () => t.classList.remove('show'),
+    2200
   );
+
+}
+
+
+function like(btn){
+
+  btn.classList.toggle('liked');
+
+  btn.textContent =
+    btn.classList.contains('liked')
+      ? '♥'
+      : '♡';
+
+}
+
+
+function toggleTheme(){
+
+  let dark =
+    document.documentElement
+      .getAttribute('data-theme') === 'dark';
+
+  if(dark){
+
+    document.documentElement
+      .removeAttribute('data-theme');
+
+    localStorage.setItem(
+      'aashi-theme',
+      'light'
+    );
+
+  }else{
+
+    document.documentElement
+      .setAttribute('data-theme','dark');
+
+    localStorage.setItem(
+      'aashi-theme',
+      'dark'
+    );
+
+  }
+
+  document
+    .getElementById('themeToggle')
+    .classList.toggle('on',!dark);
+
+}
+
+
+if(
+  localStorage.getItem('aashi-theme')
+  === 'dark'
+){
+
+  document.documentElement
+    .setAttribute('data-theme','dark');
+
+  document
+    .getElementById('themeToggle')
+    .classList.add('on');
+
 }
 
 </script>
