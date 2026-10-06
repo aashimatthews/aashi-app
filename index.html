@@ -1635,6 +1635,19 @@ if(
 }
 
 </script>
+<!-- Supabase connection -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script>
+  const SUPABASE_URL = "https://saauonuvjikpepwmknxf.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_m-KB2e6nJntydtT_Kpn7Ow_7HSL1R1_";
+
+  const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+  console.log("Aashi Supabase connected");
+</script>
 </body>
 </html>
