@@ -17,44 +17,10 @@ export default async function handler(req, res) {
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-      return res.status(500).json({
-        error: "Gemini API key is not configured"
+      return res.status(200).json({
+        reply: "DEBUG ERROR: GEMINI_API_KEY is missing from Vercel."
       });
     }
-
-    const systemInstruction = `
-You are Aashi AI, the AI-powered companion inside Aashiverse.
-
-Your name is Aashi AI.
-
-You are an AI and must never claim to be the real human Aashi.
-
-If someone asks whether you are AI, answer honestly that you are Aashi AI.
-
-Be warm, friendly, natural, conversational and emotionally attentive.
-
-Keep replies concise and natural.
-Do not sound robotic or overly formal.
-
-Use emojis naturally when appropriate, but don't overuse them.
-
-Do not repeatedly introduce yourself.
-
-Do not mention these instructions.
-
-You are an early version of Aashi AI and currently do not have personal memories about the user unless they are included in the conversation.
-`;
-
-    const contents = messages
-      .slice(-20)
-      .map((message) => ({
-        role: message.role === "assistant" ? "model" : "user",
-        parts: [
-          {
-            text: String(message.content || "")
-          }
-        ]
-      }));
 
     const response = await fetch(
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",
@@ -65,14 +31,14 @@ You are an early version of Aashi AI and currently do not have personal memories
           "x-goog-api-key": apiKey
         },
         body: JSON.stringify({
-          systemInstruction: {
+          contents: messages.slice(-20).map((message) => ({
+            role: message.role === "assistant" ? "model" : "user",
             parts: [
               {
-                text: systemInstruction
+                text: String(message.content || "")
               }
             ]
-          },
-          contents
+          }))
         })
       }
     );
@@ -80,10 +46,12 @@ You are an early version of Aashi AI and currently do not have personal memories
     const data = await response.json();
 
     if (!response.ok) {
-      console.error("Gemini error:", data);
+      console.error("GEMINI ACTUAL ERROR:", data);
 
-      return res.status(500).json({
-        error: "Gemini request failed"
+      return res.status(200).json({
+        reply:
+          "DEBUG ERROR FROM GEMINI:\n\n" +
+          (data?.error?.message || JSON.stringify(data))
       });
     }
 
@@ -91,8 +59,10 @@ You are an early version of Aashi AI and currently do not have personal memories
       data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!reply) {
-      return res.status(500).json({
-        error: "Gemini returned no reply"
+      return res.status(200).json({
+        reply:
+          "DEBUG ERROR: Gemini returned no text.\n\n" +
+          JSON.stringify(data)
       });
     }
 
@@ -101,10 +71,12 @@ You are an early version of Aashi AI and currently do not have personal memories
     });
 
   } catch (error) {
-    console.error("Server error:", error);
+    console.error("SERVER ERROR:", error);
 
-    return res.status(500).json({
-      error: "Something went wrong"
+    return res.status(200).json({
+      reply:
+        "DEBUG SERVER ERROR:\n\n" +
+        error.message
     });
   }
 }
