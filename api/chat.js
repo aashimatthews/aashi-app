@@ -59,51 +59,106 @@ You do not have personal memories about the user unless they are included in the
         ]
       }));
 
-    const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-goog-api-key": apiKey
-        },
-        body: JSON.stringify({
-          systemInstruction: {
-            parts: [
-              {
-                text: systemInstruction
-              }
-            ]
-          },
-          contents
-        })
+    const models = [
+      "gemini-3.5-flash-lite",
+      "gemini-3.8-flash"
+    ];
+
+    let lastError = null;
+
+    for (const model of models) {
+
+      for (let attempt = 0; attempt < 2; attempt++) {
+
+        try {
+
+          const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type": "application/json",
+                "x-goog-api-key": apiKey
+              },
+
+              body: JSON.stringify({
+                systemInstruction: {
+                  parts: [
+                    {
+                      text: systemInstruction
+                    }
+                  ]
+                },
+
+                contents
+              })
+            }
+          );
+
+          const data = await response.json();
+
+          if (response.ok) {
+
+            const reply =
+              data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+            if (reply) {
+              return res.status(200).json({
+                reply
+              });
+            }
+          }
+
+          lastError =
+            data?.error?.message ||
+            `Gemini returned HTTP ${response.status}`;
+
+          console.error(
+            `Gemini ${model} attempt ${attempt + 1}:`,
+            lastError
+          );
+
+          // Retry temporary server/rate-limit errors.
+          if (
+            response.status === 429 ||
+            response.status === 500 ||
+            response.status === 502 ||
+            response.status === 503 ||
+            response.status === 504
+          ) {
+            await new Promise(resolve =>
+              setTimeout(resolve, 1000 * (attempt + 1))
+            );
+
+            continue;
+          }
+
+          // Don't retry permanent errors.
+          break;
+
+        } catch (error) {
+
+          lastError = error.message;
+
+          console.error(
+            `Gemini ${model} network error:`,
+            error
+          );
+
+          await new Promise(resolve =>
+            setTimeout(resolve, 1000 * (attempt + 1))
+          );
+        }
       }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      console.error("Gemini error:", data);
-
-      return res.status(500).json({
-        error: "Gemini request failed"
-      });
     }
 
-    const reply =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-    if (!reply) {
-      return res.status(500).json({
-        error: "Gemini returned no reply"
-      });
-    }
-
-    return res.status(200).json({
-      reply
+    return res.status(503).json({
+      error: "Aashi AI is temporarily busy. Please try again in a moment."
     });
 
   } catch (error) {
+
     console.error("Server error:", error);
 
     return res.status(500).json({
