@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
 <title>Aashi</title>
 
 <style>
@@ -17,7 +18,8 @@
   --blue:#2563eb;
   --blue2:#1d4ed8;
   --soft:#eff6ff;
-  --danger:#ef4444;
+  --success:#16a34a;
+  --danger:#dc2626;
   --shadow:0 8px 28px rgba(15,23,42,.07);
 }
 
@@ -40,17 +42,49 @@
   padding:0;
 }
 
+html{
+  background:var(--bg);
+}
+
 body{
-  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,
+  "Segoe UI",Arial,sans-serif;
   background:var(--bg);
   color:var(--text);
   padding-bottom:78px;
 }
 
-button{
+button,
+input,
+textarea{
   font:inherit;
+}
+
+button{
   border:0;
   cursor:pointer;
+}
+
+input,
+textarea{
+  width:100%;
+  background:var(--surface);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px 13px;
+  outline:none;
+}
+
+input:focus,
+textarea:focus{
+  border-color:var(--blue);
+  box-shadow:0 0 0 3px rgba(37,99,235,.10);
+}
+
+textarea{
+  min-height:100px;
+  resize:vertical;
 }
 
 .app{
@@ -58,119 +92,6 @@ button{
   margin:auto;
   min-height:100vh;
   background:var(--bg);
-}
-
-/* AUTH */
-
-.auth-screen{
-  position:fixed;
-  inset:0;
-  z-index:100;
-  background:var(--bg);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  overflow:auto;
-}
-
-.auth-card{
-  width:min(420px,100%);
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:22px;
-  padding:24px 20px;
-  box-shadow:var(--shadow);
-}
-
-.auth-brand{
-  text-align:center;
-  margin-bottom:22px;
-}
-
-.auth-brand .avatar{
-  width:72px;
-  height:72px;
-  margin-bottom:10px;
-}
-
-.auth-brand h1{
-  font-size:25px;
-}
-
-.auth-brand p{
-  color:var(--muted);
-  font-size:13px;
-  margin-top:5px;
-}
-
-.auth-tabs{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:6px;
-  background:var(--surface2);
-  padding:4px;
-  border-radius:12px;
-  margin-bottom:18px;
-}
-
-.auth-tab{
-  background:transparent;
-  color:var(--muted);
-  padding:10px;
-  border-radius:9px;
-  font-weight:700;
-}
-
-.auth-tab.active{
-  background:var(--surface);
-  color:var(--blue);
-  box-shadow:0 1px 5px rgba(15,23,42,.08);
-}
-
-.auth-field{
-  margin-bottom:12px;
-}
-
-.auth-field label{
-  display:block;
-  font-size:12px;
-  font-weight:700;
-  margin-bottom:6px;
-}
-
-.auth-field input{
-  width:100%;
-  padding:12px 13px;
-  border:1px solid var(--border);
-  border-radius:11px;
-  background:var(--surface);
-  color:var(--text);
-  outline:none;
-}
-
-.auth-field input:focus{
-  border-color:var(--blue);
-}
-
-.auth-message{
-  min-height:18px;
-  color:var(--muted);
-  font-size:12px;
-  margin:8px 0 12px;
-  line-height:1.4;
-}
-
-.auth-submit{
-  width:100%;
-}
-
-.auth-note{
-  color:var(--muted);
-  font-size:11px;
-  line-height:1.45;
-  text-align:center;
-  margin-top:13px;
 }
 
 /* TOP BAR */
@@ -194,13 +115,16 @@ button{
   gap:11px;
 }
 
-.avatar{
+.brand-logo{
   width:40px;
   height:40px;
   border-radius:50%;
-  object-fit:cover;
-  border:2px solid var(--surface);
-  box-shadow:0 0 0 1px var(--border);
+  background:linear-gradient(135deg,#2563eb,#60a5fa);
+  color:white;
+  display:grid;
+  place-items:center;
+  font-weight:800;
+  font-size:18px;
 }
 
 .brand strong{
@@ -239,6 +163,187 @@ main{
   display:block;
 }
 
+/* AUTH */
+
+.auth-wrap{
+  min-height:calc(100vh - 40px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px 0;
+}
+
+.auth-card{
+  width:100%;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:22px;
+  box-shadow:var(--shadow);
+}
+
+.auth-brand{
+  text-align:center;
+  margin-bottom:22px;
+}
+
+.auth-brand .brand-logo{
+  width:64px;
+  height:64px;
+  margin:0 auto 12px;
+  font-size:27px;
+}
+
+.auth-brand h1{
+  font-size:27px;
+}
+
+.auth-brand p{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:5px;
+}
+
+.auth-tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  background:var(--surface2);
+  border-radius:12px;
+  padding:4px;
+  margin-bottom:18px;
+}
+
+.auth-tab{
+  background:transparent;
+  color:var(--muted);
+  padding:10px;
+  border-radius:9px;
+  font-weight:700;
+}
+
+.auth-tab.active{
+  background:var(--surface);
+  color:var(--text);
+  box-shadow:0 2px 7px rgba(0,0,0,.07);
+}
+
+.form-group{
+  margin-bottom:13px;
+}
+
+.form-group label{
+  display:block;
+  font-size:12px;
+  font-weight:700;
+  margin-bottom:6px;
+}
+
+.checkbox-row{
+  display:flex;
+  align-items:flex-start;
+  gap:9px;
+  margin:11px 0;
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.45;
+}
+
+.checkbox-row input{
+  width:17px;
+  height:17px;
+  margin-top:1px;
+  flex:none;
+}
+
+.auth-note{
+  background:var(--soft);
+  color:var(--blue2);
+  border:1px solid #bfdbfe;
+  border-radius:12px;
+  padding:11px;
+  font-size:12px;
+  line-height:1.45;
+  margin-bottom:14px;
+}
+
+.auth-footer{
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  margin-top:14px;
+}
+
+.text-btn{
+  background:none;
+  color:var(--blue);
+  font-weight:700;
+}
+
+/* PROFILE COMPLETION */
+
+.complete-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:22px;
+  box-shadow:var(--shadow);
+}
+
+.complete-icon{
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  background:var(--soft);
+  color:var(--blue);
+  display:grid;
+  place-items:center;
+  font-size:25px;
+  margin-bottom:14px;
+}
+
+.complete-card h2{
+  font-size:22px;
+  margin-bottom:6px;
+}
+
+.complete-card p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+  margin-bottom:18px;
+}
+
+/* BUTTONS */
+
+.primary{
+  width:auto;
+  background:var(--blue);
+  color:white;
+  padding:11px 17px;
+  border-radius:11px;
+  font-weight:700;
+}
+
+.primary.full{
+  width:100%;
+}
+
+.primary:active{
+  background:var(--blue2);
+}
+
+.secondary{
+  background:var(--surface2);
+  color:var(--text);
+  padding:11px 17px;
+  border-radius:11px;
+  font-weight:700;
+}
+
+.danger{
+  color:var(--danger);
+}
+
 /* NEW POST BANNER */
 
 .new-banner{
@@ -266,18 +371,18 @@ main{
 }
 
 .section-head span{
-  font-size:12px;
   color:var(--muted);
+  font-size:12px;
 }
 
-/* POST */
+/* POSTS */
 
 .post{
   background:var(--surface);
   border:1px solid var(--border);
   border-radius:18px;
   overflow:hidden;
-  margin-bottom:16px;
+  margin-bottom:15px;
   box-shadow:var(--shadow);
 }
 
@@ -285,12 +390,18 @@ main{
   display:flex;
   align-items:center;
   gap:10px;
-  padding:13px 14px;
+  padding:13px;
 }
 
-.post-head .avatar{
-  width:36px;
-  height:36px;
+.post-avatar{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#2563eb,#60a5fa);
+  color:white;
+  display:grid;
+  place-items:center;
+  font-weight:800;
 }
 
 .post-head strong{
@@ -307,54 +418,48 @@ main{
 .more{
   margin-left:auto;
   color:var(--muted);
-  font-size:20px;
 }
 
-/* POST IMAGE */
-
 .post-image-wrap{
-  position:relative;
+  width:100%;
+  aspect-ratio:1/1;
+  overflow:hidden;
   background:var(--surface2);
 }
 
 .post-image{
-  display:block;
   width:100%;
-  aspect-ratio:1/1.08;
+  height:100%;
   object-fit:cover;
+  display:block;
 }
-
-/* POST ACTIONS */
 
 .post-actions{
   display:flex;
-  align-items:center;
-  gap:18px;
-  padding:12px 14px 5px;
+  gap:3px;
+  padding:7px 9px 0;
 }
 
 .action{
+  width:40px;
+  height:40px;
   background:none;
   color:var(--text);
-  font-size:21px;
-  line-height:1;
-  padding:2px;
+  font-size:22px;
 }
 
 .action.liked{
-  color:var(--danger);
+  color:#ef4444;
 }
 
-/* POST BODY */
-
 .post-body{
-  padding:0 14px 15px;
+  padding:2px 13px 14px;
 }
 
 .likes{
-  font-size:13px;
+  font-size:12px;
   font-weight:700;
-  margin:3px 0 7px;
+  margin-bottom:7px;
 }
 
 .caption{
@@ -427,53 +532,98 @@ main{
   margin-bottom:14px;
 }
 
-/* BUTTONS */
-
-.primary{
-  background:var(--blue);
-  color:white;
-  padding:11px 17px;
-  border-radius:11px;
-  font-weight:700;
-}
-
-.primary:active{
-  background:var(--blue2);
-}
-
-.secondary{
-  background:var(--surface2);
-  color:var(--text);
-  padding:11px 17px;
-  border-radius:11px;
-  font-weight:700;
-}
-
 /* CHAT */
 
-.chat-header{
+.chat-card{
   background:var(--surface);
   border:1px solid var(--border);
   border-radius:18px;
   padding:18px;
-  text-align:center;
   box-shadow:var(--shadow);
 }
 
-.chat-header .avatar{
-  width:72px;
-  height:72px;
-  margin-bottom:9px;
+.chat-hero{
+  text-align:center;
 }
 
-.chat-header h2{
+.ai-avatar{
+  width:72px;
+  height:72px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#2563eb,#60a5fa);
+  color:white;
+  display:grid;
+  place-items:center;
+  margin:0 auto 10px;
+  font-size:28px;
+  font-weight:800;
+}
+
+.chat-hero h2{
   font-size:21px;
 }
 
-.chat-header p{
+.ai-label{
+  display:inline-block;
+  margin-top:5px;
+  padding:4px 8px;
+  border-radius:99px;
+  background:var(--soft);
+  color:var(--blue);
+  font-size:10px;
+  font-weight:800;
+}
+
+.chat-hero p{
   color:var(--muted);
   font-size:13px;
-  margin-top:5px;
+  margin-top:7px;
+  line-height:1.45;
+}
+
+.free-status{
+  margin-top:18px;
+  background:var(--surface2);
+  border-radius:14px;
+  padding:14px;
+  text-align:left;
+}
+
+.free-status-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:12px;
+  font-weight:700;
+}
+
+.timer{
+  color:var(--blue);
+  font-size:18px;
+  font-weight:800;
+}
+
+.progress{
+  height:8px;
+  background:var(--border);
+  border-radius:99px;
+  overflow:hidden;
+  margin-top:9px;
+}
+
+.progress-bar{
+  height:100%;
+  width:100%;
+  background:var(--blue);
+  border-radius:99px;
+  transition:width .4s;
+}
+
+.status-note{
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.4;
+  margin-top:8px;
 }
 
 .chat-preview{
@@ -508,7 +658,6 @@ main{
 .typing{
   color:var(--muted);
   font-size:12px;
-  margin:4px 2px 0;
 }
 
 /* PROFILE */
@@ -527,9 +676,16 @@ main{
   gap:14px;
 }
 
-.profile-top .avatar{
+.profile-avatar{
   width:64px;
   height:64px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#2563eb,#60a5fa);
+  color:white;
+  display:grid;
+  place-items:center;
+  font-size:24px;
+  font-weight:800;
 }
 
 .profile-top h2{
@@ -566,8 +722,6 @@ main{
   line-height:1.45;
   margin-bottom:13px;
 }
-
-/* SETTINGS */
 
 .setting{
   display:flex;
@@ -620,7 +774,6 @@ main{
   border:1px solid var(--border);
   border-radius:18px;
   padding:18px;
-  box-shadow:var(--shadow);
 }
 
 .plan.featured{
@@ -644,10 +797,6 @@ main{
 
 .plan h3{
   font-size:17px;
-}
-
-.plan .price{
-  font-size:24px;
 }
 
 .features{
@@ -707,7 +856,7 @@ main{
   font-weight:800;
 }
 
-/* SUBSCRIPTION MODAL */
+/* MODAL */
 
 .modal{
   position:fixed;
@@ -769,6 +918,8 @@ main{
   transition:.2s;
   z-index:70;
   white-space:nowrap;
+  max-width:90%;
+  text-align:center;
 }
 
 .toast.show{
@@ -776,28 +927,92 @@ main{
   transform:translate(-50%,0);
 }
 
+/* LOADING */
+
+.loading{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  background:var(--bg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.loading-box{
+  text-align:center;
+}
+
+.loading-logo{
+  width:64px;
+  height:64px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#2563eb,#60a5fa);
+  color:white;
+  display:grid;
+  place-items:center;
+  margin:auto auto 12px;
+  font-size:26px;
+  font-weight:800;
+}
+
+.loading-text{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.hidden{
+  display:none !important;
+}
+
+.small-note{
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.45;
+  margin-top:10px;
+}
+
 </style>
 </head>
 
 <body>
 
+<!-- LOADING -->
+
+<div id="loading" class="loading">
+
+  <div class="loading-box">
+
+    <div class="loading-logo">
+      A
+    </div>
+
+    <div class="loading-text">
+      Loading Aashi…
+    </div>
+
+  </div>
+
+</div>
+
+
 <!-- AUTH SCREEN -->
 
-<div id="authScreen" class="auth-screen">
+<div id="authScreen" class="auth-wrap hidden">
 
   <div class="auth-card">
 
     <div class="auth-brand">
 
-      <img
-        class="avatar"
-        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80"
-        alt="Aashi"
-      >
+      <div class="brand-logo">
+        A
+      </div>
 
       <h1>Aashi</h1>
 
-      <p>Your private AI companion</p>
+      <p>
+        A private space to connect with Aashi
+      </p>
 
     </div>
 
@@ -807,7 +1022,7 @@ main{
       <button
         id="loginTab"
         class="auth-tab active"
-        onclick="setAuthMode('login')"
+        onclick="showAuthMode('login')"
       >
         Log in
       </button>
@@ -815,7 +1030,7 @@ main{
       <button
         id="signupTab"
         class="auth-tab"
-        onclick="setAuthMode('signup')"
+        onclick="showAuthMode('signup')"
       >
         Create account
       </button>
@@ -823,607 +1038,881 @@ main{
     </div>
 
 
-    <form id="authForm" onsubmit="submitAuth(event)">
+    <!-- LOGIN -->
 
-      <div
-        class="auth-field"
-        id="nameField"
-        style="display:none"
-      >
+    <form
+      id="loginForm"
+      onsubmit="loginUser(event)"
+    >
 
-        <label for="authName">
-          Name
-        </label>
+      <div class="form-group">
 
-        <input
-          id="authName"
-          type="text"
-          autocomplete="name"
-          placeholder="Your name"
-        >
-
-      </div>
-
-
-      <div class="auth-field">
-
-        <label for="authEmail">
-          Email
-        </label>
+        <label>Email</label>
 
         <input
-          id="authEmail"
+          id="loginEmail"
           type="email"
           autocomplete="email"
-          placeholder="you@example.com"
           required
+          placeholder="you@example.com"
         >
 
       </div>
 
 
-      <div class="auth-field">
+      <div class="form-group">
 
-        <label for="authPassword">
-          Password
-        </label>
+        <label>Password</label>
 
         <input
-          id="authPassword"
+          id="loginPassword"
           type="password"
           autocomplete="current-password"
-          placeholder="At least 6 characters"
-          minlength="6"
           required
+          placeholder="Your password"
         >
 
       </div>
-
-
-      <div
-        id="authMessage"
-        class="auth-message"
-      ></div>
 
 
       <button
-        id="authSubmit"
-        class="primary auth-submit"
+        class="primary full"
         type="submit"
       >
         Log in
       </button>
 
+
+      <div class="auth-footer">
+
+        Don't have an account?
+
+        <button
+          type="button"
+          class="text-btn"
+          onclick="showAuthMode('signup')"
+        >
+          Create one
+        </button>
+
+      </div>
+
     </form>
 
 
-    <div class="auth-note">
+    <!-- SIGNUP -->
 
-      By continuing, you agree to use Aashi responsibly.
-      Aashi is an AI character.
+    <form
+      id="signupForm"
+      class="hidden"
+      onsubmit="signupUser(event)"
+    >
 
-    </div>
+      <div class="auth-note">
+
+        You must be 18 or older to use Aashi.
+        Your chat mode will always be clearly identified as AI or real-person chat.
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>Full name</label>
+
+        <input
+          id="signupName"
+          type="text"
+          autocomplete="name"
+          required
+          maxlength="100"
+          placeholder="Your full name"
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>Username</label>
+
+        <input
+          id="signupUsername"
+          type="text"
+          autocomplete="username"
+          required
+          minlength="3"
+          maxlength="30"
+          pattern="[A-Za-z0-9_.]+"
+          placeholder="your_username"
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>Date of birth</label>
+
+        <input
+          id="signupDob"
+          type="date"
+          required
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>Email</label>
+
+        <input
+          id="signupEmail"
+          type="email"
+          autocomplete="email"
+          required
+          placeholder="you@example.com"
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>Password</label>
+
+        <input
+          id="signupPassword"
+          type="password"
+          autocomplete="new-password"
+          required
+          minlength="8"
+          placeholder="At least 8 characters"
+        >
+
+      </div>
+
+
+      <label class="checkbox-row">
+
+        <input
+          id="ageCheck"
+          type="checkbox"
+          required
+        >
+
+        <span>
+          I confirm that I am 18 years old or older.
+        </span>
+
+      </label>
+
+
+      <label class="checkbox-row">
+
+        <input
+          id="chatAcknowledgement"
+          type="checkbox"
+          required
+        >
+
+        <span>
+          I understand that Aashi offers both AI-powered conversations
+          and conversations with the real person behind the account.
+          The chat mode will be clearly identified.
+        </span>
+
+      </label>
+
+
+      <label class="checkbox-row">
+
+        <input
+          id="termsCheck"
+          type="checkbox"
+          required
+        >
+
+        <span>
+          I agree to the Terms of Use and Privacy Policy.
+        </span>
+
+      </label>
+
+
+      <button
+        class="primary full"
+        type="submit"
+      >
+        Create account
+      </button>
+
+
+      <div class="auth-footer">
+
+        Already have an account?
+
+        <button
+          type="button"
+          class="text-btn"
+          onclick="showAuthMode('login')"
+        >
+          Log in
+        </button>
+
+      </div>
+
+    </form>
 
   </div>
 
 </div>
 
 
-<div class="app">
+<!-- PROFILE COMPLETION -->
 
-
-<!-- TOP HEADER -->
-
-<header class="topbar">
-
-  <div class="brand">
-
-    <img
-      class="avatar"
-      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=160&q=80"
-      alt="Aashi"
-    >
-
-    <div>
-
-      <strong>
-        Aashi
-      </strong>
-
-      <span>
-        AI companion
-      </span>
-
-    </div>
-
-  </div>
-
-
-  <button
-    class="icon-btn"
-    onclick="openPlans()"
-    aria-label="Plans"
-  >
-    ♡
-  </button>
-
-</header>
-
-
-<main>
-
-
-<!-- HOME -->
-
-<section
-  id="home"
-  class="screen active"
+<div
+  id="completionScreen"
+  class="auth-wrap hidden"
 >
 
-  <div class="new-banner">
+  <div class="complete-card">
 
-    ✨ New posts from Aashi
-
-  </div>
-
-
-  <div class="section-head">
+    <div class="complete-icon">
+      ✓
+    </div>
 
     <h2>
-      Aashi's Feed
+      Complete your profile
     </h2>
 
-    <span>
-      Latest
-    </span>
+    <p>
+      Your account is almost ready. Confirm your profile details
+      before entering Aashi.
+    </p>
+
+
+    <div class="form-group">
+
+      <label>Full name</label>
+
+      <input
+        id="completeName"
+        type="text"
+        maxlength="100"
+        placeholder="Your full name"
+      >
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label>Username</label>
+
+      <input
+        id="completeUsername"
+        type="text"
+        minlength="3"
+        maxlength="30"
+        pattern="[A-Za-z0-9_.]+"
+        placeholder="your_username"
+      >
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label>Date of birth</label>
+
+      <input
+        id="completeDob"
+        type="date"
+      >
+
+    </div>
+
+
+    <button
+      class="primary full"
+      onclick="completeProfile()"
+    >
+      Continue to Aashi
+    </button>
+
+
+    <p class="small-note">
+      Profile picture can be added later.
+    </p>
 
   </div>
 
+</div>
 
-  <!-- PUBLIC POST -->
 
-  <article class="post">
+<!-- APP -->
 
-    <div class="post-head">
+<div
+  id="appScreen"
+  class="app hidden"
+>
 
-      <img
-        class="avatar"
-        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=160&q=80"
-        alt="Aashi"
-      >
+  <!-- TOP HEADER -->
+
+  <header class="topbar">
+
+    <div class="brand">
+
+      <div class="brand-logo">
+        A
+      </div>
 
       <div>
 
-        <strong>
-          Aashi
-        </strong>
+        <strong>Aashi</strong>
 
-        <small>
-          Today · Public
-        </small>
+        <span>
+          AI companion
+        </span>
 
-      </div>
-
-      <div class="more">
-        •••
       </div>
 
     </div>
 
 
-    <div class="post-image-wrap">
+    <button
+      class="icon-btn"
+      onclick="openPlans()"
+      aria-label="Plans"
+    >
+      ♡
+    </button>
 
-      <img
-        class="post-image"
-        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1000&q=85"
-        alt="Aashi post"
-      >
-
-    </div>
-
-
-    <div class="post-actions">
-
-      <button
-        class="action"
-        onclick="like(this)"
-        aria-label="Like"
-      >
-        ♡
-      </button>
+  </header>
 
 
-      <button
-        class="action"
-        onclick="toast('Comments will be connected soon')"
-        aria-label="Comment"
-      >
-        💬
-      </button>
+  <main>
 
 
-      <button
-        class="action"
-        onclick="toast('Share will be connected soon')"
-        aria-label="Share"
-      >
-        ↗
-      </button>
+    <!-- HOME -->
 
-    </div>
+    <section
+      id="home"
+      class="screen active"
+    >
 
-
-    <div class="post-body">
-
-      <div class="likes">
-        128 likes
+      <div class="new-banner">
+        ✨ New posts from Aashi
       </div>
 
-      <div class="caption">
 
-        <b>Aashi</b>
+      <div class="section-head">
 
-        A little moment from my day. 💙
+        <h2>
+          Aashi's Feed
+        </h2>
+
+        <span>
+          Latest
+        </span>
 
       </div>
 
-      <button
-        class="comments-link"
-        onclick="toast('Comments will be connected soon')"
-      >
 
-        View 12 comments
+      <!-- PUBLIC POST -->
 
-      </button>
+      <article class="post">
 
-    </div>
+        <div class="post-head">
 
-  </article>
-
-
-  <!-- SUBSCRIBER POST -->
-
-  <article class="post">
-
-    <div class="post-head">
-
-      <img
-        class="avatar"
-        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=160&q=80"
-        alt="Aashi"
-      >
-
-      <div>
-
-        <strong>
-          Aashi
-        </strong>
-
-        <small>
-          Yesterday · Subscribers
-        </small>
-
-      </div>
-
-      <div class="more">
-        •••
-      </div>
-
-    </div>
-
-
-    <div class="post-image-wrap locked">
-
-      <img
-        class="post-image"
-        src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=85"
-        alt="Subscriber post"
-      >
-
-
-      <div class="lock-overlay">
-
-        <div class="lock-card">
-
-          <div class="lock-icon">
-            🔒
+          <div class="post-avatar">
+            A
           </div>
 
-          <h3>
-            Subscribers Only
-          </h3>
+          <div>
+
+            <strong>
+              Aashi
+            </strong>
+
+            <small>
+              Today · Public
+            </small>
+
+          </div>
+
+          <div class="more">
+            •••
+          </div>
+
+        </div>
+
+
+        <div class="post-image-wrap">
+
+          <img
+            class="post-image"
+            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1000&q=85"
+            alt="Aashi post"
+          >
+
+        </div>
+
+
+        <div class="post-actions">
+
+          <button
+            class="action"
+            onclick="like(this)"
+            aria-label="Like"
+          >
+            ♡
+          </button>
+
+          <button
+            class="action"
+            onclick="toast('Comments will be connected soon')"
+            aria-label="Comment"
+          >
+            💬
+          </button>
+
+          <button
+            class="action"
+            onclick="toast('Share will be connected soon')"
+            aria-label="Share"
+          >
+            ↗
+          </button>
+
+        </div>
+
+
+        <div class="post-body">
+
+          <div class="likes">
+            128 likes
+          </div>
+
+          <div class="caption">
+
+            <b>Aashi</b>
+
+            A little moment from my day. 💙
+
+          </div>
+
+          <button
+            class="comments-link"
+            onclick="toast('Comments will be connected soon')"
+          >
+            View 12 comments
+          </button>
+
+        </div>
+
+      </article>
+
+
+      <!-- SUBSCRIBER POST -->
+
+      <article class="post">
+
+        <div class="post-head">
+
+          <div class="post-avatar">
+            A
+          </div>
+
+          <div>
+
+            <strong>
+              Aashi
+            </strong>
+
+            <small>
+              Yesterday · Subscribers
+            </small>
+
+          </div>
+
+          <div class="more">
+            •••
+          </div>
+
+        </div>
+
+
+        <div class="post-image-wrap locked">
+
+          <img
+            class="post-image"
+            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=85"
+            alt="Subscriber post"
+          >
+
+
+          <div class="lock-overlay">
+
+            <div class="lock-card">
+
+              <div class="lock-icon">
+                🔒
+              </div>
+
+              <h3>
+                Subscribers Only
+              </h3>
+
+              <p>
+                This post is available to Aashi's subscribers.
+              </p>
+
+              <button
+                class="primary"
+                onclick="openPlans()"
+              >
+                View subscription
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="post-body"
+          style="padding-top:12px"
+        >
+
+          <div class="caption">
+
+            <b>Aashi</b>
+
+            Something special for subscribers. 💙
+
+          </div>
+
+        </div>
+
+      </article>
+
+    </section>
+
+
+    <!-- CHAT -->
+
+    <section
+      id="chat"
+      class="screen"
+    >
+
+      <div class="chat-card">
+
+        <div class="chat-hero">
+
+          <div class="ai-avatar">
+            A
+          </div>
+
+          <h2>
+            Chat with Aashi
+          </h2>
+
+          <span class="ai-label">
+            AI-POWERED
+          </span>
 
           <p>
-            This post is available to Aashi's subscribers.
+            Responses are generated by AI.
+            Your free account includes 30 active minutes every day.
+          </p>
+
+        </div>
+
+
+        <div class="free-status">
+
+          <div class="free-status-top">
+
+            <span>
+              Today's free chat
+            </span>
+
+            <span
+              id="freeTimer"
+              class="timer"
+            >
+              30:00
+            </span>
+
+          </div>
+
+
+          <div class="progress">
+
+            <div
+              id="freeProgress"
+              class="progress-bar"
+            ></div>
+
+          </div>
+
+
+          <div
+            id="freeStatusNote"
+            class="status-note"
+          >
+            You have 30 minutes of free AI chat available today.
+          </div>
+
+        </div>
+
+
+        <button
+          id="startChatButton"
+          class="primary full"
+          style="margin-top:15px"
+          onclick="startFreeChat()"
+        >
+          Start free chat
+        </button>
+
+
+        <button
+          class="secondary full"
+          style="margin-top:9px"
+          onclick="openPlans()"
+        >
+          View paid plans
+        </button>
+
+      </div>
+
+
+      <div class="chat-preview">
+
+        <div class="bubble aashi">
+
+          Hey! 💙 I'm Aashi.
+          I'd love to get to know you better.
+
+        </div>
+
+
+        <div class="bubble you">
+
+          I'd love that.
+
+        </div>
+
+
+        <div class="typing">
+
+          Your private AI conversation will appear here.
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- PROFILE -->
+
+    <section
+      id="profile"
+      class="screen"
+    >
+
+      <div class="profile-card">
+
+        <div class="profile-top">
+
+          <div
+            id="profileAvatar"
+            class="profile-avatar"
+          >
+            U
+          </div>
+
+          <div>
+
+            <h2 id="profileName">
+              Your Profile
+            </h2>
+
+            <p id="profileUsername">
+              Free member
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="plan-card">
+
+          <h3>
+            Unlock Aashi
+          </h3>
+
+          <div class="price">
+            From ₹180/week
+          </div>
+
+          <p>
+            Chat with Aashi's AI companion.
+            Responses are generated by AI, available 24/7.
           </p>
 
           <button
             class="primary"
             onclick="openPlans()"
           >
-            View subscription
+            View plans
           </button>
+
+        </div>
+
+
+        <div style="margin-top:15px">
+
+          <!-- DARK MODE -->
+
+          <div class="setting">
+
+            <span>
+              Dark mode
+            </span>
+
+            <button
+              id="themeToggle"
+              class="toggle"
+              onclick="toggleTheme()"
+            >
+
+              <i></i>
+
+            </button>
+
+          </div>
+
+
+          <!-- ACCOUNT -->
+
+          <div class="setting">
+
+            <span>
+              Account
+            </span>
+
+            <span
+              id="profileEmail"
+              style="color:var(--muted);font-size:12px"
+            >
+              —
+            </span>
+
+          </div>
+
+
+          <!-- SIGN OUT -->
+
+          <div class="setting">
+
+            <span>
+              Sign out
+            </span>
+
+            <button
+              class="text-btn danger"
+              onclick="logoutUser()"
+            >
+              Log out
+            </button>
+
+          </div>
+
+
+          <!-- ABOUT -->
+
+          <div class="setting">
+
+            <span>
+              About Aashi
+            </span>
+
+            <span style="color:var(--muted)">
+              ›
+            </span>
+
+          </div>
 
         </div>
 
       </div>
 
-    </div>
+    </section>
 
 
-    <div
-      class="post-body"
-      style="padding-top:12px"
-    >
-
-      <div class="caption">
-
-        <b>Aashi</b>
-
-        Something special for subscribers. 💙
-
-      </div>
-
-    </div>
-
-  </article>
-
-</section>
+  </main>
 
 
-<!-- CHAT -->
+  <!-- BOTTOM NAVIGATION -->
 
-<section
-  id="chat"
-  class="screen"
->
+  <nav class="bottom">
 
-  <div class="chat-header">
-
-    <img
-      class="avatar"
-      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80"
-      alt="Aashi"
-    >
-
-    <h2>
-      Chat with Aashi
-    </h2>
-
-    <p>
-      Private AI conversations, available 24/7.
-    </p>
-
-    <button
-      class="primary"
-      style="margin-top:15px"
-      onclick="openPlans()"
-    >
-      Unlock private chat
-    </button>
-
-  </div>
-
-
-  <div class="chat-preview">
-
-    <div class="bubble aashi">
-
-      Hey! 💙 I'm Aashi.
-      I'd love to get to know you better.
-
-    </div>
-
-    <div class="bubble you">
-
-      I'd love that.
-
-    </div>
-
-    <div class="typing">
-
-      Aashi will reply here when chat is unlocked…
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- PROFILE -->
-
-<section
-  id="profile"
-  class="screen"
->
-
-  <div class="profile-card">
-
-    <div class="profile-top">
-
-      <img
-        class="avatar"
-        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80"
-        alt="Aashi"
-      >
-
-      <div>
-
-        <h2>
-          Your Profile
-        </h2>
-
-        <p>
-          Free member
-        </p>
-
-      </div>
-
-    </div>
-
-
-    <div class="plan-card">
-
-      <h3>
-        Unlock Aashi
-      </h3>
-
-      <div class="price">
-        From ₹180/week
-      </div>
-
-      <p>
-        Private AI chat, personalized conversations and subscriber-only posts.
-      </p>
+    <div class="bottom-inner">
 
       <button
-        class="primary"
-        onclick="openPlans()"
+        class="nav active"
+        onclick="show('home',this)"
       >
-        View plans
+
+        <span class="ni">
+          ⌂
+        </span>
+
+        Home
+
+      </button>
+
+
+      <button
+        class="nav"
+        onclick="show('chat',this)"
+      >
+
+        <span class="ni">
+          ♡
+        </span>
+
+        Chat
+
+      </button>
+
+
+      <button
+        class="nav"
+        onclick="show('profile',this)"
+      >
+
+        <span class="ni">
+          ◯
+        </span>
+
+        Profile
+
       </button>
 
     </div>
 
-
-    <div style="margin-top:15px">
-
-      <!-- DARK MODE -->
-
-      <div class="setting">
-
-        <span>
-          Dark mode
-        </span>
-
-        <button
-          id="themeToggle"
-          class="toggle"
-          onclick="toggleTheme()"
-        >
-
-          <i></i>
-
-        </button>
-
-      </div>
-
-
-      <!-- NOTIFICATIONS -->
-
-      <div class="setting">
-
-        <span>
-          Notifications
-        </span>
-
-        <button
-          class="toggle on"
-          onclick="toast('Notifications setting will be connected soon')"
-        >
-
-          <i></i>
-
-        </button>
-
-      </div>
-
-
-      <!-- ACCOUNT -->
-
-      <div class="setting">
-
-        <span>
-          Account
-        </span>
-
-        <button
-          class="secondary"
-          style="padding:8px 12px"
-          onclick="logout()"
-        >
-          Log out
-        </button>
-
-      </div>
-
-
-      <!-- ABOUT -->
-
-      <div class="setting">
-
-        <span>
-          About Aashi
-        </span>
-
-        <span style="color:var(--muted)">
-          ›
-        </span>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-</main>
-
-
-<!-- BOTTOM NAVIGATION -->
-
-<nav class="bottom">
-
-  <div class="bottom-inner">
-
-    <button
-      class="nav active"
-      onclick="show('home',this)"
-    >
-
-      <span class="ni">
-        ⌂
-      </span>
-
-      Home
-
-    </button>
-
-
-    <button
-      class="nav"
-      onclick="show('chat',this)"
-    >
-
-      <span class="ni">
-        ♡
-      </span>
-
-      Chat
-
-    </button>
-
-
-    <button
-      class="nav"
-      onclick="show('profile',this)"
-    >
-
-      <span class="ni">
-        ◯
-      </span>
-
-      Profile
-
-    </button>
-
-  </div>
-
-</nav>
-
+  </nav>
 
 </div>
 
@@ -1457,17 +1946,15 @@ main{
     <p
       style="color:var(--muted);font-size:13px;margin-bottom:15px"
     >
-
       Subscriptions are not available yet.
       We're getting everything ready.
-
     </p>
 
 
     <div class="plans">
 
 
-      <!-- AI CHAT PLAN -->
+      <!-- AI CHAT -->
 
       <div class="plan featured">
 
@@ -1483,44 +1970,48 @@ main{
 
         </div>
 
+
         <div class="price">
           ₹180/week
         </div>
 
+
         <ul class="features">
 
           <li>
-            Private AI chat with Aashi
+            Chat with Aashi's AI companion
           </li>
 
           <li>
-            Personalized conversations
+            Unlimited text chat
           </li>
 
           <li>
-            Subscriber-only posts
+            AI-generated personalized images
           </li>
 
           <li>
-            24/7 availability
+            Maximum 10 AI images per rolling 24 hours
+          </li>
+
+          <li>
+            User image uploads are not available on this plan
           </li>
 
         </ul>
 
+
         <button
-          class="primary"
-          style="width:100%"
+          class="primary full"
           onclick="soon()"
         >
-
           Subscription will start soon
-
         </button>
 
       </div>
 
 
-      <!-- REAL PERSON PLAN -->
+      <!-- REAL PERSON -->
 
       <div class="plan">
 
@@ -1532,41 +2023,42 @@ main{
 
         </div>
 
+
         <div class="price">
           ₹1,000/week
         </div>
 
+
         <ul class="features">
 
           <li>
-            Text chat with the real creator
+            Chat personally with the real person behind Aashi
           </li>
 
           <li>
-            Personal replies
+            Replies are written by a real person
           </li>
 
           <li>
-            Personalized images sent manually
+            Unlimited text and image sharing
           </li>
 
           <li>
-            Limited availability
+            Images can be sent by both sides
           </li>
 
         </ul>
 
+
         <button
-          class="secondary"
-          style="width:100%"
+          class="secondary full"
           onclick="soon()"
         >
-
           Subscription will start soon
-
         </button>
 
       </div>
+
 
     </div>
 
@@ -1583,472 +2075,19 @@ main{
 ></div>
 
 
-<script>
-
-/* NAVIGATION */
-
-function show(id,el){
-
-  document
-    .querySelectorAll('.screen')
-    .forEach(
-      s => s.classList.remove('active')
-    );
-
-  document
-    .getElementById(id)
-    .classList.add('active');
-
-  document
-    .querySelectorAll('.nav')
-    .forEach(
-      n => n.classList.remove('active')
-    );
-
-  el.classList.add('active');
-
-  window.scrollTo(0,0);
-
-}
-
-
-/* OPEN PLANS */
-
-function openPlans(){
-
-  document
-    .getElementById('plans')
-    .classList.add('show');
-
-}
-
-
-/* CLOSE PLANS */
-
-function closePlans(){
-
-  document
-    .getElementById('plans')
-    .classList.remove('show');
-
-}
-
-
-/* SUBSCRIPTION DISABLED */
-
-function soon(){
-
-  toast(
-    'Subscription will start soon'
-  );
-
-}
-
-
-/* TOAST */
-
-function toast(msg){
-
-  const t =
-    document.getElementById('toast');
-
-  t.textContent = msg;
-
-  t.classList.add('show');
-
-  setTimeout(
-    () => t.classList.remove('show'),
-    2200
-  );
-
-}
-
-
-/* LIKE */
-
-function like(btn){
-
-  btn.classList.toggle('liked');
-
-  btn.textContent =
-    btn.classList.contains('liked')
-      ? '♥'
-      : '♡';
-
-}
-
-
-/* DARK MODE */
-
-function toggleTheme(){
-
-  const dark =
-    document.documentElement
-      .getAttribute('data-theme')
-      === 'dark';
-
-  if(dark){
-
-    document.documentElement
-      .removeAttribute('data-theme');
-
-    localStorage.setItem(
-      'aashi-theme',
-      'light'
-    );
-
-  }
-
-  else{
-
-    document.documentElement
-      .setAttribute(
-        'data-theme',
-        'dark'
-      );
-
-    localStorage.setItem(
-      'aashi-theme',
-      'dark'
-    );
-
-  }
-
-  document
-    .getElementById('themeToggle')
-    .classList
-    .toggle(
-      'on',
-      !dark
-    );
-
-}
-
-
-/* LOAD SAVED THEME */
-
-if(
-  localStorage.getItem('aashi-theme')
-  === 'dark'
-){
-
-  document.documentElement
-    .setAttribute(
-      'data-theme',
-      'dark'
-    );
-
-  document
-    .getElementById('themeToggle')
-    .classList
-    .add('on');
-
-}
-
-
-/* =========================
-   SUPABASE AUTH
-   ========================= */
-
-let authMode = 'login';
-
-
-function setAuthMode(mode){
-
-  authMode = mode;
-
-  document
-    .getElementById('loginTab')
-    .classList
-    .toggle(
-      'active',
-      mode === 'login'
-    );
-
-  document
-    .getElementById('signupTab')
-    .classList
-    .toggle(
-      'active',
-      mode === 'signup'
-    );
-
-  document
-    .getElementById('nameField')
-    .style
-    .display =
-      mode === 'signup'
-        ? 'block'
-        : 'none';
-
-  document
-    .getElementById('authSubmit')
-    .textContent =
-      mode === 'signup'
-        ? 'Create account'
-        : 'Log in';
-
-  document
-    .getElementById('authMessage')
-    .textContent = '';
-
-}
-
-
-function showAuthMessage(message){
-
-  document
-    .getElementById('authMessage')
-    .textContent = message;
-
-}
-
-
-async function submitAuth(event){
-
-  event.preventDefault();
-
-  const email =
-    document
-      .getElementById('authEmail')
-      .value
-      .trim();
-
-  const password =
-    document
-      .getElementById('authPassword')
-      .value;
-
-  const name =
-    document
-      .getElementById('authName')
-      .value
-      .trim();
-
-  const button =
-    document
-      .getElementById('authSubmit');
-
-  button.disabled = true;
-
-  showAuthMessage(
-    authMode === 'signup'
-      ? 'Creating your account…'
-      : 'Logging you in…'
-  );
-
-
-  try{
-
-    if(authMode === 'signup'){
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .auth
-          .signUp({
-
-            email,
-
-            password,
-
-            options:{
-              data:{
-                display_name:name
-              }
-            }
-
-          });
-
-
-      if(error)
-        throw error;
-
-
-      if(data.session){
-
-        showApp();
-
-        toast(
-          'Welcome to Aashi'
-        );
-
-      }
-
-      else{
-
-        showAuthMessage(
-          'Account created. Check your email to confirm your account, then log in.'
-        );
-
-      }
-
-    }
-
-    else{
-
-      const {
-        error
-      } =
-        await supabaseClient
-          .auth
-          .signInWithPassword({
-
-            email,
-
-            password
-
-          });
-
-
-      if(error)
-        throw error;
-
-
-      showApp();
-
-      toast(
-        'Welcome back'
-      );
-
-    }
-
-  }
-
-  catch(error){
-
-    showAuthMessage(
-      error.message ||
-      'Something went wrong. Please try again.'
-    );
-
-  }
-
-  finally{
-
-    button.disabled = false;
-
-  }
-
-}
-
-
-function showApp(){
-
-  document
-    .getElementById('authScreen')
-    .style
-    .display = 'none';
-
-}
-
-
-function showAuth(){
-
-  document
-    .getElementById('authScreen')
-    .style
-    .display = 'flex';
-
-}
-
-
-async function logout(){
-
-  const {
-    error
-  } =
-    await supabaseClient
-      .auth
-      .signOut();
-
-
-  if(error){
-
-    toast(
-      error.message ||
-      'Could not log out'
-    );
-
-    return;
-
-  }
-
-
-  showAuth();
-
-  setAuthMode('login');
-
-  document
-    .getElementById('authForm')
-    .reset();
-
-  toast(
-    'Logged out'
-  );
-
-}
-
-
-async function initAuth(){
-
-  const {
-    data
-  } =
-    await supabaseClient
-      .auth
-      .getSession();
-
-
-  if(data.session){
-
-    showApp();
-
-  }
-
-  else{
-
-    showAuth();
-
-  }
-
-
-  supabaseClient
-    .auth
-    .onAuthStateChange(
-      (event, session) => {
-
-        if(session){
-
-          showApp();
-
-        }
-
-        else{
-
-          showAuth();
-
-        }
-
-      }
-    );
-
-}
-
-</script>
-
-
 <!-- SUPABASE -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+
 <script>
+
+/* =========================================================
+   SUPABASE CONNECTION
+   ========================================================= */
 
 const SUPABASE_URL =
   "https://saauonuvjikpepwmknxf.supabase.co";
-
 
 const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_FeLoF94jwdOXWLXDAFE7gg_i_hpT2Vk";
@@ -2061,12 +2100,1260 @@ const supabaseClient =
   );
 
 
-console.log(
-  "Aashi Supabase connected"
+/* =========================================================
+   GLOBAL STATE
+   ========================================================= */
+
+let currentUser = null;
+
+let freeChatTimer = null;
+
+let freeSecondsRemaining = 1800;
+
+let freeChatRunning = false;
+
+
+/* =========================================================
+   BASIC UI
+   ========================================================= */
+
+function hideLoading(){
+
+  document
+    .getElementById("loading")
+    .classList
+    .add("hidden");
+
+}
+
+
+function showAuth(){
+
+  document
+    .getElementById("authScreen")
+    .classList
+    .remove("hidden");
+
+  document
+    .getElementById("completionScreen")
+    .classList
+    .add("hidden");
+
+  document
+    .getElementById("appScreen")
+    .classList
+    .add("hidden");
+
+}
+
+
+function showCompletion(){
+
+  document
+    .getElementById("authScreen")
+    .classList
+    .add("hidden");
+
+  document
+    .getElementById("completionScreen")
+    .classList
+    .remove("hidden");
+
+  document
+    .getElementById("appScreen")
+    .classList
+    .add("hidden");
+
+}
+
+
+function showApp(){
+
+  document
+    .getElementById("authScreen")
+    .classList
+    .add("hidden");
+
+  document
+    .getElementById("completionScreen")
+    .classList
+    .add("hidden");
+
+  document
+    .getElementById("appScreen")
+    .classList
+    .remove("hidden");
+
+}
+
+
+/* =========================================================
+   AUTH TABS
+   ========================================================= */
+
+function showAuthMode(mode){
+
+  const loginForm =
+    document.getElementById("loginForm");
+
+  const signupForm =
+    document.getElementById("signupForm");
+
+  const loginTab =
+    document.getElementById("loginTab");
+
+  const signupTab =
+    document.getElementById("signupTab");
+
+
+  if(mode === "signup"){
+
+    loginForm.classList.add("hidden");
+    signupForm.classList.remove("hidden");
+
+    loginTab.classList.remove("active");
+    signupTab.classList.add("active");
+
+  }
+
+  else{
+
+    signupForm.classList.add("hidden");
+    loginForm.classList.remove("hidden");
+
+    signupTab.classList.remove("active");
+    loginTab.classList.add("active");
+
+  }
+
+}
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+function toast(message){
+
+  const element =
+    document.getElementById("toast");
+
+  element.textContent = message;
+
+  element.classList.add("show");
+
+  setTimeout(
+    () => element.classList.remove("show"),
+    2600
+  );
+
+}
+
+
+/* =========================================================
+   LOGIN
+   ========================================================= */
+
+async function loginUser(event){
+
+  event.preventDefault();
+
+
+  const email =
+    document
+      .getElementById("loginEmail")
+      .value
+      .trim();
+
+  const password =
+    document
+      .getElementById("loginPassword")
+      .value;
+
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
+
+
+    if(error)
+      throw error;
+
+
+    currentUser = data.user;
+
+
+    await loadUser();
+
+
+  }
+
+  catch(error){
+
+    console.error(error);
+
+    toast(
+      error.message ||
+      "Unable to log in."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   SIGN UP
+   ========================================================= */
+
+async function signupUser(event){
+
+  event.preventDefault();
+
+
+  const fullName =
+    document
+      .getElementById("signupName")
+      .value
+      .trim();
+
+  const username =
+    document
+      .getElementById("signupUsername")
+      .value
+      .trim()
+      .toLowerCase();
+
+  const dob =
+    document
+      .getElementById("signupDob")
+      .value;
+
+  const email =
+    document
+      .getElementById("signupEmail")
+      .value
+      .trim();
+
+  const password =
+    document
+      .getElementById("signupPassword")
+      .value;
+
+
+  if(!fullName){
+
+    toast("Please enter your full name.");
+
+    return;
+
+  }
+
+
+  if(!/^[A-Za-z0-9_.]{3,30}$/.test(username)){
+
+    toast(
+      "Username must be 3–30 characters and use only letters, numbers, _ or ."
+    );
+
+    return;
+
+  }
+
+
+  if(!dob){
+
+    toast("Please enter your date of birth.");
+
+    return;
+
+  }
+
+
+  if(!is18Plus(dob)){
+
+    toast(
+      "You must be 18 or older to use Aashi."
+    );
+
+    return;
+
+  }
+
+
+  if(password.length < 8){
+
+    toast(
+      "Password must be at least 8 characters."
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    /* CHECK USERNAME */
+
+    const {
+      data: existing,
+      error: usernameError
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select("id")
+        .ilike("username", username)
+        .limit(1);
+
+
+    if(usernameError)
+      throw usernameError;
+
+
+    if(existing && existing.length > 0){
+
+      toast(
+        "That username is already taken."
+      );
+
+      return;
+
+    }
+
+
+    /* CREATE AUTH USER */
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.auth.signUp({
+
+        email,
+
+        password,
+
+        options:{
+          data:{
+            full_name:fullName,
+            username:username,
+            date_of_birth:dob
+          }
+        }
+
+      });
+
+
+    if(error)
+      throw error;
+
+
+    if(data.session){
+
+      currentUser = data.user;
+
+      await loadUser();
+
+    }
+
+    else{
+
+      toast(
+        "Account created. Please check your email and confirm your account."
+      );
+
+      showAuthMode("login");
+
+    }
+
+  }
+
+  catch(error){
+
+    console.error(error);
+
+    toast(
+      error.message ||
+      "Unable to create your account."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   AGE CHECK
+   ========================================================= */
+
+function is18Plus(dateString){
+
+  const birth =
+    new Date(
+      dateString + "T00:00:00"
+    );
+
+  const today =
+    new Date();
+
+
+  let age =
+    today.getFullYear() -
+    birth.getFullYear();
+
+
+  const month =
+    today.getMonth() -
+    birth.getMonth();
+
+
+  if(
+    month < 0 ||
+    (
+      month === 0 &&
+      today.getDate() < birth.getDate()
+    )
+  ){
+
+    age--;
+
+  }
+
+
+  return age >= 18;
+
+}
+
+
+/* =========================================================
+   LOAD CURRENT USER
+   ========================================================= */
+
+async function loadUser(){
+
+  if(!currentUser){
+
+    showAuth();
+
+    return;
+
+  }
+
+
+  try{
+
+    const {
+      data:profile,
+      error
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select("*")
+        .eq("id",currentUser.id)
+        .single();
+
+
+    if(error)
+      throw error;
+
+
+    if(
+      profile.account_status &&
+      profile.account_status !== "active"
+    ){
+
+      toast(
+        "This account is currently unavailable."
+      );
+
+      await supabaseClient.auth.signOut();
+
+      showAuth();
+
+      return;
+
+    }
+
+
+    if(!profile.profile_completed){
+
+      document
+        .getElementById("completeName")
+        .value =
+        profile.full_name ||
+        currentUser.user_metadata?.full_name ||
+        "";
+
+      document
+        .getElementById("completeUsername")
+        .value =
+        profile.username ||
+        currentUser.user_metadata?.username ||
+        "";
+
+      document
+        .getElementById("completeDob")
+        .value =
+        profile.date_of_birth ||
+        currentUser.user_metadata?.date_of_birth ||
+        "";
+
+      showCompletion();
+
+      return;
+
+    }
+
+
+    fillProfile(profile);
+
+    showApp();
+
+    await loadFreeChatStatus();
+
+  }
+
+  catch(error){
+
+    console.error(error);
+
+    toast(
+      "Could not load your profile."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   COMPLETE PROFILE
+   ========================================================= */
+
+async function completeProfile(){
+
+  if(!currentUser){
+
+    showAuth();
+
+    return;
+
+  }
+
+
+  const fullName =
+    document
+      .getElementById("completeName")
+      .value
+      .trim();
+
+  const username =
+    document
+      .getElementById("completeUsername")
+      .value
+      .trim()
+      .toLowerCase();
+
+  const dob =
+    document
+      .getElementById("completeDob")
+      .value;
+
+
+  if(!fullName){
+
+    toast("Please enter your full name.");
+
+    return;
+
+  }
+
+
+  if(!/^[A-Za-z0-9_.]{3,30}$/.test(username)){
+
+    toast(
+      "Username must be 3–30 characters and use only letters, numbers, _ or ."
+    );
+
+    return;
+
+  }
+
+
+  if(!dob || !is18Plus(dob)){
+
+    toast(
+      "You must be 18 or older."
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    const {
+      data:existing,
+      error:usernameError
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select("id")
+        .ilike("username",username)
+        .neq("id",currentUser.id)
+        .limit(1);
+
+
+    if(usernameError)
+      throw usernameError;
+
+
+    if(existing && existing.length > 0){
+
+      toast(
+        "That username is already taken."
+      );
+
+      return;
+
+    }
+
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .from("profiles")
+        .update({
+
+          full_name:fullName,
+
+          username:username,
+
+          date_of_birth:dob,
+
+          profile_completed:true
+
+        })
+        .eq("id",currentUser.id);
+
+
+    if(error)
+      throw error;
+
+
+    toast(
+      "Profile completed."
+    );
+
+
+    await loadUser();
+
+  }
+
+  catch(error){
+
+    console.error(error);
+
+    toast(
+      error.message ||
+      "Unable to complete your profile."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   PROFILE UI
+   ========================================================= */
+
+function fillProfile(profile){
+
+  const name =
+    profile.full_name ||
+    profile.username ||
+    "User";
+
+
+  const username =
+    profile.username ?
+    "@" + profile.username :
+    "Free member";
+
+
+  document
+    .getElementById("profileName")
+    .textContent = name;
+
+
+  document
+    .getElementById("profileUsername")
+    .textContent = username;
+
+
+  document
+    .getElementById("profileEmail")
+    .textContent =
+    currentUser?.email ||
+    "—";
+
+
+  document
+    .getElementById("profileAvatar")
+    .textContent =
+    name.charAt(0).toUpperCase();
+
+}
+
+
+/* =========================================================
+   FREE CHAT STATUS
+   ========================================================= */
+
+async function loadFreeChatStatus(){
+
+  if(!currentUser)
+    return;
+
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .rpc("get_free_chat_status");
+
+
+    if(error)
+      throw error;
+
+
+    if(data){
+
+      const status =
+        Array.isArray(data)
+        ? data[0]
+        : data;
+
+
+      if(status){
+
+        freeSecondsRemaining =
+          Number(
+            status.remaining_seconds ?? 1800
+          );
+
+
+        updateFreeChatUI(
+          status
+        );
+
+      }
+
+    }
+
+  }
+
+  catch(error){
+
+    console.error(
+      "Free chat status error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   FREE CHAT UI
+   ========================================================= */
+
+function updateFreeChatUI(status){
+
+  const remaining =
+    Math.max(
+      0,
+      Number(
+        status.remaining_seconds ??
+        freeSecondsRemaining
+      )
+    );
+
+
+  freeSecondsRemaining =
+    remaining;
+
+
+  const timer =
+    document
+      .getElementById("freeTimer");
+
+
+  const progress =
+    document
+      .getElementById("freeProgress");
+
+
+  const note =
+    document
+      .getElementById("freeStatusNote");
+
+
+  const button =
+    document
+      .getElementById("startChatButton");
+
+
+  timer.textContent =
+    formatSeconds(remaining);
+
+
+  const percentage =
+    Math.max(
+      0,
+      Math.min(
+        100,
+        (remaining / 1800) * 100
+      )
+    );
+
+
+  progress.style.width =
+    percentage + "%";
+
+
+  if(status.locked){
+
+    button.disabled = true;
+
+    button.style.opacity = ".6";
+
+    button.textContent =
+      "Free chat locked";
+
+
+    note.textContent =
+      "Your 30 free minutes have been used. Free chat will unlock again after the lock period.";
+
+    return;
+
+  }
+
+
+  if(remaining <= 0){
+
+    button.disabled = true;
+
+    button.style.opacity = ".6";
+
+    button.textContent =
+      "Free chat unavailable";
+
+
+    note.textContent =
+      "Your free chat time has been used.";
+
+    return;
+
+  }
+
+
+  button.disabled = false;
+
+  button.style.opacity = "1";
+
+  button.textContent =
+    "Start free chat";
+
+
+  note.textContent =
+    "You have " +
+    formatSeconds(remaining) +
+    " of free AI chat remaining.";
+
+}
+
+
+/* =========================================================
+   START FREE CHAT
+   ========================================================= */
+
+async function startFreeChat(){
+
+  if(!currentUser){
+
+    showAuth();
+
+    return;
+
+  }
+
+
+  if(freeSecondsRemaining <= 0){
+
+    toast(
+      "Your free chat time has been used."
+    );
+
+    return;
+
+  }
+
+
+  toast(
+    "Free AI chat is ready. The full chat interface will be connected next."
+  );
+
+}
+
+
+/* =========================================================
+   FORMAT TIME
+   ========================================================= */
+
+function formatSeconds(seconds){
+
+  seconds =
+    Math.max(
+      0,
+      Math.floor(seconds)
+    );
+
+
+  const minutes =
+    Math.floor(seconds / 60);
+
+  const secs =
+    seconds % 60;
+
+
+  return (
+    String(minutes).padStart(2,"0") +
+    ":" +
+    String(secs).padStart(2,"0")
+  );
+
+}
+
+
+/* =========================================================
+   SUBSCRIPTION
+   ========================================================= */
+
+function openPlans(){
+
+  document
+    .getElementById("plans")
+    .classList
+    .add("show");
+
+}
+
+
+function closePlans(){
+
+  document
+    .getElementById("plans")
+    .classList
+    .remove("show");
+
+}
+
+
+function soon(){
+
+  toast(
+    "Subscription will start soon"
+  );
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+function show(id,el){
+
+  document
+    .querySelectorAll(".screen")
+    .forEach(
+      screen =>
+        screen.classList.remove("active")
+    );
+
+
+  const target =
+    document.getElementById(id);
+
+
+  if(target)
+    target.classList.add("active");
+
+
+  document
+    .querySelectorAll(".nav")
+    .forEach(
+      nav =>
+        nav.classList.remove("active")
+    );
+
+
+  if(el)
+    el.classList.add("active");
+
+
+  window.scrollTo(
+    0,
+    0
+  );
+
+}
+
+
+/* =========================================================
+   LIKE
+   ========================================================= */
+
+function like(button){
+
+  button.classList.toggle("liked");
+
+
+  button.textContent =
+    button.classList.contains("liked")
+      ? "♥"
+      : "♡";
+
+}
+
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+function toggleTheme(){
+
+  const dark =
+    document.documentElement
+      .getAttribute("data-theme")
+      === "dark";
+
+
+  if(dark){
+
+    document.documentElement
+      .removeAttribute("data-theme");
+
+
+    localStorage.setItem(
+      "aashi-theme",
+      "light"
+    );
+
+  }
+
+  else{
+
+    document.documentElement
+      .setAttribute(
+        "data-theme",
+        "dark"
+      );
+
+
+    localStorage.setItem(
+      "aashi-theme",
+      "dark"
+    );
+
+  }
+
+
+  updateThemeButton();
+
+}
+
+
+function updateThemeButton(){
+
+  const dark =
+    document.documentElement
+      .getAttribute("data-theme")
+      === "dark";
+
+
+  document
+    .getElementById("themeToggle")
+    ?.classList
+    .toggle(
+      "on",
+      dark
+    );
+
+}
+
+
+function loadTheme(){
+
+  if(
+    localStorage.getItem(
+      "aashi-theme"
+    ) === "dark"
+  ){
+
+    document.documentElement
+      .setAttribute(
+        "data-theme",
+        "dark"
+      );
+
+  }
+
+
+  updateThemeButton();
+
+}
+
+
+/* =========================================================
+   LOGOUT
+   ========================================================= */
+
+async function logoutUser(){
+
+  try{
+
+    await supabaseClient.auth.signOut();
+
+    currentUser = null;
+
+    clearInterval(
+      freeChatTimer
+    );
+
+    showAuth();
+
+    showAuthMode("login");
+
+    toast(
+      "You have been logged out."
+    );
+
+  }
+
+  catch(error){
+
+    console.error(error);
+
+    toast(
+      "Unable to log out."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   AUTH STATE
+   ========================================================= */
+
+supabaseClient.auth.onAuthStateChange(
+  async (event,session) => {
+
+    if(session?.user){
+
+      currentUser =
+        session.user;
+
+    }
+
+    else{
+
+      currentUser = null;
+
+    }
+
+  }
 );
 
 
-initAuth();
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
+
+async function initialize(){
+
+  loadTheme();
+
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.auth.getSession();
+
+
+    if(error)
+      throw error;
+
+
+    if(data.session){
+
+      currentUser =
+        data.session.user;
+
+
+      await loadUser();
+
+    }
+
+    else{
+
+      showAuth();
+
+    }
+
+  }
+
+  catch(error){
+
+    console.error(error);
+
+    showAuth();
+
+  }
+
+  finally{
+
+    hideLoading();
+
+  }
+
+}
+
+
+/* START */
+
+initialize();
 
 </script>
 
