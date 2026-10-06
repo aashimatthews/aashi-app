@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
 <title>Aashi</title>
 
 <style>
+
 :root{
   --bg:#f8fafc;
   --surface:#ffffff;
@@ -59,6 +61,9 @@ button{
   background:var(--bg);
 }
 
+
+/* TOP BAR */
+
 .topbar{
   position:sticky;
   top:0;
@@ -109,6 +114,9 @@ button{
   font-size:19px;
 }
 
+
+/* MAIN */
+
 main{
   padding:16px;
 }
@@ -121,6 +129,9 @@ main{
   display:block;
 }
 
+
+/* NEW POST BANNER */
+
 .new-banner{
   background:var(--soft);
   border:1px solid #bfdbfe;
@@ -131,6 +142,9 @@ main{
   font-weight:700;
   margin-bottom:14px;
 }
+
+
+/* SECTION HEADER */
 
 .section-head{
   display:flex;
@@ -147,6 +161,9 @@ main{
   font-size:12px;
   color:var(--muted);
 }
+
+
+/* POST */
 
 .post{
   background:var(--surface);
@@ -186,6 +203,9 @@ main{
   font-size:20px;
 }
 
+
+/* POST IMAGE */
+
 .post-image-wrap{
   position:relative;
   background:var(--surface2);
@@ -198,8 +218,12 @@ main{
   object-fit:cover;
 }
 
+
+/* POST ACTIONS */
+
 .post-actions{
   display:flex;
+  align-items:center;
   gap:18px;
   padding:12px 14px 5px;
 }
@@ -207,12 +231,17 @@ main{
 .action{
   background:none;
   color:var(--text);
-  font-size:20px;
+  font-size:21px;
+  line-height:1;
+  padding:2px;
 }
 
 .action.liked{
   color:var(--danger);
 }
+
+
+/* POST BODY */
 
 .post-body{
   padding:0 14px 15px;
@@ -239,6 +268,9 @@ main{
   margin-top:8px;
   background:none;
 }
+
+
+/* LOCKED POST */
 
 .locked{
   position:relative;
@@ -292,6 +324,9 @@ main{
   margin-bottom:14px;
 }
 
+
+/* BUTTONS */
+
 .primary{
   background:var(--blue);
   color:white;
@@ -311,6 +346,9 @@ main{
   border-radius:11px;
   font-weight:700;
 }
+
+
+/* CHAT */
 
 .chat-header{
   background:var(--surface);
@@ -372,6 +410,9 @@ main{
   margin:4px 2px 0;
 }
 
+
+/* PROFILE */
+
 .profile-card{
   background:var(--surface);
   border:1px solid var(--border);
@@ -426,6 +467,9 @@ main{
   margin-bottom:13px;
 }
 
+
+/* SETTINGS */
+
 .setting{
   display:flex;
   align-items:center;
@@ -464,6 +508,9 @@ main{
   transform:translateX(20px);
   background:white;
 }
+
+
+/* PLANS */
 
 .plans{
   display:grid;
@@ -520,6 +567,9 @@ main{
   margin-right:7px;
 }
 
+
+/* BOTTOM NAV */
+
 .bottom{
   position:fixed;
   bottom:0;
@@ -559,6 +609,9 @@ main{
   color:var(--blue);
   font-weight:800;
 }
+
+
+/* SUBSCRIPTION MODAL */
 
 .modal{
   position:fixed;
@@ -603,6 +656,9 @@ main{
   border-radius:50%;
 }
 
+
+/* TOAST */
+
 .toast{
   position:fixed;
   left:50%;
@@ -624,12 +680,17 @@ main{
   opacity:1;
   transform:translate(-50%,0);
 }
+
 </style>
 </head>
+
 
 <body>
 
 <div class="app">
+
+
+<!-- TOP HEADER -->
 
 <header class="topbar">
 
@@ -642,11 +703,17 @@ main{
     >
 
     <div>
+
       <strong>Aashi</strong>
-      <span>AI companion</span>
+
+      <span>
+        AI companion
+      </span>
+
     </div>
 
   </div>
+
 
   <button
     class="icon-btn"
@@ -659,41 +726,71 @@ main{
 </header>
 
 
+
 <main>
+
 
 <!-- HOME -->
 
-<section id="home" class="screen active">
+<section
+  id="home"
+  class="screen active"
+>
 
   <div class="new-banner">
+
     ✨ New posts from Aashi
+
   </div>
 
+
   <div class="section-head">
-    <h2>Aashi's Feed</h2>
-    <span>Latest</span>
+
+    <h2>
+      Aashi's Feed
+    </h2>
+
+    <span>
+      Latest
+    </span>
+
   </div>
+
 
 
   <!-- PUBLIC POST -->
 
   <article class="post">
 
+
     <div class="post-head">
 
       <img
         class="avatar"
         src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=160&q=80"
+        alt="Aashi"
       >
 
+
       <div>
-        <strong>Aashi</strong>
-        <small>Today · Public</small>
+
+        <strong>
+          Aashi
+        </strong>
+
+        <small>
+          Today · Public
+        </small>
+
       </div>
 
-      <div class="more">•••</div>
+
+      <div class="more">
+        •••
+      </div>
 
     </div>
+
 
 
     <div class="post-image-wrap">
@@ -701,100 +798,153 @@ main{
       <img
         class="post-image"
         src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1000&q=85"
+        alt="Aashi post"
       >
 
     </div>
 
 
+
+    <!-- POST ACTIONS -->
+
     <div class="post-actions">
 
-      <button class="action" onclick="like(this)">
+
+      <!-- LIKE -->
+
+      <button
+        class="action"
+        onclick="like(this)"
+        aria-label="Like"
+      >
         ♡
       </button>
+
+
+      <!-- COMMENT -->
 
       <button
         class="action"
         onclick="toast('Comments will be connected soon')"
+        aria-label="Comment"
       >
-        ♡
+        💬
       </button>
+
+
+      <!-- SHARE -->
 
       <button
         class="action"
         onclick="toast('Share will be connected soon')"
+        aria-label="Share"
       >
         ↗
       </button>
 
+
     </div>
 
 
+
     <div class="post-body">
+
 
       <div class="likes">
         128 likes
       </div>
 
+
       <div class="caption">
+
         <b>Aashi</b>
+
         A little moment from my day. 💙
+
       </div>
+
 
       <button
         class="comments-link"
         onclick="toast('Comments will be connected soon')"
       >
+
         View 12 comments
+
       </button>
+
 
     </div>
 
   </article>
 
 
+
   <!-- SUBSCRIBER POST -->
 
   <article class="post">
+
 
     <div class="post-head">
 
       <img
         class="avatar"
         src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=160&q=80"
+        alt="Aashi"
       >
 
+
       <div>
-        <strong>Aashi</strong>
-        <small>Yesterday · Subscribers</small>
+
+        <strong>
+          Aashi
+        </strong>
+
+        <small>
+          Yesterday · Subscribers
+        </small>
+
       </div>
 
-      <div class="more">•••</div>
+
+      <div class="more">
+        •••
+      </div>
 
     </div>
 
 
+
     <div class="post-image-wrap locked">
+
 
       <img
         class="post-image"
         src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=85"
+        alt="Subscriber post"
       >
+
 
       <div class="lock-overlay">
 
+
         <div class="lock-card">
+
 
           <div class="lock-icon">
             🔒
           </div>
 
+
           <h3>
             Subscribers Only
           </h3>
 
+
           <p>
             This post is available to Aashi's subscribers.
           </p>
+
 
           <button
             class="primary"
@@ -803,11 +953,13 @@ main{
             View subscription
           </button>
 
+
         </div>
 
       </div>
 
     </div>
+
 
 
     <div
@@ -816,35 +968,50 @@ main{
     >
 
       <div class="caption">
+
         <b>Aashi</b>
+
         Something special for subscribers. 💙
+
       </div>
 
     </div>
 
+
   </article>
+
 
 </section>
 
 
+
 <!-- CHAT -->
 
-<section id="chat" class="screen">
+<section
+  id="chat"
+  class="screen"
+>
+
 
   <div class="chat-header">
+
 
     <img
       class="avatar"
       src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80"
+      alt="Aashi"
     >
+
 
     <h2>
       Chat with Aashi
     </h2>
 
+
     <p>
       Private AI conversations, available 24/7.
     </p>
+
 
     <button
       class="primary"
@@ -854,67 +1021,99 @@ main{
       Unlock private chat
     </button>
 
+
   </div>
+
 
 
   <div class="chat-preview">
 
+
     <div class="bubble aashi">
-      Hey! 💙 I'm Aashi. I'd love to get to know you better.
+
+      Hey! 💙 I'm Aashi.
+      I'd love to get to know you better.
+
     </div>
+
 
     <div class="bubble you">
+
       I'd love that.
+
     </div>
+
 
     <div class="typing">
+
       Aashi will reply here when chat is unlocked…
+
     </div>
 
+
   </div>
+
 
 </section>
 
 
+
 <!-- PROFILE -->
 
-<section id="profile" class="screen">
+<section
+  id="profile"
+  class="screen"
+>
+
 
   <div class="profile-card">
 
+
     <div class="profile-top">
+
 
       <img
         class="avatar"
         src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80"
+        alt="Aashi"
       >
 
+
       <div>
+
         <h2>
           Your Profile
         </h2>
 
+
         <p>
           Free member
         </p>
+
       </div>
+
 
     </div>
 
 
+
     <div class="plan-card">
+
 
       <h3>
         Unlock Aashi
       </h3>
 
+
       <div class="price">
         From ₹180/week
       </div>
 
+
       <p>
         Private AI chat, personalized conversations and subscriber-only posts.
       </p>
+
 
       <button
         class="primary"
@@ -923,10 +1122,15 @@ main{
         View plans
       </button>
 
+
     </div>
 
 
+
     <div style="margin-top:15px">
+
+
+      <!-- DARK MODE -->
 
       <div class="setting">
 
@@ -934,16 +1138,22 @@ main{
           Dark mode
         </span>
 
+
         <button
           id="themeToggle"
           class="toggle"
           onclick="toggleTheme()"
         >
+
           <i></i>
+
         </button>
 
       </div>
 
+
+
+      <!-- NOTIFICATIONS -->
 
       <div class="setting">
 
@@ -951,12 +1161,21 @@ main{
           Notifications
         </span>
 
-        <button class="toggle on">
+
+        <button
+          class="toggle on"
+          onclick="toast('Notifications setting will be connected soon')"
+        >
+
           <i></i>
+
         </button>
 
       </div>
 
+
+
+      <!-- ABOUT -->
 
       <div class="setting">
 
@@ -964,26 +1183,36 @@ main{
           About Aashi
         </span>
 
+
         <span style="color:var(--muted)">
           ›
         </span>
 
       </div>
 
+
     </div>
+
 
   </div>
 
+
 </section>
 
+
 </main>
+
 
 
 <!-- BOTTOM NAVIGATION -->
 
 <nav class="bottom">
 
+
   <div class="bottom-inner">
+
+
+    <!-- HOME -->
 
     <button
       class="nav active"
@@ -999,6 +1228,9 @@ main{
     </button>
 
 
+
+    <!-- CHAT -->
+
     <button
       class="nav"
       onclick="show('chat',this)"
@@ -1013,6 +1245,9 @@ main{
     </button>
 
 
+
+    <!-- PROFILE -->
+
     <button
       class="nav"
       onclick="show('profile',this)"
@@ -1026,11 +1261,15 @@ main{
 
     </button>
 
+
   </div>
+
 
 </nav>
 
+
 </div>
+
 
 
 <!-- SUBSCRIPTION MODAL -->
@@ -1041,13 +1280,17 @@ main{
   onclick="if(event.target===this)closePlans()"
 >
 
+
   <div class="sheet">
 
+
     <div class="sheet-head">
+
 
       <h2>
         Choose your plan
       </h2>
+
 
       <button
         class="close"
@@ -1056,28 +1299,36 @@ main{
         ×
       </button>
 
+
     </div>
+
 
 
     <p
       style="color:var(--muted);font-size:13px;margin-bottom:15px"
     >
-      Subscriptions are not available yet. We're getting everything ready.
+
+      Subscriptions are not available yet.
+      We're getting everything ready.
+
     </p>
+
 
 
     <div class="plans">
 
 
-      <!-- AI PLAN -->
+      <!-- AI CHAT PLAN -->
 
       <div class="plan featured">
+
 
         <div class="plan-title">
 
           <h3>
             AI Chat
           </h3>
+
 
           <span class="badge">
             POPULAR
@@ -1117,15 +1368,20 @@ main{
           style="width:100%"
           onclick="soon()"
         >
+
           Subscription will start soon
+
         </button>
 
+
       </div>
+
 
 
       <!-- REAL PERSON PLAN -->
 
       <div class="plan">
+
 
         <div class="plan-title">
 
@@ -1167,17 +1423,26 @@ main{
           style="width:100%"
           onclick="soon()"
         >
+
           Subscription will start soon
+
         </button>
+
 
       </div>
 
+
     </div>
+
 
   </div>
 
+
 </div>
 
+
+
+<!-- TOAST -->
 
 <div
   id="toast"
@@ -1185,28 +1450,43 @@ main{
 ></div>
 
 
+
 <script>
+
+
+/* NAVIGATION */
 
 function show(id,el){
 
   document
     .querySelectorAll('.screen')
-    .forEach(s => s.classList.remove('active'));
+    .forEach(
+      s => s.classList.remove('active')
+    );
+
 
   document
     .getElementById(id)
     .classList.add('active');
 
+
   document
     .querySelectorAll('.nav')
-    .forEach(n => n.classList.remove('active'));
+    .forEach(
+      n => n.classList.remove('active')
+    );
+
 
   el.classList.add('active');
 
-  scrollTo(0,0);
+
+  window.scrollTo(0,0);
 
 }
 
+
+
+/* OPEN PLANS */
 
 function openPlans(){
 
@@ -1217,6 +1497,9 @@ function openPlans(){
 }
 
 
+
+/* CLOSE PLANS */
+
 function closePlans(){
 
   document
@@ -1226,21 +1509,32 @@ function closePlans(){
 }
 
 
+
+/* SUBSCRIPTION DISABLED */
+
 function soon(){
 
-  toast('Subscription will start soon');
+  toast(
+    'Subscription will start soon'
+  );
 
 }
 
 
+
+/* TOAST */
+
 function toast(msg){
 
-  let t =
+  const t =
     document.getElementById('toast');
+
 
   t.textContent = msg;
 
+
   t.classList.add('show');
+
 
   setTimeout(
     () => t.classList.remove('show'),
@@ -1250,9 +1544,13 @@ function toast(msg){
 }
 
 
+
+/* LIKE */
+
 function like(btn){
 
   btn.classList.toggle('liked');
+
 
   btn.textContent =
     btn.classList.contains('liked')
@@ -1262,26 +1560,38 @@ function like(btn){
 }
 
 
+
+/* DARK MODE */
+
 function toggleTheme(){
 
-  let dark =
+  const dark =
     document.documentElement
-      .getAttribute('data-theme') === 'dark';
+      .getAttribute('data-theme')
+      === 'dark';
+
 
   if(dark){
 
     document.documentElement
       .removeAttribute('data-theme');
 
+
     localStorage.setItem(
       'aashi-theme',
       'light'
     );
 
-  }else{
+  }
+
+  else{
 
     document.documentElement
-      .setAttribute('data-theme','dark');
+      .setAttribute(
+        'data-theme',
+        'dark'
+      );
+
 
     localStorage.setItem(
       'aashi-theme',
@@ -1290,12 +1600,20 @@ function toggleTheme(){
 
   }
 
+
   document
     .getElementById('themeToggle')
-    .classList.toggle('on',!dark);
+    .classList
+    .toggle(
+      'on',
+      !dark
+    );
 
 }
 
+
+
+/* LOAD SAVED THEME */
 
 if(
   localStorage.getItem('aashi-theme')
@@ -1303,11 +1621,16 @@ if(
 ){
 
   document.documentElement
-    .setAttribute('data-theme','dark');
+    .setAttribute(
+      'data-theme',
+      'dark'
+    );
+
 
   document
     .getElementById('themeToggle')
-    .classList.add('on');
+    .classList
+    .add('on');
 
 }
 
