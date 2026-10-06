@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
 <title>Aashi</title>
 
 <style>
@@ -61,6 +60,118 @@ button{
   background:var(--bg);
 }
 
+/* AUTH */
+
+.auth-screen{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  background:var(--bg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  overflow:auto;
+}
+
+.auth-card{
+  width:min(420px,100%);
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:24px 20px;
+  box-shadow:var(--shadow);
+}
+
+.auth-brand{
+  text-align:center;
+  margin-bottom:22px;
+}
+
+.auth-brand .avatar{
+  width:72px;
+  height:72px;
+  margin-bottom:10px;
+}
+
+.auth-brand h1{
+  font-size:25px;
+}
+
+.auth-brand p{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:5px;
+}
+
+.auth-tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  background:var(--surface2);
+  padding:4px;
+  border-radius:12px;
+  margin-bottom:18px;
+}
+
+.auth-tab{
+  background:transparent;
+  color:var(--muted);
+  padding:10px;
+  border-radius:9px;
+  font-weight:700;
+}
+
+.auth-tab.active{
+  background:var(--surface);
+  color:var(--blue);
+  box-shadow:0 1px 5px rgba(15,23,42,.08);
+}
+
+.auth-field{
+  margin-bottom:12px;
+}
+
+.auth-field label{
+  display:block;
+  font-size:12px;
+  font-weight:700;
+  margin-bottom:6px;
+}
+
+.auth-field input{
+  width:100%;
+  padding:12px 13px;
+  border:1px solid var(--border);
+  border-radius:11px;
+  background:var(--surface);
+  color:var(--text);
+  outline:none;
+}
+
+.auth-field input:focus{
+  border-color:var(--blue);
+}
+
+.auth-message{
+  min-height:18px;
+  color:var(--muted);
+  font-size:12px;
+  margin:8px 0 12px;
+  line-height:1.4;
+}
+
+.auth-submit{
+  width:100%;
+}
+
+.auth-note{
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.45;
+  text-align:center;
+  margin-top:13px;
+}
 
 /* TOP BAR */
 
@@ -114,7 +225,6 @@ button{
   font-size:19px;
 }
 
-
 /* MAIN */
 
 main{
@@ -129,7 +239,6 @@ main{
   display:block;
 }
 
-
 /* NEW POST BANNER */
 
 .new-banner{
@@ -142,7 +251,6 @@ main{
   font-weight:700;
   margin-bottom:14px;
 }
-
 
 /* SECTION HEADER */
 
@@ -161,7 +269,6 @@ main{
   font-size:12px;
   color:var(--muted);
 }
-
 
 /* POST */
 
@@ -203,7 +310,6 @@ main{
   font-size:20px;
 }
 
-
 /* POST IMAGE */
 
 .post-image-wrap{
@@ -217,7 +323,6 @@ main{
   aspect-ratio:1/1.08;
   object-fit:cover;
 }
-
 
 /* POST ACTIONS */
 
@@ -239,7 +344,6 @@ main{
 .action.liked{
   color:var(--danger);
 }
-
 
 /* POST BODY */
 
@@ -268,7 +372,6 @@ main{
   margin-top:8px;
   background:none;
 }
-
 
 /* LOCKED POST */
 
@@ -324,7 +427,6 @@ main{
   margin-bottom:14px;
 }
 
-
 /* BUTTONS */
 
 .primary{
@@ -346,7 +448,6 @@ main{
   border-radius:11px;
   font-weight:700;
 }
-
 
 /* CHAT */
 
@@ -410,7 +511,6 @@ main{
   margin:4px 2px 0;
 }
 
-
 /* PROFILE */
 
 .profile-card{
@@ -467,7 +567,6 @@ main{
   margin-bottom:13px;
 }
 
-
 /* SETTINGS */
 
 .setting{
@@ -508,7 +607,6 @@ main{
   transform:translateX(20px);
   background:white;
 }
-
 
 /* PLANS */
 
@@ -567,7 +665,6 @@ main{
   margin-right:7px;
 }
 
-
 /* BOTTOM NAV */
 
 .bottom{
@@ -609,7 +706,6 @@ main{
   color:var(--blue);
   font-weight:800;
 }
-
 
 /* SUBSCRIPTION MODAL */
 
@@ -656,7 +752,6 @@ main{
   border-radius:50%;
 }
 
-
 /* TOAST */
 
 .toast{
@@ -684,8 +779,135 @@ main{
 </style>
 </head>
 
-
 <body>
+
+<!-- AUTH SCREEN -->
+
+<div id="authScreen" class="auth-screen">
+
+  <div class="auth-card">
+
+    <div class="auth-brand">
+
+      <img
+        class="avatar"
+        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80"
+        alt="Aashi"
+      >
+
+      <h1>Aashi</h1>
+
+      <p>Your private AI companion</p>
+
+    </div>
+
+
+    <div class="auth-tabs">
+
+      <button
+        id="loginTab"
+        class="auth-tab active"
+        onclick="setAuthMode('login')"
+      >
+        Log in
+      </button>
+
+      <button
+        id="signupTab"
+        class="auth-tab"
+        onclick="setAuthMode('signup')"
+      >
+        Create account
+      </button>
+
+    </div>
+
+
+    <form id="authForm" onsubmit="submitAuth(event)">
+
+      <div
+        class="auth-field"
+        id="nameField"
+        style="display:none"
+      >
+
+        <label for="authName">
+          Name
+        </label>
+
+        <input
+          id="authName"
+          type="text"
+          autocomplete="name"
+          placeholder="Your name"
+        >
+
+      </div>
+
+
+      <div class="auth-field">
+
+        <label for="authEmail">
+          Email
+        </label>
+
+        <input
+          id="authEmail"
+          type="email"
+          autocomplete="email"
+          placeholder="you@example.com"
+          required
+        >
+
+      </div>
+
+
+      <div class="auth-field">
+
+        <label for="authPassword">
+          Password
+        </label>
+
+        <input
+          id="authPassword"
+          type="password"
+          autocomplete="current-password"
+          placeholder="At least 6 characters"
+          minlength="6"
+          required
+        >
+
+      </div>
+
+
+      <div
+        id="authMessage"
+        class="auth-message"
+      ></div>
+
+
+      <button
+        id="authSubmit"
+        class="primary auth-submit"
+        type="submit"
+      >
+        Log in
+      </button>
+
+    </form>
+
+
+    <div class="auth-note">
+
+      By continuing, you agree to use Aashi responsibly.
+      Aashi is an AI character.
+
+    </div>
+
+  </div>
+
+</div>
+
 
 <div class="app">
 
@@ -704,7 +926,9 @@ main{
 
     <div>
 
-      <strong>Aashi</strong>
+      <strong>
+        Aashi
+      </strong>
 
       <span>
         AI companion
@@ -724,7 +948,6 @@ main{
   </button>
 
 </header>
-
 
 
 <main>
@@ -757,11 +980,9 @@ main{
   </div>
 
 
-
   <!-- PUBLIC POST -->
 
   <article class="post">
-
 
     <div class="post-head">
 
@@ -770,7 +991,6 @@ main{
         src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=160&q=80"
         alt="Aashi"
       >
-
 
       <div>
 
@@ -784,13 +1004,11 @@ main{
 
       </div>
 
-
       <div class="more">
         •••
       </div>
 
     </div>
-
 
 
     <div class="post-image-wrap">
@@ -804,13 +1022,7 @@ main{
     </div>
 
 
-
-    <!-- POST ACTIONS -->
-
     <div class="post-actions">
-
-
-      <!-- LIKE -->
 
       <button
         class="action"
@@ -821,8 +1033,6 @@ main{
       </button>
 
 
-      <!-- COMMENT -->
-
       <button
         class="action"
         onclick="toast('Comments will be connected soon')"
@@ -832,8 +1042,6 @@ main{
       </button>
 
 
-      <!-- SHARE -->
-
       <button
         class="action"
         onclick="toast('Share will be connected soon')"
@@ -842,18 +1050,14 @@ main{
         ↗
       </button>
 
-
     </div>
-
 
 
     <div class="post-body">
 
-
       <div class="likes">
         128 likes
       </div>
-
 
       <div class="caption">
 
@@ -862,7 +1066,6 @@ main{
         A little moment from my day. 💙
 
       </div>
-
 
       <button
         class="comments-link"
@@ -873,17 +1076,14 @@ main{
 
       </button>
 
-
     </div>
 
   </article>
 
 
-
   <!-- SUBSCRIBER POST -->
 
   <article class="post">
-
 
     <div class="post-head">
 
@@ -892,7 +1092,6 @@ main{
         src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=160&q=80"
         alt="Aashi"
       >
-
 
       <div>
 
@@ -906,7 +1105,6 @@ main{
 
       </div>
 
-
       <div class="more">
         •••
       </div>
@@ -914,9 +1112,7 @@ main{
     </div>
 
 
-
     <div class="post-image-wrap locked">
-
 
       <img
         class="post-image"
@@ -927,24 +1123,19 @@ main{
 
       <div class="lock-overlay">
 
-
         <div class="lock-card">
-
 
           <div class="lock-icon">
             🔒
           </div>
 
-
           <h3>
             Subscribers Only
           </h3>
 
-
           <p>
             This post is available to Aashi's subscribers.
           </p>
-
 
           <button
             class="primary"
@@ -953,13 +1144,11 @@ main{
             View subscription
           </button>
 
-
         </div>
 
       </div>
 
     </div>
-
 
 
     <div
@@ -977,12 +1166,9 @@ main{
 
     </div>
 
-
   </article>
 
-
 </section>
-
 
 
 <!-- CHAT -->
@@ -992,9 +1178,7 @@ main{
   class="screen"
 >
 
-
   <div class="chat-header">
-
 
     <img
       class="avatar"
@@ -1002,16 +1186,13 @@ main{
       alt="Aashi"
     >
 
-
     <h2>
       Chat with Aashi
     </h2>
 
-
     <p>
       Private AI conversations, available 24/7.
     </p>
-
 
     <button
       class="primary"
@@ -1021,13 +1202,10 @@ main{
       Unlock private chat
     </button>
 
-
   </div>
 
 
-
   <div class="chat-preview">
-
 
     <div class="bubble aashi">
 
@@ -1036,13 +1214,11 @@ main{
 
     </div>
 
-
     <div class="bubble you">
 
       I'd love that.
 
     </div>
-
 
     <div class="typing">
 
@@ -1050,12 +1226,9 @@ main{
 
     </div>
 
-
   </div>
 
-
 </section>
-
 
 
 <!-- PROFILE -->
@@ -1065,12 +1238,9 @@ main{
   class="screen"
 >
 
-
   <div class="profile-card">
 
-
     <div class="profile-top">
-
 
       <img
         class="avatar"
@@ -1078,13 +1248,11 @@ main{
         alt="Aashi"
       >
 
-
       <div>
 
         <h2>
           Your Profile
         </h2>
-
 
         <p>
           Free member
@@ -1092,28 +1260,22 @@ main{
 
       </div>
 
-
     </div>
 
 
-
     <div class="plan-card">
-
 
       <h3>
         Unlock Aashi
       </h3>
 
-
       <div class="price">
         From ₹180/week
       </div>
 
-
       <p>
         Private AI chat, personalized conversations and subscriber-only posts.
       </p>
-
 
       <button
         class="primary"
@@ -1122,13 +1284,10 @@ main{
         View plans
       </button>
 
-
     </div>
 
 
-
     <div style="margin-top:15px">
-
 
       <!-- DARK MODE -->
 
@@ -1137,7 +1296,6 @@ main{
         <span>
           Dark mode
         </span>
-
 
         <button
           id="themeToggle"
@@ -1152,7 +1310,6 @@ main{
       </div>
 
 
-
       <!-- NOTIFICATIONS -->
 
       <div class="setting">
@@ -1160,7 +1317,6 @@ main{
         <span>
           Notifications
         </span>
-
 
         <button
           class="toggle on"
@@ -1174,6 +1330,24 @@ main{
       </div>
 
 
+      <!-- ACCOUNT -->
+
+      <div class="setting">
+
+        <span>
+          Account
+        </span>
+
+        <button
+          class="secondary"
+          style="padding:8px 12px"
+          onclick="logout()"
+        >
+          Log out
+        </button>
+
+      </div>
+
 
       <!-- ABOUT -->
 
@@ -1183,19 +1357,15 @@ main{
           About Aashi
         </span>
 
-
         <span style="color:var(--muted)">
           ›
         </span>
 
       </div>
 
-
     </div>
 
-
   </div>
-
 
 </section>
 
@@ -1203,16 +1373,11 @@ main{
 </main>
 
 
-
 <!-- BOTTOM NAVIGATION -->
 
 <nav class="bottom">
 
-
   <div class="bottom-inner">
-
-
-    <!-- HOME -->
 
     <button
       class="nav active"
@@ -1228,9 +1393,6 @@ main{
     </button>
 
 
-
-    <!-- CHAT -->
-
     <button
       class="nav"
       onclick="show('chat',this)"
@@ -1245,9 +1407,6 @@ main{
     </button>
 
 
-
-    <!-- PROFILE -->
-
     <button
       class="nav"
       onclick="show('profile',this)"
@@ -1261,15 +1420,12 @@ main{
 
     </button>
 
-
   </div>
-
 
 </nav>
 
 
 </div>
-
 
 
 <!-- SUBSCRIPTION MODAL -->
@@ -1280,17 +1436,13 @@ main{
   onclick="if(event.target===this)closePlans()"
 >
 
-
   <div class="sheet">
 
-
     <div class="sheet-head">
-
 
       <h2>
         Choose your plan
       </h2>
-
 
       <button
         class="close"
@@ -1299,9 +1451,7 @@ main{
         ×
       </button>
 
-
     </div>
-
 
 
     <p
@@ -1314,7 +1464,6 @@ main{
     </p>
 
 
-
     <div class="plans">
 
 
@@ -1322,13 +1471,11 @@ main{
 
       <div class="plan featured">
 
-
         <div class="plan-title">
 
           <h3>
             AI Chat
           </h3>
-
 
           <span class="badge">
             POPULAR
@@ -1336,11 +1483,9 @@ main{
 
         </div>
 
-
         <div class="price">
           ₹180/week
         </div>
-
 
         <ul class="features">
 
@@ -1362,7 +1507,6 @@ main{
 
         </ul>
 
-
         <button
           class="primary"
           style="width:100%"
@@ -1373,15 +1517,12 @@ main{
 
         </button>
 
-
       </div>
-
 
 
       <!-- REAL PERSON PLAN -->
 
       <div class="plan">
-
 
         <div class="plan-title">
 
@@ -1391,11 +1532,9 @@ main{
 
         </div>
 
-
         <div class="price">
           ₹1,000/week
         </div>
-
 
         <ul class="features">
 
@@ -1417,7 +1556,6 @@ main{
 
         </ul>
 
-
         <button
           class="secondary"
           style="width:100%"
@@ -1428,18 +1566,13 @@ main{
 
         </button>
 
-
       </div>
-
 
     </div>
 
-
   </div>
 
-
 </div>
-
 
 
 <!-- TOAST -->
@@ -1450,9 +1583,7 @@ main{
 ></div>
 
 
-
 <script>
-
 
 /* NAVIGATION */
 
@@ -1464,11 +1595,9 @@ function show(id,el){
       s => s.classList.remove('active')
     );
 
-
   document
     .getElementById(id)
     .classList.add('active');
-
 
   document
     .querySelectorAll('.nav')
@@ -1476,14 +1605,11 @@ function show(id,el){
       n => n.classList.remove('active')
     );
 
-
   el.classList.add('active');
-
 
   window.scrollTo(0,0);
 
 }
-
 
 
 /* OPEN PLANS */
@@ -1497,7 +1623,6 @@ function openPlans(){
 }
 
 
-
 /* CLOSE PLANS */
 
 function closePlans(){
@@ -1507,7 +1632,6 @@ function closePlans(){
     .classList.remove('show');
 
 }
-
 
 
 /* SUBSCRIPTION DISABLED */
@@ -1521,7 +1645,6 @@ function soon(){
 }
 
 
-
 /* TOAST */
 
 function toast(msg){
@@ -1529,12 +1652,9 @@ function toast(msg){
   const t =
     document.getElementById('toast');
 
-
   t.textContent = msg;
 
-
   t.classList.add('show');
-
 
   setTimeout(
     () => t.classList.remove('show'),
@@ -1544,13 +1664,11 @@ function toast(msg){
 }
 
 
-
 /* LIKE */
 
 function like(btn){
 
   btn.classList.toggle('liked');
-
 
   btn.textContent =
     btn.classList.contains('liked')
@@ -1558,7 +1676,6 @@ function like(btn){
       : '♡';
 
 }
-
 
 
 /* DARK MODE */
@@ -1570,12 +1687,10 @@ function toggleTheme(){
       .getAttribute('data-theme')
       === 'dark';
 
-
   if(dark){
 
     document.documentElement
       .removeAttribute('data-theme');
-
 
     localStorage.setItem(
       'aashi-theme',
@@ -1592,14 +1707,12 @@ function toggleTheme(){
         'dark'
       );
 
-
     localStorage.setItem(
       'aashi-theme',
       'dark'
     );
 
   }
-
 
   document
     .getElementById('themeToggle')
@@ -1610,7 +1723,6 @@ function toggleTheme(){
     );
 
 }
-
 
 
 /* LOAD SAVED THEME */
@@ -1626,7 +1738,6 @@ if(
       'dark'
     );
 
-
   document
     .getElementById('themeToggle')
     .classList
@@ -1634,20 +1745,330 @@ if(
 
 }
 
+
+/* =========================
+   SUPABASE AUTH
+   ========================= */
+
+let authMode = 'login';
+
+
+function setAuthMode(mode){
+
+  authMode = mode;
+
+  document
+    .getElementById('loginTab')
+    .classList
+    .toggle(
+      'active',
+      mode === 'login'
+    );
+
+  document
+    .getElementById('signupTab')
+    .classList
+    .toggle(
+      'active',
+      mode === 'signup'
+    );
+
+  document
+    .getElementById('nameField')
+    .style
+    .display =
+      mode === 'signup'
+        ? 'block'
+        : 'none';
+
+  document
+    .getElementById('authSubmit')
+    .textContent =
+      mode === 'signup'
+        ? 'Create account'
+        : 'Log in';
+
+  document
+    .getElementById('authMessage')
+    .textContent = '';
+
+}
+
+
+function showAuthMessage(message){
+
+  document
+    .getElementById('authMessage')
+    .textContent = message;
+
+}
+
+
+async function submitAuth(event){
+
+  event.preventDefault();
+
+  const email =
+    document
+      .getElementById('authEmail')
+      .value
+      .trim();
+
+  const password =
+    document
+      .getElementById('authPassword')
+      .value;
+
+  const name =
+    document
+      .getElementById('authName')
+      .value
+      .trim();
+
+  const button =
+    document
+      .getElementById('authSubmit');
+
+  button.disabled = true;
+
+  showAuthMessage(
+    authMode === 'signup'
+      ? 'Creating your account…'
+      : 'Logging you in…'
+  );
+
+
+  try{
+
+    if(authMode === 'signup'){
+
+      const {
+        data,
+        error
+      } =
+        await supabaseClient
+          .auth
+          .signUp({
+
+            email,
+
+            password,
+
+            options:{
+              data:{
+                display_name:name
+              }
+            }
+
+          });
+
+
+      if(error)
+        throw error;
+
+
+      if(data.session){
+
+        showApp();
+
+        toast(
+          'Welcome to Aashi'
+        );
+
+      }
+
+      else{
+
+        showAuthMessage(
+          'Account created. Check your email to confirm your account, then log in.'
+        );
+
+      }
+
+    }
+
+    else{
+
+      const {
+        error
+      } =
+        await supabaseClient
+          .auth
+          .signInWithPassword({
+
+            email,
+
+            password
+
+          });
+
+
+      if(error)
+        throw error;
+
+
+      showApp();
+
+      toast(
+        'Welcome back'
+      );
+
+    }
+
+  }
+
+  catch(error){
+
+    showAuthMessage(
+      error.message ||
+      'Something went wrong. Please try again.'
+    );
+
+  }
+
+  finally{
+
+    button.disabled = false;
+
+  }
+
+}
+
+
+function showApp(){
+
+  document
+    .getElementById('authScreen')
+    .style
+    .display = 'none';
+
+}
+
+
+function showAuth(){
+
+  document
+    .getElementById('authScreen')
+    .style
+    .display = 'flex';
+
+}
+
+
+async function logout(){
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .auth
+      .signOut();
+
+
+  if(error){
+
+    toast(
+      error.message ||
+      'Could not log out'
+    );
+
+    return;
+
+  }
+
+
+  showAuth();
+
+  setAuthMode('login');
+
+  document
+    .getElementById('authForm')
+    .reset();
+
+  toast(
+    'Logged out'
+  );
+
+}
+
+
+async function initAuth(){
+
+  const {
+    data
+  } =
+    await supabaseClient
+      .auth
+      .getSession();
+
+
+  if(data.session){
+
+    showApp();
+
+  }
+
+  else{
+
+    showAuth();
+
+  }
+
+
+  supabaseClient
+    .auth
+    .onAuthStateChange(
+      (event, session) => {
+
+        if(session){
+
+          showApp();
+
+        }
+
+        else{
+
+          showAuth();
+
+        }
+
+      }
+    );
+
+}
+
 </script>
-<!-- Supabase connection -->
+
+
+<!-- SUPABASE -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-  const SUPABASE_URL = "https://saauonuvjikpepwmknxf.supabase.co";
-  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_m-KB2e6nJntydtT_Kpn7Ow_7HSL1R1_";
 
-  const supabaseClient = window.supabase.createClient(
+const SUPABASE_URL =
+  "https://saauonuvjikpepwmknxf.supabase.co";
+
+
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_m-KB2e6nJntydtT_Kpn7Ow_7HSL1R1_";
+
+
+const supabaseClient =
+  window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_PUBLISHABLE_KEY
   );
 
-  console.log("Aashi Supabase connected");
+
+console.log(
+  "Aashi Supabase connected"
+);
+
+
+initAuth();
+
 </script>
+
 </body>
 </html>
