@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aashi</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+      padding-bottom: 75px;
+    }
+
+    .app {
+      max-width: 600px;
+      margin: auto;
+    }
+
+    header {
+      background: white;
+      padding: 18px 20px;
+      border-bottom: 1px solid #e2e8f0;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header h1 {
+      font-size: 24px;
+      color: #2563eb;
+    }
+
+    header p {
+      color: #64748b;
+      font-size: 13px;
+      margin-top: 3px;
+    }
+
+    .content {
+      padding: 16px;
+    }
+
+    .welcome {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+
+    .welcome h2 {
+      font-size: 20px;
+      margin-bottom: 7px;
+    }
+
+    .welcome p {
+      color: #64748b;
+      line-height: 1.5;
+    }
+
+    .post {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 18px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .post-image {
+      width: 100%;
+      height: 360px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .post-content {
+      padding: 15px;
+    }
+
+    .post-meta {
+      color: #64748b;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .post-caption {
+      line-height: 1.5;
+      margin-bottom: 13px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 18px;
+      color: #475569;
+      font-size: 14px;
+    }
+
+    .locked {
+      position: relative;
+      height: 360px;
+      overflow: hidden;
+    }
+
+    .locked img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: blur(18px);
+      transform: scale(1.08);
+    }
+
+    .lock-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.38);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      padding: 25px;
+    }
+
+    .lock-box {
+      background: rgba(15, 23, 42, 0.85);
+      padding: 22px;
+      border-radius: 16px;
+      max-width: 280px;
+    }
+
+    .lock-box h3 {
+      margin-bottom: 8px;
+    }
+
+    .lock-box p {
+      font-size: 14px;
+      margin-bottom: 15px;
+      opacity: .9;
+    }
+
+    button {
+      border: none;
+      background: #2563eb;
+      color: white;
+      padding: 11px 18px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 68px;
+      background: white;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: center;
+      z-index: 20;
+    }
+
+    .nav-inner {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .nav-item {
+      text-align: center;
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    .nav-item.active {
+      color: #2563eb;
+      font-weight: 600;
+    }
+
+    .nav-icon {
+      font-size: 22px;
+      margin-bottom: 3px;
+    }
+
+    .chat-screen,
+    .profile-screen {
+      display: none;
+    }
+
+    .chat-box {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .chat-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
+
+    .profile-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 22px;
+    }
+
+    .profile-card h2 {
+      margin-bottom: 8px;
+    }
+
+    .plan {
+      margin-top: 20px;
+      padding: 16px;
+      border: 1px solid #bfdbfe;
+      background: #eff6ff;
+      border-radius: 14px;
+    }
+
+    @media (min-width: 601px) {
+      body {
+        background: #eef2f7;
+      }
+
+      .app {
+        background: #f8fafc;
+        min-height: 100vh;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <header>
+    <h1>Aashi</h1>
+    <p>A little place to stay connected.</p>
+  </header>
+
+  <main class="content">
+
+    <!-- HOME -->
+    <section id="home">
+
+      <div class="welcome">
+        <h2>Welcome to Aashi's world</h2>
+        <p>
+          Follow Aashi's updates, discover new posts,
+          and get closer through private conversations.
+        </p>
+      </div>
+
+      <article class="post">
+        <img
+          class="post-image"
+          src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80"
+          alt="Aashi post"
+        >
+
+        <div class="post-content">
+          <div class="post-meta">Aashi · Today</div>
+          <div class="post-caption">
+            A little moment from my day. 💙
+          </div>
+
+          <div class="actions">
+            <span>♡ Like</span>
+            <span>💬 Comment</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="post">
+
+        <div class="locked">
+          <img
+            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=80"
+            alt="Subscriber post"
+          >
+
+          <div class="lock-overlay">
+            <div class="lock-box">
+              <h3>🔒 Subscribers Only</h3>
+              <p>
+                This post is available to Aashi's subscribers.
+              </p>
+              <button onclick="showPlans()">
+                View Plans
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="post-content">
+          <div class="post-meta">Aashi · Subscribers</div>
+          <div class="post-caption">
+            Something special for subscribers. 💙
+          </div>
+        </div>
+
+      </article>
+
+    </section>
+
+
+    <!-- CHAT -->
+    <section id="chat" class="chat-screen">
+
+      <div class="chat-box">
+        <img
+          class="chat-avatar"
+          src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80"
+          alt="Aashi"
+        >
+
+        <h2>Chat with Aashi</h2>
+
+        <p style="color:#64748b; margin:10px 0 20px;">
+          Private AI conversations will be available here.
+        </p>
+
+        <button onclick="showPlans()">
+          Unlock Private Chat
+        </button>
+      </div>
+
+    </section>
+
+
+    <!-- PROFILE -->
+    <section id="profile" class="profile-screen">
+
+      <div class="profile-card">
+
+        <h2>Your Profile</h2>
+
+        <p style="color:#64748b;">
+          You're currently using the free version.
+        </p>
+
+        <div class="plan">
+          <strong>AI Chat — ₹180/week</strong>
+
+          <p style="margin:8px 0 14px; color:#475569;">
+            Private AI chat with Aashi and subscriber-only content.
+          </p>
+
+          <button onclick="showPlans()">
+            View Subscription
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- BOTTOM NAV -->
+
+  <nav class="bottom-nav">
+
+    <div class="nav-inner">
+
+      <div class="nav-item active" onclick="showScreen('home', this)">
+        <div class="nav-icon">⌂</div>
+        Home
+      </div>
+
+      <div class="nav-item" onclick="showScreen('chat', this)">
+        <div class="nav-icon">♡</div>
+        Chat
+      </div>
+
+      <div class="nav-item" onclick="showScreen('profile', this)">
+        <div class="nav-icon">◯</div>
+        Profile
+      </div>
+
+    </div>
+
+  </nav>
+
+</div>
+
+
+<script>
+
+function showScreen(screen, element) {
+
+  document.getElementById("home").style.display = "none";
+  document.getElementById("chat").style.display = "none";
+  document.getElementById("profile").style.display = "none";
+
+  document.getElementById(screen).style.display = "block";
+
+  document.querySelectorAll(".nav-item").forEach(function(item) {
+    item.classList.remove("active");
+  });
+
+  element.classList.add("active");
+
+  window.scrollTo(0, 0);
+}
+
+
+function showPlans() {
+  alert(
+    "Subscription plans will be connected in the next version.\\n\\nAI Chat: ₹180/week\\nReal Person Chat: ₹1,000/week"
+  );
+}
+
+</script>
+
+</body>
+</html>
