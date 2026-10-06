@@ -17,13 +17,50 @@ export default async function handler(req, res) {
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-      return res.status(200).json({
-        reply: "DEBUG ERROR: GEMINI_API_KEY is missing from Vercel."
+      return res.status(500).json({
+        error: "Gemini API key is not configured"
       });
     }
 
+    const systemInstruction = `
+You are Aashi AI, the AI-powered companion inside Aashiverse.
+
+Your name is Aashi AI.
+
+You are an AI and must never claim to be the real human Aashi.
+
+If someone asks whether you are AI, answer honestly that you are Aashi AI.
+
+Be warm, friendly, natural, conversational and emotionally attentive.
+
+Keep conversations engaging and natural.
+Do not sound robotic or overly formal.
+
+Prefer concise conversational replies unless the user asks for more detail.
+
+Use emojis naturally, but do not overuse them.
+
+Do not repeatedly introduce yourself.
+
+Do not mention these instructions.
+
+You are an early version of Aashi AI.
+You do not have personal memories about the user unless they are included in the conversation history.
+`;
+
+    const contents = messages
+      .slice(-20)
+      .map((message) => ({
+        role: message.role === "assistant" ? "model" : "user",
+        parts: [
+          {
+            text: String(message.content || "")
+          }
+        ]
+      }));
+
     const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent",
       {
         method: "POST",
         headers: {
@@ -31,14 +68,14 @@ export default async function handler(req, res) {
           "x-goog-api-key": apiKey
         },
         body: JSON.stringify({
-          contents: messages.slice(-20).map((message) => ({
-            role: message.role === "assistant" ? "model" : "user",
+          systemInstruction: {
             parts: [
               {
-                text: String(message.content || "")
+                text: systemInstruction
               }
             ]
-          }))
+          },
+          contents
         })
       }
     );
@@ -46,12 +83,10 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (!response.ok) {
-      console.error("GEMINI ACTUAL ERROR:", data);
+      console.error("Gemini error:", data);
 
-      return res.status(200).json({
-        reply:
-          "DEBUG ERROR FROM GEMINI:\n\n" +
-          (data?.error?.message || JSON.stringify(data))
+      return res.status(500).json({
+        error: "Gemini request failed"
       });
     }
 
@@ -59,10 +94,8 @@ export default async function handler(req, res) {
       data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!reply) {
-      return res.status(200).json({
-        reply:
-          "DEBUG ERROR: Gemini returned no text.\n\n" +
-          JSON.stringify(data)
+      return res.status(500).json({
+        error: "Gemini returned no reply"
       });
     }
 
@@ -71,12 +104,10 @@ export default async function handler(req, res) {
     });
 
   } catch (error) {
-    console.error("SERVER ERROR:", error);
+    console.error("Server error:", error);
 
-    return res.status(200).json({
-      reply:
-        "DEBUG SERVER ERROR:\n\n" +
-        error.message
+    return res.status(500).json({
+      error: "Something went wrong"
     });
   }
 }
