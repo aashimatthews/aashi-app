@@ -3,4070 +3,780 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
 <title>Aashiverse</title>
-
 <style>
-
-/* =========================================================
-   THEME
-   ========================================================= */
-
-:root{
-  --bg:#f8fafc;
-  --surface:#ffffff;
-  --surface2:#f1f5f9;
-  --text:#0f172a;
-  --muted:#64748b;
-  --border:#e2e8f0;
-  --blue:#2563eb;
-  --blue2:#1d4ed8;
-  --soft:#eff6ff;
-  --success:#16a34a;
-  --danger:#dc2626;
-  --shadow:0 8px 28px rgba(15,23,42,.07);
-}
-
-[data-theme="dark"]{
-  --bg:#0b1220;
-  --surface:#111827;
-  --surface2:#1e293b;
-  --text:#f8fafc;
-  --muted:#94a3b8;
-  --border:#273449;
-  --blue:#60a5fa;
-  --blue2:#3b82f6;
-  --soft:#172554;
-  --shadow:0 8px 28px rgba(0,0,0,.25);
-}
-
-
-/* =========================================================
-   GLOBAL
-   ========================================================= */
-
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
-
-html{
-  background:var(--bg);
-}
-
-body{
-  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,
-  "Segoe UI",Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  padding-bottom:78px;
-}
-
-button,
-input,
-textarea{
-  font:inherit;
-}
-
-button{
-  border:0;
-  cursor:pointer;
-}
-
-input,
-textarea{
-  width:100%;
-  background:var(--surface);
-  color:var(--text);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:12px 13px;
-  outline:none;
-}
-
-input:focus,
-textarea:focus{
-  border-color:var(--blue);
-  box-shadow:0 0 0 3px rgba(37,99,235,.10);
-}
-
-textarea{
-  min-height:100px;
-  resize:vertical;
-}
-
-.app{
-  max-width:620px;
-  margin:auto;
-  min-height:100vh;
-  background:var(--bg);
-}
-
-
-/* =========================================================
-   AASHIVERSE BRANDING
-   ========================================================= */
-
-.aashiverse-name{
-  font-family:
-    "Bodoni 72",
-    "Bodoni Moda",
-    "Didot",
-    "Baskerville",
-    "Times New Roman",
-    serif;
-
-  font-weight:500;
-  letter-spacing:-.045em;
-  line-height:.95;
-}
-
-.aashiverse-tagline{
-  font-family:
-    Inter,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Arial,
-    sans-serif;
-
-  font-style:italic;
-  font-weight:400;
-}
-
-
-/* =========================================================
-   TOP BAR
-   ========================================================= */
-
-.topbar{
-  position:sticky;
-  top:0;
-  z-index:20;
-  min-height:78px;
-  background:var(--surface);
-  border-bottom:1px solid var(--border);
-
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-
-  padding:10px 18px;
-}
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:11px;
-}
-
-.brand-logo{
-  width:40px;
-  height:40px;
-  border-radius:50%;
-
-  background:linear-gradient(135deg,#2563eb,#60a5fa);
-
-  color:white;
-  display:grid;
-  place-items:center;
-
-  font-weight:800;
-  font-size:18px;
-}
-
-.brand-copy{
-  display:flex;
-  flex-direction:column;
-}
-
-.brand-name{
-  font-size:25px;
-  letter-spacing:-.04em;
-}
-
-.brand-tagline{
-  display:block;
-  color:var(--muted);
-  font-size:10px;
-  margin-top:4px;
-  letter-spacing:.01em;
-}
-
-.icon-btn{
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  background:var(--surface2);
-  color:var(--text);
-  display:grid;
-  place-items:center;
-  font-size:19px;
-}
-
-
-/* =========================================================
-   MAIN
-   ========================================================= */
-
-main{
-  padding:16px;
-}
-
-.screen{
-  display:none;
-}
-
-.screen.active{
-  display:block;
-}
-
-
-/* =========================================================
-   AUTH
-   ========================================================= */
-
-.auth-wrap{
-  min-height:calc(100vh - 40px);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:24px 0;
-}
-
-.auth-card{
-  width:100%;
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:22px;
-  padding:22px;
-  box-shadow:var(--shadow);
-}
-
-.auth-brand{
-  text-align:center;
-  margin-bottom:22px;
-}
-
-.auth-brand .brand-logo{
-  width:64px;
-  height:64px;
-  margin:0 auto 12px;
-  font-size:27px;
-}
-
-.auth-brand h1{
-  font-size:34px;
-  line-height:1;
-}
-
-.auth-brand .auth-tagline{
-  color:var(--muted);
-  font-size:13px;
-  margin-top:8px;
-}
-
-.auth-tabs{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  background:var(--surface2);
-  border-radius:12px;
-  padding:4px;
-  margin-bottom:18px;
-}
-
-.auth-tab{
-  background:transparent;
-  color:var(--muted);
-  padding:10px;
-  border-radius:9px;
-  font-weight:700;
-}
-
-.auth-tab.active{
-  background:var(--surface);
-  color:var(--text);
-  box-shadow:0 2px 7px rgba(0,0,0,.07);
-}
-
-.form-group{
-  margin-bottom:13px;
-}
-
-.form-group label{
-  display:block;
-  font-size:12px;
-  font-weight:700;
-  margin-bottom:6px;
-}
-
-.checkbox-row{
-  display:flex;
-  align-items:flex-start;
-  gap:9px;
-  margin:11px 0;
-  font-size:12px;
-  color:var(--muted);
-  line-height:1.45;
-}
-
-.checkbox-row input{
-  width:17px;
-  height:17px;
-  margin-top:1px;
-  flex:none;
-}
-
-.auth-note{
-  background:var(--soft);
-  color:var(--blue2);
-  border:1px solid #bfdbfe;
-  border-radius:12px;
-  padding:11px;
-  font-size:12px;
-  line-height:1.45;
-  margin-bottom:14px;
-}
-
-.auth-footer{
-  text-align:center;
-  color:var(--muted);
-  font-size:12px;
-  margin-top:14px;
-}
-
-.text-btn{
-  background:none;
-  color:var(--blue);
-  font-weight:700;
-}
-
-
-/* =========================================================
-   PROFILE COMPLETION FALLBACK
-   ========================================================= */
-
-.complete-card{
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:22px;
-  box-shadow:var(--shadow);
-}
-
-.complete-icon{
-  width:58px;
-  height:58px;
-  border-radius:50%;
-  background:var(--soft);
-  color:var(--blue);
-  display:grid;
-  place-items:center;
-  font-size:25px;
-  margin-bottom:14px;
-}
-
-.complete-card h2{
-  font-size:22px;
-  margin-bottom:6px;
-}
-
-.complete-card p{
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.5;
-  margin-bottom:18px;
-}
-
-
-/* =========================================================
-   BUTTONS
-   ========================================================= */
-
-.primary{
-  width:auto;
-  background:var(--blue);
-  color:white;
-  padding:11px 17px;
-  border-radius:11px;
-  font-weight:700;
-}
-
-.primary.full{
-  width:100%;
-}
-
-.primary:active{
-  background:var(--blue2);
-}
-
-.secondary{
-  background:var(--surface2);
-  color:var(--text);
-  padding:11px 17px;
-  border-radius:11px;
-  font-weight:700;
-}
-
-.danger{
-  color:var(--danger);
-}
-
-
-/* =========================================================
-   NEW POST BANNER
-   ========================================================= */
-
-.new-banner{
-  background:var(--soft);
-  border:1px solid #bfdbfe;
-  color:var(--blue2);
-  padding:10px 13px;
-  border-radius:12px;
-  font-size:13px;
-  font-weight:700;
-  margin-bottom:14px;
-}
-
-
-/* =========================================================
-   SECTION HEADER
-   ========================================================= */
-
-.section-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin:5px 2px 12px;
-}
-
-.section-head h2{
-  font-size:20px;
-}
-
-.section-head span{
-  color:var(--muted);
-  font-size:12px;
-}
-
-
-/* =========================================================
-   POSTS
-   ========================================================= */
-
-.post{
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:18px;
-  overflow:hidden;
-  margin-bottom:15px;
-  box-shadow:var(--shadow);
-}
-
-.post-head{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:13px;
-}
-
-.post-avatar{
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#2563eb,#60a5fa);
-  color:white;
-  display:grid;
-  place-items:center;
-  font-weight:800;
-}
-
-.post-head strong{
-  font-size:14px;
-}
-
-.post-head small{
-  display:block;
-  color:var(--muted);
-  font-size:11px;
-  margin-top:2px;
-}
-
-.more{
-  margin-left:auto;
-  color:var(--muted);
-}
-
-.post-image-wrap{
-  width:100%;
-  aspect-ratio:1/1;
-  overflow:hidden;
-  background:var(--surface2);
-}
-
-.post-image{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-}
-
-.post-actions{
-  display:flex;
-  gap:3px;
-  padding:7px 9px 0;
-}
-
-.action{
-  width:40px;
-  height:40px;
-  background:none;
-  color:var(--text);
-  font-size:22px;
-}
-
-.action.liked{
-  color:#ef4444;
-}
-
-.post-body{
-  padding:2px 13px 14px;
-}
-
-.likes{
-  font-size:12px;
-  font-weight:700;
-  margin-bottom:7px;
-}
-
-.caption{
-  font-size:14px;
-  line-height:1.48;
-}
-
-.caption b{
-  margin-right:4px;
-}
-
-.comments-link{
-  color:var(--muted);
-  font-size:13px;
-  margin-top:8px;
-  background:none;
-}
-
-
-/* =========================================================
-   LOCKED POST
-   ========================================================= */
-
-.locked{
-  position:relative;
-}
-
-.locked .post-image{
-  filter:blur(18px);
-  transform:scale(1.06);
-}
-
-.lock-overlay{
-  position:absolute;
-  inset:0;
-  background:rgba(15,23,42,.38);
-  display:grid;
-  place-items:center;
-  padding:20px;
-}
-
-.lock-card{
-  background:rgba(255,255,255,.96);
-  color:#0f172a;
-  border-radius:18px;
-  padding:22px;
-  text-align:center;
-  width:min(310px,90%);
-  box-shadow:0 16px 40px rgba(0,0,0,.22);
-}
-
-.lock-icon{
-  width:44px;
-  height:44px;
-  border-radius:50%;
-  background:#eff6ff;
-  color:#2563eb;
-  display:grid;
-  place-items:center;
-  margin:0 auto 10px;
-  font-size:20px;
-}
-
-.lock-card h3{
-  font-size:17px;
-  margin-bottom:6px;
-}
-
-.lock-card p{
-  font-size:13px;
-  color:#64748b;
-  line-height:1.45;
-  margin-bottom:14px;
-}
-
-
-/* =========================================================
-   CHAT
-   ========================================================= */
-
-.chat-card{
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:18px;
-  box-shadow:var(--shadow);
-}
-
-.chat-hero{
-  text-align:center;
-}
-
-.ai-avatar{
-  width:72px;
-  height:72px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#2563eb,#60a5fa);
-  color:white;
-  display:grid;
-  place-items:center;
-  margin:0 auto 10px;
-  font-size:28px;
-  font-weight:800;
-}
-
-.chat-hero h2{
-  font-size:21px;
-}
-
-.ai-label{
-  display:inline-block;
-  margin-top:5px;
-  padding:4px 8px;
-  border-radius:99px;
-  background:var(--soft);
-  color:var(--blue);
-  font-size:10px;
-  font-weight:800;
-}
-
-.chat-hero p{
-  color:var(--muted);
-  font-size:13px;
-  margin-top:7px;
-  line-height:1.45;
-}
-
-.free-status{
-  margin-top:18px;
-  background:var(--surface2);
-  border-radius:14px;
-  padding:14px;
-  text-align:left;
-}
-
-.free-status-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-size:12px;
-  font-weight:700;
-}
-
-.timer{
-  color:var(--blue);
-  font-size:18px;
-  font-weight:800;
-}
-
-.progress{
-  height:8px;
-  background:var(--border);
-  border-radius:99px;
-  overflow:hidden;
-  margin-top:9px;
-}
-
-.progress-bar{
-  height:100%;
-  width:100%;
-  background:var(--blue);
-  border-radius:99px;
-  transition:width .4s;
-}
-
-.status-note{
-  color:var(--muted);
-  font-size:11px;
-  line-height:1.4;
-  margin-top:8px;
-}
-
-.chat-preview{
-  margin-top:14px;
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:15px;
-}
-
-.bubble{
-  max-width:80%;
-  padding:11px 13px;
-  border-radius:16px;
-  margin-bottom:10px;
-  font-size:14px;
-  line-height:1.4;
-}
-
-.bubble.aashi{
-  background:var(--surface2);
-  border-bottom-left-radius:5px;
-}
-
-.bubble.you{
-  background:var(--blue);
-  color:white;
-  margin-left:auto;
-  border-bottom-right-radius:5px;
-}
-
-.typing{
-  color:var(--muted);
-  font-size:12px;
-}
-
-
-/* =========================================================
-   REAL AI CHAT
-   ========================================================= */
-
-.ai-chat-box{
-  margin-top:15px;
-  border:1px solid var(--border);
-  border-radius:16px;
-  overflow:hidden;
-  background:var(--surface);
-}
-
-.ai-messages{
-  padding:14px;
-  max-height:55vh;
-  overflow-y:auto;
-}
-
-.chat-message{
-  margin-bottom:13px;
-  display:flex;
-  flex-direction:column;
-}
-
-.ai-message{
-  align-items:flex-start;
-}
-
-.user-message{
-  align-items:flex-end;
-}
-
-.message-name{
-  color:var(--muted);
-  font-size:10px;
-  font-weight:800;
-  margin-bottom:4px;
-  padding:0 5px;
-}
-
-.message-bubble{
-  max-width:85%;
-  padding:10px 13px;
-  border-radius:16px;
-  font-size:14px;
-  line-height:1.45;
-  white-space:pre-wrap;
-  word-break:break-word;
-}
-
-.ai-message .message-bubble{
-  background:var(--surface2);
-  border-bottom-left-radius:5px;
-}
-
-.user-message .message-bubble{
-  background:var(--blue);
-  color:white;
-  border-bottom-right-radius:5px;
-}
-
-.chat-input-area{
-  display:flex;
-  gap:8px;
-  padding:10px;
-  border-top:1px solid var(--border);
-  background:var(--surface);
-  align-items:flex-end;
-}
-
-.chat-input-area textarea{
-  min-height:44px;
-  max-height:120px;
-  resize:none;
-  padding:11px 12px;
-}
-
-.chat-input-area .primary{
-  width:auto;
-  min-height:44px;
-  padding:10px 15px;
-}
-
-.ai-thinking{
-  opacity:.65;
-  font-style:italic;
-}
-
-
-/* =========================================================
-   PROFILE
-   ========================================================= */
-
-.profile-card{
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:18px;
-  box-shadow:var(--shadow);
-}
-
-.profile-top{
-  display:flex;
-  align-items:center;
-  gap:14px;
-}
-
-.profile-avatar{
-  width:64px;
-  height:64px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#2563eb,#60a5fa);
-  color:white;
-  display:grid;
-  place-items:center;
-  font-size:24px;
-  font-weight:800;
-}
-
-.profile-top h2{
-  font-size:20px;
-}
-
-.profile-top p{
-  color:var(--muted);
-  font-size:13px;
-  margin-top:3px;
-}
-
-.plan-card{
-  margin-top:18px;
-  border:1px solid #bfdbfe;
-  background:var(--soft);
-  border-radius:16px;
-  padding:16px;
-}
-
-.plan-card h3{
-  font-size:16px;
-}
-
-.price{
-  font-size:22px;
-  font-weight:800;
-  margin:7px 0;
-}
-
-.plan-card p{
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.45;
-  margin-bottom:13px;
-}
-
-.setting{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:16px 2px;
-  border-bottom:1px solid var(--border);
-  font-size:14px;
-}
-
-.setting:last-child{
-  border-bottom:0;
-}
-
-.toggle{
-  width:48px;
-  height:28px;
-  background:var(--surface2);
-  border-radius:20px;
-  padding:3px;
-}
-
-.toggle i{
-  display:block;
-  width:22px;
-  height:22px;
-  border-radius:50%;
-  background:var(--muted);
-  transition:.2s;
-}
-
-.toggle.on{
-  background:var(--blue);
-}
-
-.toggle.on i{
-  transform:translateX(20px);
-  background:white;
-}
-
-
-/* =========================================================
-   PLANS
-   ========================================================= */
-
-.plans{
-  display:grid;
-  gap:12px;
-}
-
-.plan{
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:18px;
-}
-
-.plan.featured{
-  border:1.5px solid var(--blue);
-}
-
-.plan-title{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.badge{
-  font-size:10px;
-  font-weight:800;
-  background:var(--soft);
-  color:var(--blue);
-  padding:5px 8px;
-  border-radius:99px;
-}
-
-.plan h3{
-  font-size:17px;
-}
-
-.features{
-  list-style:none;
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.8;
-  margin:8px 0 14px;
-}
-
-.features li:before{
-  content:"✓";
-  color:#10b981;
-  font-weight:800;
-  margin-right:7px;
-}
-
-
-/* =========================================================
-   BOTTOM NAV
-   ========================================================= */
-
-.bottom{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  height:72px;
-  background:var(--surface);
-  border-top:1px solid var(--border);
-  z-index:30;
-}
-
-.bottom-inner{
-  max-width:620px;
-  height:100%;
-  margin:auto;
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-}
-
-.nav{
-  background:none;
-  color:var(--muted);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:3px;
-  font-size:11px;
-}
-
-.nav .ni{
-  font-size:22px;
-  line-height:1;
-}
-
-.nav.active{
-  color:var(--blue);
-  font-weight:800;
-}
-
-
-/* =========================================================
-   MODAL
-   ========================================================= */
-
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(2,6,23,.52);
-  z-index:50;
-  display:none;
-  align-items:flex-end;
-}
-
-.modal.show{
-  display:flex;
-}
-
-.sheet{
-  background:var(--surface);
-  width:100%;
-  max-width:620px;
-  margin:auto;
-  border-radius:22px 22px 0 0;
-  padding:20px 18px 28px;
-  max-height:90vh;
-  overflow:auto;
-}
-
-.sheet-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:16px;
-}
-
-.sheet-head h2{
-  font-size:20px;
-}
-
-.close{
-  background:var(--surface2);
-  color:var(--text);
-  width:36px;
-  height:36px;
-  border-radius:50%;
-}
-
-
-/* =========================================================
-   TOAST
-   ========================================================= */
-
-.toast{
-  position:fixed;
-  left:50%;
-  bottom:88px;
-  transform:translate(-50%,15px);
-  background:#0f172a;
-  color:white;
-  padding:12px 16px;
-  border-radius:12px;
-  font-size:13px;
-  opacity:0;
-  pointer-events:none;
-  transition:.2s;
-  z-index:70;
-  white-space:nowrap;
-  max-width:90%;
-  text-align:center;
-}
-
-.toast.show{
-  opacity:1;
-  transform:translate(-50%,0);
-}
-
-
-/* =========================================================
-   LOADING
-   ========================================================= */
-
-.loading{
-  position:fixed;
-  inset:0;
-  z-index:100;
-  background:var(--bg);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.loading-box{
-  text-align:center;
-}
-
-.loading-logo{
-  width:64px;
-  height:64px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#2563eb,#60a5fa);
-  color:white;
-  display:grid;
-  place-items:center;
-  margin:auto auto 12px;
-  font-size:26px;
-  font-weight:800;
-}
-
-.loading-name{
-  font-size:32px;
-  color:var(--text);
-}
-
-.loading-tagline{
-  color:var(--muted);
-  font-size:12px;
-  margin-top:7px;
-}
-
-.loading-text{
-  color:var(--muted);
-  font-size:13px;
-  margin-top:13px;
-}
-
-.hidden{
-  display:none !important;
-}
-
-.small-note{
-  color:var(--muted);
-  font-size:11px;
-  line-height:1.45;
-  margin-top:10px;
-}
-
+:root{--bg:#f8fafc;--surface:#fff;--surface2:#f1f5f9;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;--blue:#2563eb;--blue2:#1d4ed8;--soft:#eff6ff;--danger:#dc2626;--shadow:0 8px 28px rgba(15,23,42,.07)}
+[data-theme="dark"]{--bg:#0b1220;--surface:#111827;--surface2:#1e293b;--text:#f8fafc;--muted:#94a3b8;--border:#273449;--blue:#60a5fa;--blue2:#3b82f6;--soft:#172554;--danger:#f87171;--shadow:0 8px 28px rgba(0,0,0,.25)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--text)}
+body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;padding-bottom:78px}
+button,input{font:inherit}
+button{border:0;cursor:pointer}
+input{width:100%;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:12px 13px;outline:none}
+input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.hidden{display:none!important}
+.app{max-width:620px;margin:auto;min-height:100vh;background:var(--bg)}
+.aashiverse-name{font-family:"Bodoni 72","Bodoni Moda","Didot","Baskerville","Times New Roman",serif;font-weight:500;letter-spacing:-.045em;line-height:.95}
+.aashiverse-tagline{font-family:Inter,system-ui,sans-serif;font-style:italic;font-weight:400}
+.topbar{position:sticky;top:0;z-index:20;min-height:78px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:10px 18px}
+.brand{display:flex;align-items:center;gap:11px}
+.brand-logo{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#60a5fa);color:white;display:grid;place-items:center;font-weight:800;font-size:18px;flex:none}
+.brand-copy{display:flex;flex-direction:column}
+.brand-name{font-size:25px;letter-spacing:-.04em}
+.brand-tagline{display:block;color:var(--muted);font-size:10px;margin-top:4px}
+.icon-btn{width:40px;height:40px;border-radius:50%;background:var(--surface2);color:var(--text);display:grid;place-items:center;font-size:19px}
+main{padding:16px}
+.screen{display:none}
+.screen.active{display:block}
+.auth-wrap{min-height:calc(100vh - 40px);display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.auth-card,.complete-card{width:100%;max-width:520px;background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:22px;box-shadow:var(--shadow)}
+.auth-brand{text-align:center;margin-bottom:22px}
+.auth-brand .brand-logo{width:64px;height:64px;margin:0 auto 12px;font-size:27px}
+.auth-brand h1{font-size:34px;line-height:1}
+.auth-tagline{color:var(--muted);font-size:13px;margin-top:8px}
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--surface2);border-radius:12px;padding:4px;margin-bottom:18px}
+.auth-tab{background:transparent;color:var(--muted);padding:10px;border-radius:9px;font-weight:700}
+.auth-tab.active{background:var(--surface);color:var(--text);box-shadow:0 2px 7px rgba(0,0,0,.07)}
+.form-group{margin-bottom:13px}
+.form-group label{display:block;font-size:12px;font-weight:700;margin-bottom:6px}
+.checkbox-row{display:flex;align-items:flex-start;gap:9px;margin:11px 0;font-size:12px;color:var(--muted);line-height:1.45}
+.checkbox-row input{width:17px;height:17px;margin-top:1px;flex:none}
+.auth-note{background:var(--soft);color:var(--blue2);border:1px solid #bfdbfe;border-radius:12px;padding:11px;font-size:12px;line-height:1.45;margin-bottom:14px}
+.auth-footer{text-align:center;color:var(--muted);font-size:12px;margin-top:14px}
+.text-btn{background:none;color:var(--blue);font-weight:700}
+.complete-card{max-width:520px}
+.complete-icon{width:58px;height:58px;border-radius:50%;background:var(--soft);color:var(--blue);display:grid;place-items:center;font-size:25px;margin-bottom:14px}
+.complete-card h2{font-size:22px;margin-bottom:6px}
+.complete-card p{color:var(--muted);font-size:13px;line-height:1.5;margin-bottom:18px}
+.primary{background:var(--blue);color:white;padding:11px 17px;border-radius:11px;font-weight:700}
+.primary.full{width:100%}
+.primary:active{background:var(--blue2)}
+.secondary{background:var(--surface2);color:var(--text);padding:11px 17px;border-radius:11px;font-weight:700}
+.danger{color:var(--danger)}
+.new-banner{background:var(--soft);border:1px solid #bfdbfe;color:var(--blue2);padding:10px 13px;border-radius:12px;font-size:13px;font-weight:700;margin-bottom:14px}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin:5px 2px 12px}
+.section-head h2{font-size:20px}
+.section-head span{color:var(--muted);font-size:12px}
+.post{background:var(--surface);border:1px solid var(--border);border-radius:18px;overflow:hidden;margin-bottom:15px;box-shadow:var(--shadow)}
+.post-head{display:flex;align-items:center;gap:10px;padding:13px}
+.post-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#60a5fa);color:white;display:grid;place-items:center;font-weight:800;flex:none}
+.post-head strong{font-size:14px}
+.post-head small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+.more{margin-left:auto;color:var(--muted)}
+.post-image-wrap{width:100%;aspect-ratio:1/1;overflow:hidden;background:var(--surface2);position:relative}
+.post-image{width:100%;height:100%;object-fit:cover;display:block}
+.post-actions{display:flex;gap:3px;padding:7px 9px 0}
+.action{width:40px;height:40px;background:none;color:var(--text);font-size:22px}
+.action.liked{color:#ef4444}
+.post-body{padding:2px 13px 14px}
+.likes{font-size:12px;font-weight:700;margin-bottom:7px}
+.caption{font-size:14px;line-height:1.48}
+.caption b{margin-right:4px}
+.comments-link{color:var(--muted);font-size:13px;margin-top:8px;background:none}
+.locked .post-image{filter:blur(18px);transform:scale(1.06)}
+.lock-overlay{position:absolute;inset:0;background:rgba(15,23,42,.38);display:grid;place-items:center;padding:20px}
+.lock-card{background:rgba(255,255,255,.96);color:#0f172a;border-radius:18px;padding:22px;text-align:center;width:min(310px,90%);box-shadow:0 16px 40px rgba(0,0,0,.22)}
+.lock-icon{width:44px;height:44px;border-radius:50%;background:#eff6ff;color:#2563eb;display:grid;place-items:center;margin:0 auto 10px;font-size:20px}
+.lock-card h3{font-size:17px;margin-bottom:6px}
+.lock-card p{font-size:13px;color:#64748b;line-height:1.45;margin-bottom:14px}
+
+/* FEATURES */
+.feature-intro{background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #bfdbfe;border-radius:18px;padding:22px 18px;margin-bottom:18px;color:#0f172a}
+.feature-intro h2{font-size:23px;margin-bottom:8px}
+.feature-intro p{font-size:13px;line-height:1.6;color:#475569}
+.feature-section-title{font-size:17px;margin:20px 2px 10px}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:17px;padding:17px;margin-bottom:12px;box-shadow:var(--shadow)}
+.feature-card-top{display:flex;align-items:flex-start;gap:12px}
+.feature-icon{width:46px;height:46px;flex-shrink:0;border-radius:13px;display:grid;place-items:center;background:var(--soft);color:var(--blue);font-size:23px}
+.feature-card h3{font-size:16px;margin:2px 0 6px}
+.feature-card p{color:var(--muted);font-size:13px;line-height:1.55}
+.feature-badge{display:inline-block;margin-top:9px;padding:5px 9px;border-radius:99px;background:var(--soft);color:var(--blue);font-size:10px;font-weight:800}
+.feature-card .primary,.feature-card .secondary{margin-top:14px;width:100%}
+.feature-note{color:var(--muted);font-size:12px;line-height:1.55;margin:16px 2px}
+
+.profile-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px;box-shadow:var(--shadow)}
+.profile-top{display:flex;align-items:center;gap:14px}
+.profile-avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#60a5fa);color:white;display:grid;place-items:center;font-size:24px;font-weight:800;flex:none}
+.profile-top h2{font-size:20px}
+.profile-top p{color:var(--muted);font-size:13px;margin-top:3px}
+.plan-card{margin-top:18px;border:1px solid #bfdbfe;background:var(--soft);border-radius:16px;padding:16px}
+.plan-card h3{font-size:16px}
+.price{font-size:22px;font-weight:800;margin:7px 0}
+.plan-card p{color:var(--muted);font-size:13px;line-height:1.45;margin-bottom:13px}
+.setting{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 2px;border-bottom:1px solid var(--border);font-size:14px}
+.setting:last-child{border-bottom:0}
+.toggle{width:48px;height:28px;background:var(--surface2);border-radius:20px;padding:3px;flex:none}
+.toggle i{display:block;width:22px;height:22px;border-radius:50%;background:var(--muted);transition:.2s}
+.toggle.on{background:var(--blue)}
+.toggle.on i{transform:translateX(20px);background:white}
+.plans{display:grid;gap:12px}
+.plan{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px}
+.plan.featured{border:1.5px solid var(--blue)}
+.plan-title{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.badge{font-size:10px;font-weight:800;background:var(--soft);color:var(--blue);padding:5px 8px;border-radius:99px}
+.plan h3{font-size:17px}
+.features{list-style:none;color:var(--muted);font-size:13px;line-height:1.8;margin:8px 0 14px}
+.features li:before{content:"✓";color:#10b981;font-weight:800;margin-right:7px}
+.bottom{position:fixed;bottom:0;left:0;right:0;height:72px;background:var(--surface);border-top:1px solid var(--border);z-index:30}
+.bottom-inner{max-width:620px;height:100%;margin:auto;display:grid;grid-template-columns:repeat(3,1fr)}
+.nav{background:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px}
+.nav .ni{font-size:22px;line-height:1}
+.nav.active{color:var(--blue);font-weight:800}
+.modal{position:fixed;inset:0;background:rgba(2,6,23,.52);z-index:50;display:none;align-items:flex-end}
+.modal.show{display:flex}
+.sheet{background:var(--surface);width:100%;max-width:620px;margin:auto;border-radius:22px 22px 0 0;padding:20px 18px 28px;max-height:90vh;overflow:auto}
+.sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.sheet-head h2{font-size:20px}
+.close{background:var(--surface2);color:var(--text);width:36px;height:36px;border-radius:50%;font-size:20px}
+.toast{position:fixed;left:50%;bottom:88px;transform:translate(-50%,15px);background:#0f172a;color:white;padding:12px 16px;border-radius:12px;font-size:13px;opacity:0;pointer-events:none;transition:.2s;z-index:70;max-width:90%;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.loading{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center}
+.loading-box{text-align:center}
+.loading-logo{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#60a5fa);color:white;display:grid;place-items:center;margin:0 auto 12px;font-size:26px;font-weight:800}
+.loading-name{font-size:32px;color:var(--text)}
+.loading-tagline{color:var(--muted);font-size:12px;margin-top:7px}
+.loading-text{color:var(--muted);font-size:13px;margin-top:13px}
+.small-note{color:var(--muted);font-size:11px;line-height:1.45;margin-top:10px}
 </style>
 </head>
-
 <body>
 
-
-<!-- =======================================================
-     LOADING
-     ======================================================= -->
-
 <div id="loading" class="loading">
-
   <div class="loading-box">
-
-    <div class="loading-logo">
-      A
-    </div>
-
-    <div class="aashiverse-name loading-name">
-      Aashiverse
-    </div>
-
-    <div class="aashiverse-tagline loading-tagline">
-      The world of your dreams.
-    </div>
-
-    <div class="loading-text">
-      Loading…
-    </div>
-
+    <div class="loading-logo">A</div>
+    <div class="aashiverse-name loading-name">Aashiverse</div>
+    <div class="aashiverse-tagline loading-tagline">The world of your dreams.</div>
+    <div class="loading-text">Loading…</div>
   </div>
-
 </div>
 
-
-<!-- =======================================================
-     AUTH SCREEN
-     ======================================================= -->
-
+<!-- LOGIN AND SIGNUP -->
 <div id="authScreen" class="auth-wrap hidden">
-
   <div class="auth-card">
-
     <div class="auth-brand">
-
-      <div class="brand-logo">
-        A
-      </div>
-
-      <h1 class="aashiverse-name">
-        Aashiverse
-      </h1>
-
-      <p class="aashiverse-tagline auth-tagline">
-        The world of your dreams.
-      </p>
-
+      <div class="brand-logo">A</div>
+      <h1 class="aashiverse-name">Aashiverse</h1>
+      <p class="aashiverse-tagline auth-tagline">The world of your dreams.</p>
     </div>
-
 
     <div class="auth-tabs">
-
-      <button
-        id="loginTab"
-        class="auth-tab active"
-        onclick="showAuthMode('login')"
-      >
-        Log in
-      </button>
-
-      <button
-        id="signupTab"
-        class="auth-tab"
-        onclick="showAuthMode('signup')"
-      >
-        Create account
-      </button>
-
+      <button id="loginTab" class="auth-tab active" onclick="showAuthMode('login')">Log in</button>
+      <button id="signupTab" class="auth-tab" onclick="showAuthMode('signup')">Create account</button>
     </div>
 
-
-    <!-- LOGIN -->
-
-    <form
-      id="loginForm"
-      onsubmit="loginUser(event)"
-    >
-
+    <form id="loginForm" onsubmit="loginUser(event)">
       <div class="form-group">
-
-        <label>Email</label>
-
-        <input
-          id="loginEmail"
-          type="email"
-          autocomplete="email"
-          required
-          placeholder="you@example.com"
-        >
-
+        <label for="loginEmail">Email</label>
+        <input id="loginEmail" type="email" autocomplete="email" required placeholder="you@example.com">
       </div>
-
-
       <div class="form-group">
-
-        <label>Password</label>
-
-        <input
-          id="loginPassword"
-          type="password"
-          autocomplete="current-password"
-          required
-          placeholder="Your password"
-        >
-
+        <label for="loginPassword">Password</label>
+        <input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Your password">
       </div>
-
-
-      <button
-        class="primary full"
-        type="submit"
-      >
-        Log in
-      </button>
-
-
-      <div class="auth-footer">
-
-        Don't have an account?
-
-        <button
-          type="button"
-          class="text-btn"
-          onclick="showAuthMode('signup')"
-        >
-          Create one
-        </button>
-
-      </div>
-
+      <button class="primary full" type="submit">Log in</button>
+      <div class="auth-footer">Don't have an account? <button type="button" class="text-btn" onclick="showAuthMode('signup')">Create one</button></div>
     </form>
 
-
-    <!-- SIGNUP -->
-
-    <form
-      id="signupForm"
-      class="hidden"
-      onsubmit="signupUser(event)"
-    >
-
-      <div class="auth-note">
-
-        You must be 18 or older to use Aashiverse.
-        Your chat mode will always be clearly identified as AI or real-person chat.
-
-      </div>
-
-
+    <form id="signupForm" class="hidden" onsubmit="signupUser(event)">
+      <div class="auth-note">You must be 18 or older to use Aashiverse. Chat modes, when available, will be clearly identified as AI or real-person chat.</div>
       <div class="form-group">
-
-        <label>Full name</label>
-
-        <input
-          id="signupName"
-          type="text"
-          autocomplete="name"
-          required
-          maxlength="100"
-          placeholder="Your full name"
-        >
-
+        <label for="signupName">Full name</label>
+        <input id="signupName" type="text" autocomplete="name" required maxlength="100" placeholder="Your full name">
       </div>
-
-
       <div class="form-group">
-
-        <label>Username</label>
-
-        <input
-          id="signupUsername"
-          type="text"
-          autocomplete="username"
-          required
-          minlength="3"
-          maxlength="30"
-          pattern="[A-Za-z0-9_.]+"
-          placeholder="your_username"
-        >
-
+        <label for="signupUsername">Username</label>
+        <input id="signupUsername" type="text" autocomplete="username" required minlength="3" maxlength="30" pattern="[A-Za-z0-9_.]+" placeholder="your_username">
       </div>
-
-
       <div class="form-group">
-
-        <label>Date of birth</label>
-
-        <input
-          id="signupDob"
-          type="date"
-          required
-        >
-
+        <label for="signupDob">Date of birth</label>
+        <input id="signupDob" type="date" required>
       </div>
-
-
       <div class="form-group">
-
-        <label>Email</label>
-
-        <input
-          id="signupEmail"
-          type="email"
-          autocomplete="email"
-          required
-          placeholder="you@example.com"
-        >
-
+        <label for="signupEmail">Email</label>
+        <input id="signupEmail" type="email" autocomplete="email" required placeholder="you@example.com">
       </div>
-
-
       <div class="form-group">
-
-        <label>Password</label>
-
-        <input
-          id="signupPassword"
-          type="password"
-          autocomplete="new-password"
-          required
-          minlength="8"
-          placeholder="At least 8 characters"
-        >
-
+        <label for="signupPassword">Password</label>
+        <input id="signupPassword" type="password" autocomplete="new-password" required minlength="8" placeholder="At least 8 characters">
       </div>
-
-
       <label class="checkbox-row">
-
-        <input
-          id="ageCheck"
-          type="checkbox"
-          required
-        >
-
-        <span>
-          I confirm that I am 18 years old or older.
-        </span>
-
+        <input id="ageCheck" type="checkbox" required>
+        <span>I confirm that I am 18 years old or older.</span>
       </label>
-
-
       <label class="checkbox-row">
-
-        <input
-          id="chatAcknowledgement"
-          type="checkbox"
-          required
-        >
-
-        <span>
-          I understand that Aashi AI provides AI-powered conversations
-          and Aashi provides conversations with the real person behind the account.
-          The chat mode will be clearly identified.
-        </span>
-
+        <input id="chatAcknowledgement" type="checkbox" required>
+        <span>I understand that Aashi AI provides AI-powered conversations and Aashi provides conversations with the real person behind the account. The chat mode will be clearly identified when chat is available.</span>
       </label>
-
-
       <label class="checkbox-row">
-
-        <input
-          id="termsCheck"
-          type="checkbox"
-          required
-        >
-
-        <span>
-          I agree to the Terms of Use and Privacy Policy.
-        </span>
-
+        <input id="termsCheck" type="checkbox" required>
+        <span>I agree to the Terms of Use and Privacy Policy.</span>
       </label>
-
-
-      <button
-        class="primary full"
-        type="submit"
-      >
-        Create account
-      </button>
-
-
-      <div class="auth-footer">
-
-        Already have an account?
-
-        <button
-          type="button"
-          class="text-btn"
-          onclick="showAuthMode('login')"
-        >
-          Log in
-        </button>
-
-      </div>
-
+      <button class="primary full" type="submit">Create account</button>
+      <div class="auth-footer">Already have an account? <button type="button" class="text-btn" onclick="showAuthMode('login')">Log in</button></div>
     </form>
-
   </div>
-
 </div>
 
-
-<!-- =======================================================
-     PROFILE COMPLETION FALLBACK
-     ======================================================= -->
-
-<div
-  id="completionScreen"
-  class="auth-wrap hidden"
->
-
+<!-- PROFILE COMPLETION -->
+<div id="completionScreen" class="auth-wrap hidden">
   <div class="complete-card">
-
-    <div class="complete-icon">
-      ✓
-    </div>
-
-    <h2>
-      Complete your profile
-    </h2>
-
-    <p>
-      Aashiverse needs a few profile details before you can enter.
-    </p>
-
-
+    <div class="complete-icon">✓</div>
+    <h2>Complete your profile</h2>
+    <p>Aashiverse needs a few profile details before you can enter.</p>
     <div class="form-group">
-
-      <label>Full name</label>
-
-      <input
-        id="completeName"
-        type="text"
-        maxlength="100"
-        placeholder="Your full name"
-      >
-
+      <label for="completeName">Full name</label>
+      <input id="completeName" type="text" maxlength="100" placeholder="Your full name">
     </div>
-
-
     <div class="form-group">
-
-      <label>Username</label>
-
-      <input
-        id="completeUsername"
-        type="text"
-        minlength="3"
-        maxlength="30"
-        pattern="[A-Za-z0-9_.]+"
-        placeholder="your_username"
-      >
-
+      <label for="completeUsername">Username</label>
+      <input id="completeUsername" type="text" minlength="3" maxlength="30" pattern="[A-Za-z0-9_.]+" placeholder="your_username">
     </div>
-
-
     <div class="form-group">
-
-      <label>Date of birth</label>
-
-      <input
-        id="completeDob"
-        type="date"
-      >
-
+      <label for="completeDob">Date of birth</label>
+      <input id="completeDob" type="date">
     </div>
-
-
-    <button
-      class="primary full"
-      onclick="completeProfile()"
-    >
-      Continue to Aashiverse
-    </button>
-
-
-    <p class="small-note">
-      This screen is only a fallback for accounts with missing information.
-    </p>
-
+    <button class="primary full" onclick="completeProfile()">Continue to Aashiverse</button>
+    <p class="small-note">This screen is only a fallback for accounts with missing information.</p>
   </div>
-
 </div>
 
-
-<!-- =======================================================
-     APP
-     ======================================================= -->
-
-<div
-  id="appScreen"
-  class="app hidden"
->
-
-
-  <!-- TOP HEADER -->
-
+<!-- MAIN APP -->
+<div id="appScreen" class="app hidden">
   <header class="topbar">
-
     <div class="brand">
-
-      <div class="brand-logo">
-        A
-      </div>
-
+      <div class="brand-logo">A</div>
       <div class="brand-copy">
-
-        <strong class="aashiverse-name brand-name">
-          Aashiverse
-        </strong>
-
-        <span class="aashiverse-tagline brand-tagline">
-          The world of your dreams.
-        </span>
-
+        <strong class="aashiverse-name brand-name">Aashiverse</strong>
+        <span class="aashiverse-tagline brand-tagline">The world of your dreams.</span>
       </div>
-
     </div>
-
-
-    <button
-      class="icon-btn"
-      onclick="openPlans()"
-      aria-label="Plans"
-    >
-      ♡
-    </button>
-
+    <button class="icon-btn" onclick="openPlans()" aria-label="Plans">♡</button>
   </header>
 
-
   <main>
-
-
-    <!-- ===================================================
-         HOME
-         =================================================== -->
-
-    <section
-      id="home"
-      class="screen active"
-    >
-
-      <div class="new-banner">
-        ✨ New posts from Aashi
-      </div>
-
-
+    <!-- HOME FEED -->
+    <section id="home" class="screen active">
+      <div class="new-banner">✨ New posts from Aashi</div>
       <div class="section-head">
-
-        <h2>
-          Aashi's Feed
-        </h2>
-
-        <span>
-          Latest
-        </span>
-
+        <h2>Aashi's Feed</h2>
+        <span>Latest</span>
       </div>
 
-
-      <!-- PUBLIC POST -->
-
       <article class="post">
-
         <div class="post-head">
-
-          <div class="post-avatar">
-            A
-          </div>
-
-          <div>
-
-            <strong>
-              Aashi
-            </strong>
-
-            <small>
-              Today · Public
-            </small>
-
-          </div>
-
-          <div class="more">
-            •••
-          </div>
-
+          <div class="post-avatar">A</div>
+          <div><strong>Aashi</strong><small>Today · Public</small></div>
+          <div class="more">•••</div>
         </div>
-
-
         <div class="post-image-wrap">
-
-          <img
-            class="post-image"
-            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1000&q=85"
-            alt="Aashi post"
-          >
-
+          <img class="post-image" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1000&q=85" alt="Aashi post">
         </div>
-
-
         <div class="post-actions">
-
-          <button
-            class="action"
-            onclick="like(this)"
-            aria-label="Like"
-          >
-            ♡
-          </button>
-
-          <button
-            class="action"
-            onclick="toast('Comments will be connected soon')"
-            aria-label="Comment"
-          >
-            💬
-          </button>
-
-          <button
-            class="action"
-            onclick="toast('Share will be connected soon')"
-            aria-label="Share"
-          >
-            ↗
-          </button>
-
+          <button class="action" onclick="like(this)" aria-label="Like">♡</button>
+          <button class="action" onclick="toast('Comments will be connected soon')" aria-label="Comment">💬</button>
+          <button class="action" onclick="toast('Share will be connected soon')" aria-label="Share">↗</button>
         </div>
-
-
         <div class="post-body">
-
-          <div class="likes">
-            128 likes
-          </div>
-
-          <div class="caption">
-
-            <b>Aashi</b>
-
-            A little moment from my day. 💙
-
-          </div>
-
-          <button
-            class="comments-link"
-            onclick="toast('Comments will be connected soon')"
-          >
-            View 12 comments
-          </button>
-
+          <div class="likes">128 likes</div>
+          <div class="caption"><b>Aashi</b> A little moment from my day. 💙</div>
+          <button class="comments-link" onclick="toast('Comments will be connected soon')">View 12 comments</button>
         </div>
-
       </article>
-
-
-      <!-- SUBSCRIBER POST -->
 
       <article class="post">
-
         <div class="post-head">
-
-          <div class="post-avatar">
-            A
-          </div>
-
-          <div>
-
-            <strong>
-              Aashi
-            </strong>
-
-            <small>
-              Yesterday · Subscribers
-            </small>
-
-          </div>
-
-          <div class="more">
-            •••
-          </div>
-
+          <div class="post-avatar">A</div>
+          <div><strong>Aashi</strong><small>Yesterday · Subscribers</small></div>
+          <div class="more">•••</div>
         </div>
-
-
         <div class="post-image-wrap locked">
-
-          <img
-            class="post-image"
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=85"
-            alt="Subscriber post"
-          >
-
-
+          <img class="post-image" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=85" alt="Subscriber post">
           <div class="lock-overlay">
-
             <div class="lock-card">
-
-              <div class="lock-icon">
-                🔒
-              </div>
-
-              <h3>
-                Subscribers Only
-              </h3>
-
-              <p>
-                This post is available to Aashi's subscribers.
-              </p>
-
-              <button
-                class="primary"
-                onclick="openPlans()"
-              >
-                View subscription
-              </button>
-
+              <div class="lock-icon">🔒</div>
+              <h3>Subscribers Only</h3>
+              <p>This post is available to Aashi's subscribers.</p>
+              <button class="primary" onclick="openPlans()">View subscription</button>
             </div>
-
           </div>
-
         </div>
-
-
-        <div
-          class="post-body"
-          style="padding-top:12px"
-        >
-
-          <div class="caption">
-
-            <b>Aashi</b>
-
-            Something special for subscribers. 💙
-
-          </div>
-
+        <div class="post-body" style="padding-top:12px">
+          <div class="caption"><b>Aashi</b> Something special for subscribers. 💙</div>
         </div>
-
       </article>
-
     </section>
 
-
-    <!-- ===================================================
-         CHAT
-         =================================================== -->
-
-    <section
-      id="chat"
-      class="screen"
-    >
-
-      <div class="chat-card">
-
-        <div class="chat-hero">
-
-          <div class="ai-avatar">
-            A
-          </div>
-
-          <h2>
-            Chat with Aashi AI
-          </h2>
-
-          <span class="ai-label">
-            AI-POWERED
-          </span>
-
-          <p>
-            Responses are generated by AI.
-            Your free account includes 30 active minutes every day.
-          </p>
-
-        </div>
-
-
-        <div class="free-status">
-
-          <div class="free-status-top">
-
-            <span>
-              Today's free chat
-            </span>
-
-            <span
-              id="freeTimer"
-              class="timer"
-            >
-              30:00
-            </span>
-
-          </div>
-
-
-          <div class="progress">
-
-            <div
-              id="freeProgress"
-              class="progress-bar"
-            ></div>
-
-          </div>
-
-
-          <div
-            id="freeStatusNote"
-            class="status-note"
-          >
-            You have 30 minutes of free Aashi AI chat available today.
-          </div>
-
-        </div>
-
-
-        <!-- REAL AI CHAT -->
-
-        <div
-          id="aiChatBox"
-          class="ai-chat-box hidden"
-        >
-
-          <div
-            id="aiMessages"
-            class="ai-messages"
-          >
-
-            <div class="chat-message ai-message">
-
-              <div class="message-name">
-                Aashi AI
-              </div>
-
-              <div class="message-bubble">
-                Hey! 💙 I'm Aashi AI.
-                It's nice to meet you.
-                What would you like to talk about?
-              </div>
-
-            </div>
-
-          </div>
-
-
-          <div class="chat-input-area">
-
-            <textarea
-              id="aiMessageInput"
-              rows="1"
-              placeholder="Message Aashi AI..."
-              maxlength="2000"
-              onkeydown="handleChatKey(event)"
-            ></textarea>
-
-
-            <button
-              id="sendAiButton"
-              class="primary"
-              onclick="sendAiMessage()"
-            >
-              Send
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <button
-          id="startChatButton"
-          class="primary full"
-          style="margin-top:15px"
-          onclick="startFreeChat()"
-        >
-          Start free chat
-        </button>
-
-
-        <button
-          class="secondary full"
-          style="margin-top:9px"
-          onclick="openPlans()"
-        >
-          View paid plans
-        </button>
-
+    <!-- FEATURES: REPLACES CHAT TAB -->
+    <section id="features" class="screen">
+      <div class="feature-intro">
+        <h2>Discover Aashiverse</h2>
+        <p>Explore the experiences planned for members. Paid features are being prepared, and subscriptions are not available yet.</p>
       </div>
 
+      <h3 class="feature-section-title">AI Experiences</h3>
+      <div class="feature-card">
+        <div class="feature-card-top">
+          <div class="feature-icon">✦</div>
+          <div>
+            <h3>Chat with Aashi AI</h3>
+            <p>Enjoy AI-powered conversations with Aashi AI, available 24/7. Responses are generated by AI and can use supported conversation context.</p>
+            <span class="feature-badge">AI CHAT · ₹180/WEEK</span>
+          </div>
+        </div>
+        <button class="primary" onclick="openPlans()">Explore AI Chat Plan</button>
+      </div>
+
+      <h3 class="feature-section-title">Personal Experiences</h3>
+      <div class="feature-card">
+        <div class="feature-card-top">
+          <div class="feature-icon">♡</div>
+          <div>
+            <h3>Real Person Chat</h3>
+            <p>Chat personally with Aashi. Replies are written by the real person behind the account, with private text and image sharing when available.</p>
+            <span class="feature-badge">REAL PERSON · ₹1,000/WEEK</span>
+          </div>
+        </div>
+        <button class="secondary" onclick="openPlans()">Explore Real Person Plan</button>
+      </div>
+
+      <h3 class="feature-section-title">Exclusive Content</h3>
+      <div class="feature-card">
+        <div class="feature-card-top">
+          <div class="feature-icon">▧</div>
+          <div>
+            <h3>Exclusive Photos & Feed</h3>
+            <p>Discover subscriber-only posts and exclusive content shared by Aashi. Public posts remain available in Aashi's Feed.</p>
+            <span class="feature-badge">SUBSCRIBER ACCESS</span>
+          </div>
+        </div>
+        <button class="primary" onclick="openPlans()">View Membership Plans</button>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-top">
+          <div class="feature-icon">▤</div>
+          <div>
+            <h3>Private Shared Media</h3>
+            <p>Images shared in private conversations will stay associated with those conversations and separate from the public feed.</p>
+            <span class="feature-badge">PLANNED FEATURE</span>
+          </div>
+        </div>
+        <button class="secondary" onclick="toast('Private Shared Media is planned for a future update.')">Coming Soon</button>
+      </div>
+
+      <p class="feature-note">Subscriptions and paid access are not active yet. Feature availability may change as Aashiverse develops.</p>
     </section>
 
-
-    <!-- ===================================================
-         PROFILE
-         =================================================== -->
-
-    <section
-      id="profile"
-      class="screen"
-    >
-
+    <!-- PROFILE -->
+    <section id="profile" class="screen">
       <div class="profile-card">
-
         <div class="profile-top">
-
-          <div
-            id="profileAvatar"
-            class="profile-avatar"
-          >
-            U
-          </div>
-
+          <div id="profileAvatar" class="profile-avatar">U</div>
           <div>
-
-            <h2 id="profileName">
-              Your Profile
-            </h2>
-
-            <p id="profileUsername">
-              Free member
-            </p>
-
+            <h2 id="profileName">Your Profile</h2>
+            <p id="profileUsername">Free member</p>
           </div>
-
         </div>
-
 
         <div class="plan-card">
-
-          <h3>
-            Unlock Aashi AI
-          </h3>
-
-          <div class="price">
-            From ₹180/week
-          </div>
-
-          <p>
-            Chat with Aashi AI.
-            Responses are generated by AI and available 24/7.
-          </p>
-
-          <button
-            class="primary"
-            onclick="openPlans()"
-          >
-            View plans
-          </button>
-
+          <h3>Explore Aashiverse</h3>
+          <div class="price">From ₹180/week</div>
+          <p>Discover AI chat, personal conversations, and subscriber-only content as these features become available.</p>
+          <button class="primary" onclick="openPlans()">View plans</button>
         </div>
-
 
         <div style="margin-top:15px">
-
           <div class="setting">
-
-            <span>
-              Dark mode
-            </span>
-
-            <button
-              id="themeToggle"
-              class="toggle"
-              onclick="toggleTheme()"
-            >
-
-              <i></i>
-
-            </button>
-
+            <span>Dark mode</span>
+            <button id="themeToggle" class="toggle" onclick="toggleTheme()" aria-label="Toggle dark mode"><i></i></button>
           </div>
-
-
           <div class="setting">
-
-            <span>
-              Account
-            </span>
-
-            <span
-              id="profileEmail"
-              style="color:var(--muted);font-size:12px"
-            >
-              —
-            </span>
-
+            <span>Account</span>
+            <span id="profileEmail" style="color:var(--muted);font-size:12px;overflow-wrap:anywhere">—</span>
           </div>
-
-
           <div class="setting">
-
-            <span>
-              Sign out
-            </span>
-
-            <button
-              class="text-btn danger"
-              onclick="logoutUser()"
-            >
-              Log out
-            </button>
-
+            <span>Sign out</span>
+            <button class="text-btn danger" onclick="logoutUser()">Log out</button>
           </div>
-
-
           <div class="setting">
-
-            <span>
-              About Aashiverse
-            </span>
-
-            <span style="color:var(--muted)">
-              ›
-            </span>
-
+            <span>About Aashiverse</span>
+            <span style="color:var(--muted)">›</span>
           </div>
-
         </div>
-
       </div>
-
     </section>
-
-
   </main>
 
-
-  <!-- BOTTOM NAVIGATION -->
-
+  <!-- BOTTOM NAVIGATION: HOME / FEATURES / PROFILE -->
   <nav class="bottom">
-
     <div class="bottom-inner">
-
-      <button
-        class="nav active"
-        onclick="show('home',this)"
-      >
-
-        <span class="ni">
-          ⌂
-        </span>
-
-        Home
-
+      <button class="nav active" onclick="show('home',this)">
+        <span class="ni">⌂</span>Home
       </button>
-
-
-      <button
-        class="nav"
-        onclick="show('chat',this)"
-      >
-
-        <span class="ni">
-          ♡
-        </span>
-
-        Chat
-
+      <button class="nav" onclick="show('features',this)">
+        <span class="ni">✦</span>Features
       </button>
-
-
-      <button
-        class="nav"
-        onclick="show('profile',this)"
-      >
-
-        <span class="ni">
-          ◯
-        </span>
-
-        Profile
-
+      <button class="nav" onclick="show('profile',this)">
+        <span class="ni">◯</span>Profile
       </button>
-
     </div>
-
   </nav>
-
 </div>
 
-
-<!-- =======================================================
-     SUBSCRIPTION MODAL
-     ======================================================= -->
-
-<div
-  id="plans"
-  class="modal"
-  onclick="if(event.target===this)closePlans()"
->
-
+<!-- SUBSCRIPTION MODAL -->
+<div id="plans" class="modal" onclick="if(event.target===this)closePlans()">
   <div class="sheet">
-
     <div class="sheet-head">
-
-      <h2>
-        Choose your plan
-      </h2>
-
-      <button
-        class="close"
-        onclick="closePlans()"
-      >
-        ×
-      </button>
-
+      <h2>Choose your plan</h2>
+      <button class="close" onclick="closePlans()" aria-label="Close">×</button>
     </div>
-
-
-    <p
-      style="color:var(--muted);font-size:13px;margin-bottom:15px"
-    >
-      Subscriptions are not available yet.
-      We're getting everything ready.
-    </p>
-
+    <p style="color:var(--muted);font-size:13px;margin-bottom:15px">Subscriptions are not available yet. We're getting everything ready.</p>
 
     <div class="plans">
-
-
-      <!-- AI CHAT -->
-
       <div class="plan featured">
-
         <div class="plan-title">
-
-          <h3>
-            AI Chat
-          </h3>
-
-          <span class="badge">
-            POPULAR
-          </span>
-
+          <h3>AI Chat</h3>
+          <span class="badge">POPULAR</span>
         </div>
-
-
-        <div class="price">
-          ₹180/week
-        </div>
-
-
+        <div class="price">₹180/week</div>
         <ul class="features">
-
-          <li>
-            Chat with Aashi AI
-          </li>
-
-          <li>
-            Unlimited text chat
-          </li>
-
-          <li>
-            AI-generated personalized images
-          </li>
-
-          <li>
-            Maximum 10 AI images per rolling 24 hours
-          </li>
-
-          <li>
-            User image uploads are not available on this plan
-          </li>
-
+          <li>Chat with Aashi AI</li>
+          <li>Unlimited text chat when the plan launches</li>
+          <li>AI-generated personalized images, subject to limits</li>
+          <li>Maximum 10 AI images per rolling 24 hours</li>
+          <li>User image uploads are not included in this plan</li>
         </ul>
-
-
-        <button
-          class="primary full"
-          onclick="soon()"
-        >
-          Subscription will start soon
-        </button>
-
+        <button class="primary full" onclick="soon()">Subscription will start soon</button>
       </div>
-
-
-      <!-- REAL PERSON -->
 
       <div class="plan">
-
-        <div class="plan-title">
-
-          <h3>
-            Real Person Chat
-          </h3>
-
-        </div>
-
-
-        <div class="price">
-          ₹1,000/week
-        </div>
-
-
+        <div class="plan-title"><h3>Real Person Chat</h3></div>
+        <div class="price">₹1,000/week</div>
         <ul class="features">
-
-          <li>
-            Chat personally with Aashi
-          </li>
-
-          <li>
-            Replies are written by the real person behind Aashi
-          </li>
-
-          <li>
-            Unlimited text and image sharing
-          </li>
-
-          <li>
-            Images can be sent by both sides
-          </li>
-
+          <li>Chat personally with Aashi</li>
+          <li>Replies written by the real person behind Aashi</li>
+          <li>Text and image sharing</li>
+          <li>Images can be sent by both sides</li>
         </ul>
-
-
-        <button
-          class="secondary full"
-          onclick="soon()"
-        >
-          Subscription will start soon
-        </button>
-
+        <button class="secondary full" onclick="soon()">Subscription will start soon</button>
       </div>
-
-
     </div>
-
   </div>
-
 </div>
 
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-<!-- =======================================================
-     TOAST
-     ======================================================= -->
-
-<div
-  id="toast"
-  class="toast"
-></div>
-
-
-<!-- =======================================================
-     SUPABASE
-     ======================================================= -->
-
+<!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
-
-/* =========================================================
-   SUPABASE CONNECTION
-   ========================================================= */
-
-const SUPABASE_URL =
-  "https://saauonuvjikpepwmknxf.supabase.co";
-
-const SUPABASE_PUBLISHABLE_KEY =
-  "sb_publishable_FeLoF94jwdOXWLXDAFE7gg_i_hpT2Vk";
-
-
-const supabaseClient =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
-
-
-/* =========================================================
-   GLOBAL STATE
-   ========================================================= */
-
-let currentUser = null;
-
-let freeChatTimer = null;
-
-let freeSecondsRemaining = 1800;
-
-let freeChatRunning = false;
-
-let aiChatHistory = [];
-
-
-/* =========================================================
-   BASIC UI
-   ========================================================= */
-
-function hideLoading(){
-
-  document
-    .getElementById("loading")
-    .classList
-    .add("hidden");
-
-}
-
-
-function showAuth(){
-
-  document
-    .getElementById("authScreen")
-    .classList
-    .remove("hidden");
-
-  document
-    .getElementById("completionScreen")
-    .classList
-    .add("hidden");
-
-  document
-    .getElementById("appScreen")
-    .classList
-    .add("hidden");
-
-}
-
-
-function showCompletion(){
-
-  document
-    .getElementById("authScreen")
-    .classList
-    .add("hidden");
-
-  document
-    .getElementById("completionScreen")
-    .classList
-    .remove("hidden");
-
-  document
-    .getElementById("appScreen")
-    .classList
-    .add("hidden");
-
-}
-
-
-function showApp(){
-
-  document
-    .getElementById("authScreen")
-    .classList
-    .add("hidden");
-
-  document
-    .getElementById("completionScreen")
-    .classList
-    .add("hidden");
-
-  document
-    .getElementById("appScreen")
-    .classList
-    .remove("hidden");
-
-}
-
-
-/* =========================================================
-   AUTH TABS
-   ========================================================= */
-
-function showAuthMode(mode){
-
-  const loginForm =
-    document.getElementById("loginForm");
-
-  const signupForm =
-    document.getElementById("signupForm");
-
-  const loginTab =
-    document.getElementById("loginTab");
-
-  const signupTab =
-    document.getElementById("signupTab");
-
-
-  if(mode === "signup"){
-
-    loginForm.classList.add("hidden");
-    signupForm.classList.remove("hidden");
-
-    loginTab.classList.remove("active");
-    signupTab.classList.add("active");
-
-  }
-
-  else{
-
-    signupForm.classList.add("hidden");
-    loginForm.classList.remove("hidden");
-
-    signupTab.classList.remove("active");
-    loginTab.classList.add("active");
-
-  }
-
-}
-
-
-/* =========================================================
-   TOAST
-   ========================================================= */
+const SUPABASE_URL="https://saauonuvjikpepwmknxf.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_FeLoF94jwdOXWLXDAFE7gg_i_hpT2Vk";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+let currentUser=null;
 
 function toast(message){
-
-  const element =
-    document.getElementById("toast");
-
-  element.textContent = message;
-
-  element.classList.add("show");
-
-  setTimeout(
-    () => element.classList.remove("show"),
-    2600
-  );
-
+  const el=document.getElementById("toast");
+  el.textContent=message;
+  el.classList.add("show");
+  clearTimeout(window.toastTimer);
+  window.toastTimer=setTimeout(()=>el.classList.remove("show"),2600);
 }
 
-
-/* =========================================================
-   LOGIN
-   ========================================================= */
-
-async function loginUser(event){
-
-  event.preventDefault();
-
-
-  const email =
-    document
-      .getElementById("loginEmail")
-      .value
-      .trim();
-
-  const password =
-    document
-      .getElementById("loginPassword")
-      .value;
-
-
-  try{
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient.auth.signInWithPassword({
-        email,
-        password
-      });
-
-
-    if(error)
-      throw error;
-
-
-    currentUser = data.user;
-
-
-    await loadUser();
-
-
-  }
-
-  catch(error){
-
-    console.error(error);
-
-    toast(
-      error.message ||
-      "Unable to log in."
-    );
-
-  }
-
+function hideLoading(){
+  document.getElementById("loading").classList.add("hidden");
 }
 
-
-/* =========================================================
-   SIGN UP
-   ========================================================= */
-
-async function signupUser(event){
-
-  event.preventDefault();
-
-
-  const fullName =
-    document
-      .getElementById("signupName")
-      .value
-      .trim();
-
-  const username =
-    document
-      .getElementById("signupUsername")
-      .value
-      .trim()
-      .toLowerCase();
-
-  const dob =
-    document
-      .getElementById("signupDob")
-      .value;
-
-  const email =
-    document
-      .getElementById("signupEmail")
-      .value
-      .trim();
-
-  const password =
-    document
-      .getElementById("signupPassword")
-      .value;
-
-
-  if(!fullName){
-
-    toast("Please enter your full name.");
-
-    return;
-
-  }
-
-
-  if(!/^[A-Za-z0-9_.]{3,30}$/.test(username)){
-
-    toast(
-      "Username must be 3–30 characters and use only letters, numbers, _ or ."
-    );
-
-    return;
-
-  }
-
-
-  if(!dob){
-
-    toast("Please enter your date of birth.");
-
-    return;
-
-  }
-
-
-  if(!is18Plus(dob)){
-
-    toast(
-      "You must be 18 or older to use Aashiverse."
-    );
-
-    return;
-
-  }
-
-
-  if(password.length < 8){
-
-    toast(
-      "Password must be at least 8 characters."
-    );
-
-    return;
-
-  }
-
-
-  try{
-
-    const {
-      data: existing,
-      error: usernameError
-    } =
-      await supabaseClient
-        .from("profiles")
-        .select("id")
-        .ilike("username", username)
-        .limit(1);
-
-
-    if(usernameError)
-      throw usernameError;
-
-
-    if(existing && existing.length > 0){
-
-      toast(
-        "That username is already taken."
-      );
-
-      return;
-
-    }
-
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient.auth.signUp({
-
-        email,
-
-        password,
-
-        options:{
-          data:{
-            full_name:fullName,
-            username:username,
-            date_of_birth:dob
-          }
-        }
-
-      });
-
-
-    if(error)
-      throw error;
-
-
-    if(data.session){
-
-      currentUser = data.user;
-
-      await loadUser();
-
-    }
-
-    else{
-
-      toast(
-        "Account created. Please check your email and confirm your account."
-      );
-
-      showAuthMode("login");
-
-    }
-
-  }
-
-  catch(error){
-
-    console.error(error);
-
-    toast(
-      error.message ||
-      "Unable to create your account."
-    );
-
-  }
-
+function showAuth(){
+  document.getElementById("authScreen").classList.remove("hidden");
+  document.getElementById("completionScreen").classList.add("hidden");
+  document.getElementById("appScreen").classList.add("hidden");
 }
 
+function showCompletion(){
+  document.getElementById("authScreen").classList.add("hidden");
+  document.getElementById("completionScreen").classList.remove("hidden");
+  document.getElementById("appScreen").classList.add("hidden");
+}
 
-/* =========================================================
-   AGE CHECK
-   ========================================================= */
+function showApp(){
+  document.getElementById("authScreen").classList.add("hidden");
+  document.getElementById("completionScreen").classList.add("hidden");
+  document.getElementById("appScreen").classList.remove("hidden");
+}
+
+function showAuthMode(mode){
+  const signup=mode==="signup";
+  document.getElementById("loginForm").classList.toggle("hidden",signup);
+  document.getElementById("signupForm").classList.toggle("hidden",!signup);
+  document.getElementById("loginTab").classList.toggle("active",!signup);
+  document.getElementById("signupTab").classList.toggle("active",signup);
+}
 
 function is18Plus(dateString){
-
-  const birth =
-    new Date(
-      dateString + "T00:00:00"
-    );
-
-  const today =
-    new Date();
-
-
-  let age =
-    today.getFullYear() -
-    birth.getFullYear();
-
-
-  const month =
-    today.getMonth() -
-    birth.getMonth();
-
-
-  if(
-    month < 0 ||
-    (
-      month === 0 &&
-      today.getDate() < birth.getDate()
-    )
-  ){
-
-    age--;
-
-  }
-
-
-  return age >= 18;
-
+  if(!dateString)return false;
+  const birth=new Date(dateString+"T00:00:00");
+  const today=new Date();
+  let age=today.getFullYear()-birth.getFullYear();
+  const month=today.getMonth()-birth.getMonth();
+  if(month<0||(month===0&&today.getDate()<birth.getDate()))age--;
+  return age>=18;
 }
 
-
-/* =========================================================
-   LOAD CURRENT USER
-   ========================================================= */
-
-async function loadUser(){
-
-  if(!currentUser){
-
-    showAuth();
-
-    return;
-
-  }
-
-
+async function loginUser(event){
+  event.preventDefault();
   try{
-
-    const {
-      data:profile,
-      error
-    } =
-      await supabaseClient
-        .from("profiles")
-        .select("*")
-        .eq("id",currentUser.id)
-        .single();
-
-
-    if(error)
-      throw error;
-
-
-    if(
-      profile.account_status &&
-      profile.account_status !== "active"
-    ){
-
-      toast(
-        "This account is currently unavailable."
-      );
-
-      await supabaseClient.auth.signOut();
-
-      showAuth();
-
-      return;
-
-    }
-
-
-    if(!profile.profile_completed){
-
-      const fullName =
-        profile.full_name ||
-        currentUser.user_metadata?.full_name ||
-        "";
-
-      const username =
-        profile.username ||
-        currentUser.user_metadata?.username ||
-        "";
-
-      const dob =
-        profile.date_of_birth ||
-        currentUser.user_metadata?.date_of_birth ||
-        "";
-
-
-      if(
-        fullName &&
-        username &&
-        dob &&
-        is18Plus(dob)
-      ){
-
-        const {
-          error:completeError
-        } =
-          await supabaseClient
-            .from("profiles")
-            .update({
-
-              full_name:fullName,
-
-              username:username,
-
-              date_of_birth:dob,
-
-              profile_completed:true
-
-            })
-            .eq("id",currentUser.id);
-
-
-        if(completeError)
-          throw completeError;
-
-
-        profile.profile_completed = true;
-
-        profile.full_name = fullName;
-
-        profile.username = username;
-
-        profile.date_of_birth = dob;
-
-      }
-
-      else{
-
-        document
-          .getElementById("completeName")
-          .value =
-          fullName;
-
-        document
-          .getElementById("completeUsername")
-          .value =
-          username;
-
-        document
-          .getElementById("completeDob")
-          .value =
-          dob;
-
-        showCompletion();
-
-        return;
-
-      }
-
-    }
-
-
-    fillProfile(profile);
-
-    showApp();
-
-    await loadFreeChatStatus();
-
-  }
-
-  catch(error){
-
-    console.error(error);
-
-    toast(
-      "Could not load your profile."
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   COMPLETE PROFILE FALLBACK
-   ========================================================= */
-
-async function completeProfile(){
-
-  if(!currentUser){
-
-    showAuth();
-
-    return;
-
-  }
-
-
-  const fullName =
-    document
-      .getElementById("completeName")
-      .value
-      .trim();
-
-  const username =
-    document
-      .getElementById("completeUsername")
-      .value
-      .trim()
-      .toLowerCase();
-
-  const dob =
-    document
-      .getElementById("completeDob")
-      .value;
-
-
-  if(!fullName){
-
-    toast("Please enter your full name.");
-
-    return;
-
-  }
-
-
-  if(!/^[A-Za-z0-9_.]{3,30}$/.test(username)){
-
-    toast(
-      "Username must be 3–30 characters and use only letters, numbers, _ or ."
-    );
-
-    return;
-
-  }
-
-
-  if(!dob || !is18Plus(dob)){
-
-    toast(
-      "You must be 18 or older."
-    );
-
-    return;
-
-  }
-
-
-  try{
-
-    const {
-      data:existing,
-      error:usernameError
-    } =
-      await supabaseClient
-        .from("profiles")
-        .select("id")
-        .ilike("username",username)
-        .neq("id",currentUser.id)
-        .limit(1);
-
-
-    if(usernameError)
-      throw usernameError;
-
-
-    if(existing && existing.length > 0){
-
-      toast(
-        "That username is already taken."
-      );
-
-      return;
-
-    }
-
-
-    const {
-      error
-    } =
-      await supabaseClient
-        .from("profiles")
-        .update({
-
-          full_name:fullName,
-
-          username:username,
-
-          date_of_birth:dob,
-
-          profile_completed:true
-
-        })
-        .eq("id",currentUser.id);
-
-
-    if(error)
-      throw error;
-
-
-    toast(
-      "Profile completed."
-    );
-
-
+    const {data,error}=await supabaseClient.auth.signInWithPassword({
+      email:document.getElementById("loginEmail").value.trim(),
+      password:document.getElementById("loginPassword").value
+    });
+    if(error)throw error;
+    currentUser=data.user;
     await loadUser();
-
-  }
-
-  catch(error){
-
+  }catch(error){
     console.error(error);
-
-    toast(
-      error.message ||
-      "Unable to complete your profile."
-    );
-
+    toast(error.message||"Unable to log in.");
   }
-
 }
 
+async function signupUser(event){
+  event.preventDefault();
 
-/* =========================================================
-   PROFILE UI
-   ========================================================= */
+  const fullName=document.getElementById("signupName").value.trim();
+  const username=document.getElementById("signupUsername").value.trim().toLowerCase();
+  const dob=document.getElementById("signupDob").value;
+  const email=document.getElementById("signupEmail").value.trim();
+  const password=document.getElementById("signupPassword").value;
 
-function fillProfile(profile){
-
-  const name =
-    profile.full_name ||
-    profile.username ||
-    "User";
-
-
-  const username =
-    profile.username ?
-    "@" + profile.username :
-    "Free member";
-
-
-  document
-    .getElementById("profileName")
-    .textContent = name;
-
-
-  document
-    .getElementById("profileUsername")
-    .textContent = username;
-
-
-  document
-    .getElementById("profileEmail")
-    .textContent =
-    currentUser?.email ||
-    "—";
-
-
-  document
-    .getElementById("profileAvatar")
-    .textContent =
-    name.charAt(0).toUpperCase();
-
-}
-
-
-/* =========================================================
-   FREE CHAT STATUS
-   ========================================================= */
-
-async function loadFreeChatStatus(){
-
-  if(!currentUser)
-    return;
-
+  if(!fullName)return toast("Please enter your full name.");
+  if(!/^[A-Za-z0-9_.]{3,30}$/.test(username))return toast("Username must be 3–30 characters and use only letters, numbers, _ or .");
+  if(!dob||!is18Plus(dob))return toast("You must be 18 or older to use Aashiverse.");
+  if(password.length<8)return toast("Password must be at least 8 characters.");
 
   try{
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient
-        .rpc("get_free_chat_status");
-
-
-    if(error)
-      throw error;
-
-
-    if(data){
-
-      const status =
-        Array.isArray(data)
-        ? data[0]
-        : data;
-
-
-      if(status){
-
-        freeSecondsRemaining =
-          Number(
-            status.remaining_seconds ?? 1800
-          );
-
-
-        updateFreeChatUI(
-          status
-        );
-
-      }
-
-    }
-
-  }
-
-  catch(error){
-
-    console.error(
-      "Free chat status error:",
-      error
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   FREE CHAT UI
-   ========================================================= */
-
-function updateFreeChatUI(status){
-
-  const remaining =
-    Math.max(
-      0,
-      Number(
-        status.remaining_seconds ??
-        freeSecondsRemaining
-      )
-    );
-
-
-  freeSecondsRemaining =
-    remaining;
-
-
-  const timer =
-    document
-      .getElementById("freeTimer");
-
-
-  const progress =
-    document
-      .getElementById("freeProgress");
-
-
-  const note =
-    document
-      .getElementById("freeStatusNote");
-
-
-  const button =
-    document
-      .getElementById("startChatButton");
-
-
-  if(!timer || !progress || !note || !button)
-    return;
-
-
-  timer.textContent =
-    formatSeconds(remaining);
-
-
-  const percentage =
-    Math.max(
-      0,
-      Math.min(
-        100,
-        (remaining / 1800) * 100
-      )
-    );
-
-
-  progress.style.width =
-    percentage + "%";
-
-
-  if(status.locked){
-
-    button.disabled = true;
-
-    button.style.opacity = ".6";
-
-    button.textContent =
-      "Free chat locked";
-
-
-    note.textContent =
-      "Your 30 free minutes have been used. Free chat will unlock again after the lock period.";
-
-    return;
-
-  }
-
-
-  if(remaining <= 0){
-
-    button.disabled = true;
-
-    button.style.opacity = ".6";
-
-    button.textContent =
-      "Free chat unavailable";
-
-
-    note.textContent =
-      "Your free chat time has been used.";
-
-    return;
-
-  }
-
-
-  button.disabled = false;
-
-  button.style.opacity = "1";
-
-  button.textContent =
-    "Start free chat";
-
-
-  note.textContent =
-    "You have " +
-    formatSeconds(remaining) +
-    " of free Aashi AI chat remaining.";
-
-}
-
-
-/* =========================================================
-   START FREE CHAT
-   ========================================================= */
-
-async function startFreeChat(){
-
-  if(!currentUser){
-
-    showAuth();
-
-    return;
-
-  }
-
-
-  if(freeSecondsRemaining <= 0){
-
-    toast(
-      "Your free chat time has been used."
-    );
-
-    return;
-
-  }
-
-
-  freeChatRunning = true;
-
-
-  document
-    .getElementById("aiChatBox")
-    .classList
-    .remove("hidden");
-
-
-  document
-    .getElementById("startChatButton")
-    .classList
-    .add("hidden");
-
-
-  document
-    .getElementById("aiMessageInput")
-    .focus();
-
-
-  toast(
-    "Aashi AI is ready to chat."
-  );
-
-
-  startFreeChatTimer();
-
-}
-
-
-/* =========================================================
-   AASHI AI CHAT
-   ========================================================= */
-
-function handleChatKey(event){
-
-  if(
-    event.key === "Enter" &&
-    !event.shiftKey
-  ){
-
-    event.preventDefault();
-
-    sendAiMessage();
-
-  }
-
-}
-
-
-function addChatMessage(
-  message,
-  type
-){
-
-  const messages =
-    document.getElementById(
-      "aiMessages"
-    );
-
-
-  const wrapper =
-    document.createElement("div");
-
-
-  wrapper.className =
-    "chat-message " +
-    (
-      type === "user"
-        ? "user-message"
-        : "ai-message"
-    );
-
-
-  const name =
-    document.createElement("div");
-
-
-  name.className =
-    "message-name";
-
-
-  name.textContent =
-    type === "user"
-      ? "You"
-      : "Aashi AI";
-
-
-  const bubble =
-    document.createElement("div");
-
-
-  bubble.className =
-    "message-bubble";
-
-
-  bubble.textContent =
-    message;
-
-
-  wrapper.appendChild(name);
-
-  wrapper.appendChild(bubble);
-
-  messages.appendChild(wrapper);
-
-
-  messages.scrollTop =
-    messages.scrollHeight;
-
-}
-
-
-async function sendAiMessage(){
-
-  if(!freeChatRunning){
-
-    toast(
-      "Start your free chat first."
-    );
-
-    return;
-
-  }
-
-
-  if(freeSecondsRemaining <= 0){
-
-    toast(
-      "Your free chat time has been used."
-    );
-
-    return;
-
-  }
-
-
-  const input =
-    document.getElementById(
-      "aiMessageInput"
-    );
-
-
-  const sendButton =
-    document.getElementById(
-      "sendAiButton"
-    );
-
-
-  const message =
-    input.value.trim();
-
-
-  if(!message)
-    return;
-
-
-  input.value = "";
-
-
-  addChatMessage(
-    message,
-    "user"
-  );
-
-
-  aiChatHistory.push({
-    role:"user",
-    content:message
-  });
-
-
-  sendButton.disabled = true;
-
-  sendButton.style.opacity = ".6";
-
-  sendButton.textContent =
-    "…";
-
-
-  const thinking =
-    document.createElement("div");
-
-
-  thinking.className =
-    "chat-message ai-message";
-
-
-  thinking.innerHTML = `
-    <div class="message-name">Aashi AI</div>
-    <div class="message-bubble ai-thinking">
-      Aashi AI is typing…
-    </div>
-  `;
-
-
-  const messages =
-    document.getElementById(
-      "aiMessages"
-    );
-
-
-  messages.appendChild(
-    thinking
-  );
-
-
-  messages.scrollTop =
-    messages.scrollHeight;
-
-
-  try{
-
-    const response =
-      await fetch(
-        "/api/chat",
-        {
-          method:"POST",
-
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-
-          body:JSON.stringify({
-            messages:
-              aiChatHistory
-          })
-        }
-      );
-
-
-    const data =
-      await response.json();
-
-
-    thinking.remove();
-
-
-    if(!response.ok){
-
-      throw new Error(
-        data.error ||
-        "Unable to contact Aashi AI."
-      );
-
-    }
-
-
-    const reply =
-      data.reply ||
-      "I'm sorry, I couldn't reply right now.";
-
-
-    aiChatHistory.push({
-      role:"assistant",
-      content:reply
+    const {data:existing,error:usernameError}=await supabaseClient
+      .from("profiles").select("id").ilike("username",username).limit(1);
+
+    if(usernameError)throw usernameError;
+    if(existing&&existing.length>0)return toast("That username is already taken.");
+
+    const {data,error}=await supabaseClient.auth.signUp({
+      email,
+      password,
+      options:{data:{full_name:fullName,username:username,date_of_birth:dob}}
     });
 
-
-    addChatMessage(
-      reply,
-      "assistant"
-    );
-
-
-  }
-
-  catch(error){
-
-    console.error(
-      "Aashi AI error:",
-      error
-    );
-
-
-    thinking.remove();
-
-
-    toast(
-      error.message ||
-      "Aashi AI could not reply."
-    );
-
-
-    aiChatHistory.pop();
-
-  }
-
-  finally{
-
-    sendButton.disabled = false;
-
-    sendButton.style.opacity = "1";
-
-    sendButton.textContent =
-      "Send";
-
-
-    input.focus();
-
-  }
-
-}
-
-
-/* =========================================================
-   FREE CHAT TIMER
-   ========================================================= */
-
-function startFreeChatTimer(){
-
-  clearInterval(
-    freeChatTimer
-  );
-
-
-  freeChatTimer =
-    setInterval(
-      async () => {
-
-        if(!freeChatRunning)
-          return;
-
-
-        if(freeSecondsRemaining <= 0){
-
-          clearInterval(
-            freeChatTimer
-          );
-
-
-          freeChatRunning = false;
-
-
-          updateFreeChatUI({
-            remaining_seconds:0,
-            locked:false
-          });
-
-
-          toast(
-            "Your free chat time has been used."
-          );
-
-
-          return;
-
-        }
-
-
-        freeSecondsRemaining--;
-
-
-        updateFreeChatUI({
-          remaining_seconds:
-            freeSecondsRemaining,
-          locked:false
-        });
-
-
-        /*
-           Save usage every 60 seconds.
-        */
-
-        if(
-          freeSecondsRemaining % 60 === 0
-        ){
-
-          try{
-
-            await supabaseClient.rpc(
-              "consume_free_chat_time",
-              {
-                seconds_to_consume:60
-              }
-            );
-
-          }
-
-          catch(error){
-
-            console.error(
-              "Free time update error:",
-              error
-            );
-
-          }
-
-        }
-
-      },
-      1000
-    );
-
-}
-
-
-/* =========================================================
-   FORMAT TIME
-   ========================================================= */
-
-function formatSeconds(seconds){
-
-  seconds =
-    Math.max(
-      0,
-      Math.floor(seconds)
-    );
-
-
-  const minutes =
-    Math.floor(seconds / 60);
-
-  const secs =
-    seconds % 60;
-
-
-  return (
-    String(minutes).padStart(2,"0") +
-    ":" +
-    String(secs).padStart(2,"0")
-  );
-
-}
-
-
-/* =========================================================
-   SUBSCRIPTION
-   ========================================================= */
-
-function openPlans(){
-
-  document
-    .getElementById("plans")
-    .classList
-    .add("show");
-
-}
-
-
-function closePlans(){
-
-  document
-    .getElementById("plans")
-    .classList
-    .remove("show");
-
-}
-
-
-function soon(){
-
-  toast(
-    "Subscription will start soon"
-  );
-
-}
-
-
-/* =========================================================
-   NAVIGATION
-   ========================================================= */
-
-function show(id,el){
-
-  document
-    .querySelectorAll(".screen")
-    .forEach(
-      screen =>
-        screen.classList.remove("active")
-    );
-
-
-  const target =
-    document.getElementById(id);
-
-
-  if(target)
-    target.classList.add("active");
-
-
-  document
-    .querySelectorAll(".nav")
-    .forEach(
-      nav =>
-        nav.classList.remove("active")
-    );
-
-
-  if(el)
-    el.classList.add("active");
-
-
-  window.scrollTo(
-    0,
-    0
-  );
-
-}
-
-
-/* =========================================================
-   LIKE
-   ========================================================= */
-
-function like(button){
-
-  button.classList.toggle("liked");
-
-
-  button.textContent =
-    button.classList.contains("liked")
-      ? "♥"
-      : "♡";
-
-}
-
-
-/* =========================================================
-   DARK MODE
-   ========================================================= */
-
-function toggleTheme(){
-
-  const dark =
-    document.documentElement
-      .getAttribute("data-theme")
-      === "dark";
-
-
-  if(dark){
-
-    document.documentElement
-      .removeAttribute("data-theme");
-
-
-    localStorage.setItem(
-      "aashiverse-theme",
-      "light"
-    );
-
-  }
-
-  else{
-
-    document.documentElement
-      .setAttribute(
-        "data-theme",
-        "dark"
-      );
-
-
-    localStorage.setItem(
-      "aashiverse-theme",
-      "dark"
-    );
-
-  }
-
-
-  updateThemeButton();
-
-}
-
-
-function updateThemeButton(){
-
-  const dark =
-    document.documentElement
-      .getAttribute("data-theme")
-      === "dark";
-
-
-  document
-    .getElementById("themeToggle")
-    ?.classList
-    .toggle(
-      "on",
-      dark
-    );
-
-}
-
-
-function loadTheme(){
-
-  if(
-    localStorage.getItem(
-      "aashiverse-theme"
-    ) === "dark"
-  ){
-
-    document.documentElement
-      .setAttribute(
-        "data-theme",
-        "dark"
-      );
-
-  }
-
-
-  updateThemeButton();
-
-}
-
-
-/* =========================================================
-   LOGOUT
-   ========================================================= */
-
-async function logoutUser(){
-
-  try{
-
-    freeChatRunning = false;
-
-    clearInterval(
-      freeChatTimer
-    );
-
-
-    await supabaseClient.auth.signOut();
-
-    currentUser = null;
-
-    aiChatHistory = [];
-
-
-    showAuth();
-
-    showAuthMode("login");
-
-
-    toast(
-      "You have been logged out."
-    );
-
-  }
-
-  catch(error){
-
-    console.error(error);
-
-    toast(
-      "Unable to log out."
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   AUTH STATE
-   ========================================================= */
-
-supabaseClient.auth.onAuthStateChange(
-  async (event,session) => {
-
-    if(session?.user){
-
-      currentUser =
-        session.user;
-
-    }
-
-    else{
-
-      currentUser = null;
-
-    }
-
-  }
-);
-
-
-/* =========================================================
-   INITIALIZE
-   ========================================================= */
-
-async function initialize(){
-
-  loadTheme();
-
-
-  try{
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient.auth.getSession();
-
-
-    if(error)
-      throw error;
-
+    if(error)throw error;
 
     if(data.session){
-
-      currentUser =
-        data.session.user;
-
-
+      currentUser=data.user;
       await loadUser();
-
+    }else{
+      toast("Account created. Check your email to confirm your account.");
+      showAuthMode("login");
     }
-
-    else{
-
-      showAuth();
-
-    }
-
-  }
-
-  catch(error){
-
+  }catch(error){
     console.error(error);
-
-    showAuth();
-
+    toast(error.message||"Unable to create your account.");
   }
-
-  finally{
-
-    hideLoading();
-
-  }
-
 }
 
+async function loadUser(){
+  if(!currentUser){showAuth();return;}
 
-/* =========================================================
-   START
-   ========================================================= */
+  try{
+    const {data:profile,error}=await supabaseClient
+      .from("profiles").select("*").eq("id",currentUser.id).single();
+
+    if(error)throw error;
+
+    if(profile.account_status&&profile.account_status!=="active"){
+      toast("This account is currently unavailable.");
+      await supabaseClient.auth.signOut();
+      currentUser=null;
+      showAuth();
+      return;
+    }
+
+    if(!profile.profile_completed){
+      const fullName=profile.full_name||currentUser.user_metadata?.full_name||"";
+      const username=profile.username||currentUser.user_metadata?.username||"";
+      const dob=profile.date_of_birth||currentUser.user_metadata?.date_of_birth||"";
+
+      if(fullName&&username&&dob&&is18Plus(dob)){
+        const {error:completeError}=await supabaseClient
+          .from("profiles")
+          .update({
+            full_name:fullName,
+            username:username,
+            date_of_birth:dob,
+            profile_completed:true
+          })
+          .eq("id",currentUser.id);
+
+        if(completeError)throw completeError;
+
+        profile.profile_completed=true;
+        profile.full_name=fullName;
+        profile.username=username;
+        profile.date_of_birth=dob;
+      }else{
+        document.getElementById("completeName").value=fullName;
+        document.getElementById("completeUsername").value=username;
+        document.getElementById("completeDob").value=dob;
+        showCompletion();
+        return;
+      }
+    }
+
+    fillProfile(profile);
+    showApp();
+  }catch(error){
+    console.error(error);
+    toast("Could not load your profile. Check your Supabase profiles table and permissions.");
+  }
+}
+
+async function completeProfile(){
+  if(!currentUser){showAuth();return;}
+
+  const fullName=document.getElementById("completeName").value.trim();
+  const username=document.getElementById("completeUsername").value.trim().toLowerCase();
+  const dob=document.getElementById("completeDob").value;
+
+  if(!fullName)return toast("Please enter your full name.");
+  if(!/^[A-Za-z0-9_.]{3,30}$/.test(username))return toast("Username must be 3–30 characters and use only letters, numbers, _ or .");
+  if(!dob||!is18Plus(dob))return toast("You must be 18 or older.");
+
+  try{
+    const {data:existing,error:usernameError}=await supabaseClient
+      .from("profiles").select("id").ilike("username",username)
+      .neq("id",currentUser.id).limit(1);
+
+    if(usernameError)throw usernameError;
+    if(existing&&existing.length>0)return toast("That username is already taken.");
+
+    const {error}=await supabaseClient.from("profiles")
+      .update({
+        full_name:fullName,
+        username:username,
+        date_of_birth:dob,
+        profile_completed:true
+      })
+      .eq("id",currentUser.id);
+
+    if(error)throw error;
+    toast("Profile completed.");
+    await loadUser();
+  }catch(error){
+    console.error(error);
+    toast(error.message||"Unable to complete your profile.");
+  }
+}
+
+function fillProfile(profile){
+  const name=profile.full_name||profile.username||"User";
+  document.getElementById("profileName").textContent=name;
+  document.getElementById("profileUsername").textContent=profile.username?"@"+profile.username:"Free member";
+  document.getElementById("profileEmail").textContent=currentUser?.email||"—";
+  document.getElementById("profileAvatar").textContent=name.charAt(0).toUpperCase();
+}
+
+function openPlans(){
+  document.getElementById("plans").classList.add("show");
+}
+
+function closePlans(){
+  document.getElementById("plans").classList.remove("show");
+}
+
+function soon(){
+  toast("Subscription will start soon");
+}
+
+function show(id,button){
+  document.querySelectorAll(".screen").forEach(screen=>screen.classList.remove("active"));
+  const target=document.getElementById(id);
+  if(target)target.classList.add("active");
+
+  document.querySelectorAll(".nav").forEach(nav=>nav.classList.remove("active"));
+  if(button)button.classList.add("active");
+
+  window.scrollTo(0,0);
+}
+
+function like(button){
+  button.classList.toggle("liked");
+  button.textContent=button.classList.contains("liked")?"♥":"♡";
+}
+
+function toggleTheme(){
+  const dark=document.documentElement.getAttribute("data-theme")==="dark";
+
+  if(dark){
+    document.documentElement.removeAttribute("data-theme");
+    localStorage.setItem("aashiverse-theme","light");
+  }else{
+    document.documentElement.setAttribute("data-theme","dark");
+    localStorage.setItem("aashiverse-theme","dark");
+  }
+
+  updateThemeButton();
+}
+
+function updateThemeButton(){
+  document.getElementById("themeToggle")?.classList.toggle(
+    "on",
+    document.documentElement.getAttribute("data-theme")==="dark"
+  );
+}
+
+function loadTheme(){
+  if(localStorage.getItem("aashiverse-theme")==="dark"){
+    document.documentElement.setAttribute("data-theme","dark");
+  }
+  updateThemeButton();
+}
+
+async function logoutUser(){
+  try{
+    const {error}=await supabaseClient.auth.signOut();
+    if(error)throw error;
+    currentUser=null;
+    showAuth();
+    showAuthMode("login");
+    toast("You have been logged out.");
+  }catch(error){
+    console.error(error);
+    toast("Unable to log out.");
+  }
+}
+
+supabaseClient.auth.onAuthStateChange((event,session)=>{
+  currentUser=session?.user||null;
+});
+
+async function initialize(){
+  loadTheme();
+
+  try{
+    const {data,error}=await supabaseClient.auth.getSession();
+    if(error)throw error;
+
+    if(data.session){
+      currentUser=data.session.user;
+      await loadUser();
+    }else{
+      showAuth();
+    }
+  }catch(error){
+    console.error(error);
+    showAuth();
+  }finally{
+    hideLoading();
+  }
+}
 
 initialize();
-
 </script>
-
 </body>
 </html>
