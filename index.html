@@ -156,6 +156,26 @@
       padding:5px 8px;background:var(--soft);color:var(--primary)}
     .empty{padding:20px 8px;text-align:center;color:var(--muted);
       font-size:13px;line-height:1.6}
+    /* Inbox layout: conversation list beside the selected chat, like a messaging app */
+    .inboxlayout{display:grid;grid-template-columns:minmax(230px, .85fr) minmax(0,1.5fr);gap:12px;align-items:start}
+    .inboxpanel{min-width:0;overflow:hidden}
+    .inboxlist{max-height:620px;overflow-y:auto}
+    .inboxrow{display:flex;gap:11px;align-items:center;width:100%;text-align:left;
+      padding:13px 12px;border:0;border-bottom:1px solid var(--border);background:transparent;color:var(--text)}
+    .inboxrow:hover,.inboxrow.selected{background:var(--soft)}
+    .inboxavatar{width:44px;height:44px;flex:0 0 44px;border-radius:50%;display:grid;place-items:center;background:var(--soft);color:var(--primary);font-weight:800}
+    .inboxrowbody{min-width:0;flex:1}
+    .inboxrowtop{display:flex;justify-content:space-between;gap:8px;align-items:center}
+    .inboxrowname{font-size:14px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .inboxtime{font-size:10px;color:var(--muted);white-space:nowrap}
+    .inboxpreview{font-size:12px;color:var(--muted);margin-top:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .threadmessages{height:440px;max-height:60vh;overflow-y:auto;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:13px}
+    .messagebubble{max-width:88%;padding:10px 12px;border:1px solid var(--border);border-radius:14px;margin:9px 0;background:var(--surface);overflow-wrap:anywhere}
+    .messagebubble.outgoing{margin-left:auto;background:var(--soft)}
+    .messagebody{font-size:14px;line-height:1.5;white-space:pre-wrap}
+    .messagefoot{font-size:10px;color:var(--muted);margin-top:6px}
+    .inboxsearch{margin-bottom:10px}
+    @media(max-width:700px){.inboxlayout{grid-template-columns:minmax(0,1fr)}.inboxlist{max-height:320px}.threadmessages{height:380px;max-height:52vh}.inboxrow{padding:12px 8px}}
     @media(min-width:650px){
       main{padding:27px 22px}.hero{padding:34px}
       .stats{grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -363,6 +383,7 @@
           <div class="stat"><span>Published posts</span><strong id="statPosts">—</strong></div>
           <div class="stat"><span>Personal conversations</span><strong id="statPersonal">—</strong></div>
           <div class="stat"><span>AI conversations</span><strong id="statAI">—</strong></div>
+          <div class="stat"><span>Paid subscribers</span><strong id="statPaid">—</strong></div>
         </div>
         <div class="btnrow"><button id="refreshAdmin" class="btn secondary" type="button">Refresh dashboard</button></div>
         <h2>Quick actions</h2>
@@ -396,26 +417,35 @@
 
       <section id="admin-messages" class="adminsection">
         <h2>Personal messages</h2>
-        <div class="notice">Messages in this inbox are from people chatting with Aashi as a real person. They are separate from AI conversations.</div>
-        <div class="card"><div id="personalInbox" class="empty">Loading personal conversations…</div></div>
-        <div class="card">
-          <h3 id="personalThreadTitle" style="margin-top:0">Select a conversation</h3>
-          <div id="personalThread" class="empty">Choose a conversation above to read its messages.</div>
-          <div class="field" style="margin-top:14px"><label for="personalReply">Your reply</label><textarea id="personalReply" maxlength="10000" placeholder="Write your reply…"></textarea></div>
-          <button id="sendPersonalReply" class="btn primary" type="button" disabled>Send Reply</button>
-          <p class="note">Replies are sent as admin messages. Only an authenticated admin can send them.</p>
+        <div class="notice">Your inbox for conversations with you as a real person. Each user has a separate chat thread.</div>
+        <div class="inboxlayout">
+          <div class="card inboxpanel">
+            <div class="field inboxsearch"><label for="personalSearch">Search inbox</label><input id="personalSearch" placeholder="Search name or username"></div>
+            <div id="personalInbox" class="inboxlist empty">Your personal inbox will appear here.</div>
+          </div>
+          <div class="card inboxpanel">
+            <h3 id="personalThreadTitle" style="margin:0 0 12px">Select a conversation</h3>
+            <div id="personalThread" class="threadmessages"><div class="empty">Choose a person from your inbox to read the conversation.</div></div>
+            <div class="field" style="margin-top:14px"><label for="personalReply">Your reply</label><textarea id="personalReply" maxlength="10000" placeholder="Write your reply…"></textarea></div>
+            <button id="sendPersonalReply" class="btn primary" type="button" disabled>Send Reply</button>
+          </div>
         </div>
       </section>
 
       <section id="admin-ai" class="adminsection">
         <h2>AI conversations</h2>
-        <div class="field"><label for="aiSearch">Search by name, username or conversation ID</label><input id="aiSearch" placeholder="Search conversations"></div>
-        <div class="card"><div id="aiInbox" class="empty">Loading AI conversations…</div></div>
-        <div class="card">
-          <h3 id="aiThreadTitle" style="margin-top:0">AI chat history</h3>
-          <div id="aiThread" class="empty">Choose an AI conversation to view its history.</div>
+        <div class="notice">Read what users are talking about with Aashi AI. Each user's AI conversation is shown separately.</div>
+        <div class="inboxlayout">
+          <div class="card inboxpanel">
+            <div class="field inboxsearch"><label for="aiSearch">Search AI inbox</label><input id="aiSearch" placeholder="Search name or username"></div>
+            <div id="aiInbox" class="inboxlist empty">AI conversations will appear here.</div>
+          </div>
+          <div class="card inboxpanel">
+            <h3 id="aiThreadTitle" style="margin:0 0 12px">AI chat history</h3>
+            <div id="aiThread" class="threadmessages"><div class="empty">Choose a conversation to view its history.</div></div>
+          </div>
         </div>
-        <div class="previewbox">AI conversations are read-only in this admin panel. AI replies are not generated from this screen.</div>
+        <p class="note">This inbox is read-only. It does not send messages to the AI or change users' chats.</p>
       </section>
 
       <section id="admin-users" class="adminsection">
@@ -785,15 +815,28 @@
         db.from("profiles").select("id", {count:"exact", head:true}),
         db.from("posts").select("id", {count:"exact", head:true}),
         db.from("conversations").select("id", {count:"exact", head:true}).eq("type","real_person"),
-        db.from("conversations").select("id", {count:"exact", head:true}).eq("type","ai")
+        db.from("conversations").select("id", {count:"exact", head:true}).eq("type","ai"),
+        db.from("subscriptions").select("user_id,status,starts_at,ends_at,plans(price_inr)").eq("status","active").limit(5000)
       ]);
       const labels = ["statUsers","statPosts","statPersonal","statAI"];
       let failed = false;
-      queries.forEach((result,i) => {
+      queries.slice(0,4).forEach((result,i) => {
         if (result.error) { $(labels[i]).textContent = "—"; failed = true; }
         else $(labels[i]).textContent = String(result.count ?? 0);
       });
-      if (failed) adminError("Some dashboard counters could not load. Check the admin SELECT policies for the affected table.");
+      const subResult = queries[4];
+      if (subResult.error) { $("statPaid").textContent = "—"; failed = true; }
+      else {
+        const now = Date.now(), paidUsers = new Set();
+        (subResult.data || []).forEach(sub => {
+          const price = Number(sub.plans?.price_inr || 0);
+          const start = sub.starts_at ? new Date(sub.starts_at).getTime() : 0;
+          const end = sub.ends_at ? new Date(sub.ends_at).getTime() : Infinity;
+          if (price > 0 && start <= now && end > now && sub.user_id) paidUsers.add(sub.user_id);
+        });
+        $("statPaid").textContent = String(paidUsers.size);
+      }
+      if (failed) adminError("Some dashboard counters could not load. Check the admin SELECT policies and subscription plan relationship.");
     }
     async function loadAdminProfiles() {
       const {data,error} = await db.from("profiles")
@@ -835,8 +878,9 @@
     }
     function renderConversationList(type) {
       const list = type === "ai" ? $("aiInbox") : $("personalInbox");
-      const search = (type === "ai" ? $("aiSearch").value : "").trim().toLowerCase();
+      const search = (type === "ai" ? $("aiSearch").value : $("personalSearch").value).trim().toLowerCase();
       list.replaceChildren();
+      const selectedId = type === "ai" ? selectedAIConversation : selectedPersonalConversation;
       const conversations = adminConversations.filter(c => c.type === type).filter(c => {
         const p = adminProfiles.get(c.user_id);
         const hay = [c.id,c.user_id,p?.full_name,p?.display_name,p?.username].join(" ").toLowerCase();
@@ -847,43 +891,55 @@
         list.textContent = search ? "No conversations match this search." : "No conversations found yet.";
         return;
       }
-      list.className = "";
+      list.className = "inboxlist";
       conversations.forEach(c => {
-        const row = document.createElement("div"); row.className = "adminlistitem";
+        const row = document.createElement("button"); row.type="button";
+        row.className = "inboxrow" + (selectedId === c.id ? " selected" : "");
+        const avatar = addText(row,"div",(profileLabel(c.user_id).trim().charAt(0) || "U").toUpperCase(),"inboxavatar");
+        const body = addText(row,"div","","inboxrowbody");
+        const top = addText(body,"div","","inboxrowtop");
+        addText(top,"span",profileLabel(c.user_id),"inboxrowname");
         const msgs = adminMessages.get(c.id) || [];
         const last = msgs[msgs.length-1];
-        addText(row,"h3",profileLabel(c.user_id));
-        addText(row,"p",(last ? (last.body || (last.image_url ? "Image message" : "Message")) : "No messages yet") +
-          " · " + formatDate(last?.created_at || c.last_message_at || c.created_at));
-        const button = addText(row,"button",type === "ai" ? "View AI chat" : "Open conversation","btn secondary");
-        button.type = "button";
-        button.onclick = () => {
-          if (type === "ai") { selectedAIConversation = c.id; renderThread(c,"ai"); }
-          else { selectedPersonalConversation = c.id; renderThread(c,"personal"); }
+        addText(top,"span",formatShortDate(last?.created_at || c.last_message_at || c.created_at),"inboxtime");
+        const preview = last ? (last.body || (last.image_url ? "Image message" : "Message")) : "No messages yet";
+        addText(body,"div",(last?.sender_type === "user" ? "" : last?.sender_type === "admin" ? "You: " : last?.sender_type === "aashi" ? (last.is_ai_generated ? "Aashi AI: " : "Aashi: ") : "") + preview,"inboxpreview");
+        row.onclick = () => {
+          if (type === "ai") selectedAIConversation = c.id;
+          else selectedPersonalConversation = c.id;
+          renderConversationList(type);
+          renderThread(c,type === "ai" ? "ai" : "personal");
         };
         list.appendChild(row);
       });
+    }
+    function formatShortDate(value) {
+      if (!value) return "";
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return "";
+      const today = new Date();
+      return d.toDateString() === today.toDateString() ? d.toLocaleTimeString([], {hour:"numeric",minute:"2-digit"}) : d.toLocaleDateString([], {month:"short",day:"numeric"});
     }
     function renderThread(conversation, mode) {
       const isAI = mode === "ai";
       const target = $(isAI ? "aiThread" : "personalThread");
       const title = $(isAI ? "aiThreadTitle" : "personalThreadTitle");
-      title.textContent = profileLabel(conversation.user_id) + (isAI ? " · AI conversation" : " · Personal conversation");
+      title.textContent = profileLabel(conversation.user_id) + (isAI ? " · Aashi AI" : " · Personal chat");
       target.replaceChildren();
-      target.className = "";
+      target.className = "threadmessages";
       const messages = adminMessages.get(conversation.id) || [];
       if (!messages.length) addText(target,"div","No messages in this conversation yet.","empty");
       messages.forEach(m => {
         const bubble = document.createElement("div");
-        bubble.style.cssText = "padding:11px 12px;border:1px solid var(--border);border-radius:12px;margin:8px 0;background:" +
-          ((m.sender_type === "admin" || m.sender_type === "aashi") ? "var(--soft)" : "var(--surface)") + ";";
+        bubble.className = "messagebubble" + ((m.sender_type === "admin" || (m.sender_type === "aashi" && !m.is_ai_generated)) ? " outgoing" : "");
         const sender = m.sender_type === "user" ? "User" : m.sender_type === "admin" ? "You (admin)" : m.sender_type === "aashi" ? (m.is_ai_generated ? "Aashi AI" : "Aashi") : m.sender_type;
         addText(bubble,"strong",sender);
-        addText(bubble,"div",m.body || (m.image_url ? "[Image message — image viewing will be connected in the image step]" : "[Empty message]"));
+        addText(bubble,"div",m.body || (m.image_url ? "[Image message — image viewing will be connected in the image step]" : "[Empty message]"),"messagebody");
         if (m.image_url) addText(bubble,"div",m.image_url,"small muted");
-        addText(bubble,"div",formatDate(m.created_at),"small muted");
+        addText(bubble,"div",formatDate(m.created_at),"messagefoot");
         target.appendChild(bubble);
       });
+      target.scrollTop = target.scrollHeight;
       if (!isAI) $("sendPersonalReply").disabled = false;
     }
     async function loadAdminUsers() {
@@ -924,6 +980,7 @@
       });
     }
     $("aiSearch").addEventListener("input",() => renderConversationList("ai"));
+    $("personalSearch").addEventListener("input",() => renderConversationList("real_person"));
     $("userSearch").addEventListener("input",() => loadAdminUsers());
     $("refreshAdmin").onclick = async () => {
       await loadAdminStats();
