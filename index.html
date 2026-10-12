@@ -296,8 +296,15 @@
         <div class="brandname">Aashiverse</div>
         <div class="tagline">The world of your dreams.</div>
       </div></div>
-      <button id="theme" class="iconbtn" aria-label="Toggle theme">☾</button>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button id="notificationButton" class="iconbtn" type="button" aria-label="Notifications" style="position:relative">♧<span id="notificationBadge" class="hidden" style="position:absolute;right:-4px;top:-4px;background:#b42318;color:white;border-radius:99px;min-width:19px;height:19px;padding:2px 5px;font-size:11px;font-weight:700">0</span></button>
+        <button id="theme" class="iconbtn" aria-label="Toggle theme">☾</button>
+      </div>
     </header>
+    <section id="notificationPanel" class="card hidden" style="max-width:780px;margin:12px auto;padding:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h3 style="margin:0">Notifications</h3><button id="closeNotifications" class="btn outline" style="width:auto;min-height:36px">Close</button></div>
+      <div id="notificationList" style="margin-top:10px"><div class="empty">No notifications yet.</div></div>
+    </section>
     <main>
       <section id="home" class="screen active">
         <div class="hero">
@@ -612,6 +619,7 @@
       show("customerApp");
       showCustomerScreen("home");
       await loadPublicPosts();
+      await loadNotifications();
     }
     function setAuthMode(mode) {
       authMode = mode;
@@ -771,7 +779,7 @@
         }
         for (const post of data) {
           const card=document.createElement("article");
-          card.className="card post";
+          card.className="card post"; card.dataset.postId=post.id;
           const meta=document.createElement("div");
           meta.className="postmeta";
           const author=document.createElement("strong");
@@ -854,7 +862,7 @@
 
           try {
             const {data:rows,error:commentError}=await db.from("post_comments")
-              .select("id,user_id,body,created_at").eq("post_id",post.id)
+              .select("id,user_id,body,created_at,parent_comment_id").eq("post_id",post.id)
               .order("created_at",{ascending:true}).limit(50);
             if(commentError)throw commentError;
             const authorIds=[...new Set((rows||[]).map(r=>r.user_id).filter(Boolean))];
@@ -865,15 +873,22 @@
               if(!authorError) authors=new Map((authorRows||[]).map(a=>[a.id,a]));
             }
             comments.innerHTML="";
-            (rows||[]).forEach(row=>{
-              const line=document.createElement("div");
-              line.className="comment-item";
+            const topLevel=(rows||[]).filter(r=>!r.parent_comment_id);
+            const replies=(rows||[]).filter(r=>r.parent_comment_id);
+            topLevel.forEach(row=>{
+              const line=document.createElement("div"); line.className="comment-item";
               const author=authors.get(row.user_id);
               const name=document.createElement("strong");
               name.textContent=(author?.full_name||author?.display_name||(author?.username?"@"+author.username:"Member"))+" ";
-              const text=document.createElement("span");
-              text.textContent=row.body||"";
-              line.append(name,text);comments.appendChild(line);
+              const text=document.createElement("span"); text.textContent=row.body||"";
+              line.append(name,text); comments.appendChild(line);
+              replies.filter(r=>r.parent_comment_id===row.id).forEach(reply=>{
+                const replyLine=document.createElement("div"); replyLine.className="comment-item"; replyLine.style.marginLeft="22px"; replyLine.style.borderLeft="2px solid var(--border)"; replyLine.style.paddingLeft="10px";
+                const replyAuthor=authors.get(reply.user_id); const replyName=document.createElement("strong");
+                replyName.textContent=(reply.user_id===user?.id?"Aashi":replyAuthor?.full_name||replyAuthor?.display_name||(replyAuthor?.username?"@"+replyAuthor.username:"Member"))+" replied: ";
+                const replyText=document.createElement("span"); replyText.textContent=reply.body||"";
+                replyLine.append(replyName,replyText); comments.appendChild(replyLine);
+              });
             });
           } catch(e) {
             console.warn("Comments could not load",e);
@@ -1286,23 +1301,78 @@
           replyForm.append(replyInput,replyButton); detail.appendChild(replyForm); row.appendChild(detail);
           async function refreshPostComments(){
             commentList.textContent="Loading comments…";
-            const {data:rows,error:ce}=await db.from("post_comments").select("id,user_id,body,created_at").eq("post_id",post.id).order("created_at",{ascending:true}).limit(100);
+            const {data:rows,error:ce}=await db.from("post_comments").select("id,user_id,body,created_at,parent_comment_id").eq("post_id",post.id).order("created_at",{ascending:true}).limit(200);
             if(ce){commentList.textContent="Could not load comments: "+ce.message;return;}
             commentList.replaceChildren();
             const ids=[...new Set((rows||[]).map(r=>r.user_id).filter(Boolean))];
             let authors=new Map();
-            if(ids.length){const {data:aa}=await db.from("comment_author_profiles").select("id,full_name,display_name,username").in("id",ids);authors=new Map((aa||[]).map(a=>[a.id,a]));}
-            if(!rows?.length){commentList.textContent="No comments yet.";return;}
-            rows.forEach(c=>{const line=document.createElement("div");line.className="adminlistitem";const a=authors.get(c.user_id);addText(line,"strong",(c.user_id===user?.id?"Aashi":a?.full_name||a?.display_name||(a?.username?"@"+a.username:"Member"))+" · ");addText(line,"span",c.body||"");addText(line,"p",formatDate(c.created_at));commentList.appendChild(line);});
+            if(ids.length){const {data:aa,error:ae}=await db.from("comment_author_profiles").select("id,full_name,display_name,username").in("id",ids);if(!ae)authors=new Map((aa||[]).map(a=>[a.id,a]));}
+            const top=(rows||[]).filter(c=>!c.parent_comment_id); const replies=(rows||[]).filter(c=>c.parent_comment_id);
+            if(!top.length){commentList.textContent="No comments yet.";return;}
+            top.forEach(c=>{
+              const thread=document.createElement("div");thread.className="adminlistitem";thread.style.padding="12px";thread.style.border="1px solid var(--border)";thread.style.borderRadius="12px";thread.style.marginBottom="10px";
+              const a=authors.get(c.user_id); const authorName=a?.full_name||a?.display_name||(a?.username?"@"+a.username:"Member");
+              const head=addText(thread,"strong",authorName+" · "+formatDate(c.created_at));
+              addText(thread,"p",c.body||"");
+              replies.filter(r=>r.parent_comment_id===c.id).forEach(r=>{
+                const ra=authors.get(r.user_id); const replyLine=document.createElement("div");replyLine.style.cssText="margin:8px 0 8px 12px;padding:9px;border-left:3px solid var(--primary);background:var(--surface2);border-radius:6px";
+                addText(replyLine,"strong",(r.user_id===user?.id?"Aashi":ra?.full_name||ra?.display_name||(ra?.username?"@"+ra.username:"Member"))+" replied");
+                addText(replyLine,"p",r.body||"");addText(replyLine,"small",formatDate(r.created_at),"muted");thread.appendChild(replyLine);
+              });
+              const oneReplyForm=document.createElement("form");oneReplyForm.className="comment-form";oneReplyForm.style.marginTop="10px";
+              const oneReplyInput=document.createElement("input");oneReplyInput.maxLength=1000;oneReplyInput.placeholder="Reply directly to "+authorName+"…";oneReplyInput.required=true;
+              const oneReplyButton=document.createElement("button");oneReplyButton.type="submit";oneReplyButton.textContent="Reply to this comment";
+              oneReplyForm.append(oneReplyInput,oneReplyButton);thread.appendChild(oneReplyForm);
+              oneReplyForm.onsubmit=async ev=>{
+                ev.preventDefault();const body=oneReplyInput.value.trim();if(!body)return;oneReplyButton.disabled=true;
+                try{
+                  const {data:replyRow,error:re}=await db.from("post_comments").insert({post_id:post.id,user_id:user.id,body,parent_comment_id:c.id}).select("id").single();
+                  if(re)throw re;
+                  const {error:ne}=await db.from("notifications").insert({user_id:c.user_id,actor_id:user.id,post_id:post.id,comment_id:replyRow.id,type:"comment_reply",message:"Aashi replied to your comment: "+body.slice(0,180)});
+                  if(ne)throw new Error("Reply was posted, but notification could not be created: "+ne.message);
+                  oneReplyInput.value="";await refreshPostComments();
+                  notice("adminNotice","Reply sent and notification created.","success");
+                }catch(err){adminError("Reply failed: "+(err.message||"Check post_comments and notifications permissions."));}
+                finally{oneReplyButton.disabled=false;}
+              };
+              commentList.appendChild(thread);
+            });
           }
           heading.onclick=()=>{detail.classList.toggle("hidden");if(!detail.classList.contains("hidden"))refreshPostComments();};
-          replyForm.onsubmit=async e=>{e.preventDefault();const body=replyInput.value.trim();if(!body)return;replyButton.disabled=true;try{const {error:re}=await db.from("post_comments").insert({post_id:post.id,user_id:user.id,body});if(re)throw re;replyInput.value="";await refreshPostComments();}catch(err){adminError("Reply failed: "+(err.message||"Check post_comments INSERT policy."));}finally{replyButton.disabled=false;}};
           list.appendChild(row);
         }
       } catch(err) {
         list.textContent = "Could not load posts: " + (err.message || "");
       }
     }
+
+    async function loadNotifications(){
+      if(!user)return;
+      const list=$("notificationList");
+      try{
+        const {data,error}=await db.from("notifications").select("id,post_id,comment_id,message,is_read,created_at").eq("user_id",user.id).order("created_at",{ascending:false}).limit(30);
+        if(error)throw error;
+        const unread=(data||[]).filter(n=>!n.is_read).length;
+        const badge=$("notificationBadge");badge.textContent=unread>99?"99+":String(unread);badge.classList.toggle("hidden",unread===0);
+        list.replaceChildren();
+        if(!data?.length){list.innerHTML='<div class="empty">No notifications yet.</div>';return;}
+        data.forEach(n=>{
+          const item=document.createElement("button");item.type="button";item.className="btn "+(n.is_read?"outline":"secondary");item.style.cssText="display:block;text-align:left;margin:8px 0;height:auto;white-space:normal";
+          const msg=document.createElement("div");msg.textContent=n.message;msg.style.fontWeight=n.is_read?"400":"700";
+          const time=document.createElement("small");time.className="muted";time.textContent=formatDate(n.created_at);item.append(msg,time);
+          item.onclick=async()=>{
+            try{if(!n.is_read){const {error:ue}=await db.from("notifications").update({is_read:true}).eq("id",n.id);if(ue)throw ue;}}
+            catch(e){console.warn("Notification read status could not be updated",e);}
+            $("notificationPanel").classList.add("hidden");showCustomerScreen("home");await loadPublicPosts();
+            if(n.post_id){const target=document.querySelector('[data-post-id="'+CSS.escape(n.post_id)+'"]');if(target){target.scrollIntoView({behavior:"smooth",block:"center"});target.style.outline="2px solid var(--primary)";setTimeout(()=>target.style.outline="",2200);}}
+            await loadNotifications();
+          };
+          list.appendChild(item);
+        });
+      }catch(e){list.textContent="Notifications could not load: "+(e.message||"Please try again.");}
+    }
+    $("notificationButton").onclick=async()=>{const panel=$("notificationPanel");panel.classList.toggle("hidden");if(!panel.classList.contains("hidden"))await loadNotifications();};
+    $("closeNotifications").onclick=()=>$("notificationPanel").classList.add("hidden");
 
     async function init(){
       try{
