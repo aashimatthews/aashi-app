@@ -338,6 +338,7 @@
           <div class="stat"><span>Personal conversations</span><strong id="statPersonal">—</strong></div>
           <div class="stat"><span>AI conversations</span><strong id="statAI">—</strong></div>
         </div>
+        <div class="btnrow"><button id="refreshAdmin" class="btn secondary" type="button">Refresh dashboard</button></div>
         <h2>Quick actions</h2>
         <div class="card">
           <button class="btn primary" data-go-tab="posts">Create a Post</button>
@@ -369,27 +370,32 @@
 
       <section id="admin-messages" class="adminsection">
         <h2>Personal messages</h2>
-        <div class="notice">This area is reserved for conversations with you as the real person. It will not mix these messages with AI conversations.</div>
-        <div class="card"><div class="empty">Incoming personal conversations will appear here when connected to the database.</div></div>
-        <div class="card adminform">
-          <h3 style="margin-top:0">Reply preview</h3>
-          <div class="field"><label>Message</label><textarea id="personalReply" placeholder="Write your reply..."></textarea></div>
-          <button id="sendPersonalReply" class="btn primary" type="button">Send Reply</button>
-          <p class="note">Sending is disabled until a conversation is selected and the backend is connected.</p>
+        <div class="notice">Messages in this inbox are from people chatting with Aashi as a real person. They are separate from AI conversations.</div>
+        <div class="card"><div id="personalInbox" class="empty">Loading personal conversations…</div></div>
+        <div class="card">
+          <h3 id="personalThreadTitle" style="margin-top:0">Select a conversation</h3>
+          <div id="personalThread" class="empty">Choose a conversation above to read its messages.</div>
+          <div class="field" style="margin-top:14px"><label for="personalReply">Your reply</label><textarea id="personalReply" maxlength="10000" placeholder="Write your reply…"></textarea></div>
+          <button id="sendPersonalReply" class="btn primary" type="button" disabled>Send Reply</button>
+          <p class="note">Replies are sent as admin messages. Only an authenticated admin can send them.</p>
         </div>
       </section>
 
       <section id="admin-ai" class="adminsection">
         <h2>AI conversations</h2>
-        <div class="field"><label>Search by user email or ID</label><input id="aiSearch" placeholder="Search users"></div>
-        <div class="card"><div class="empty">AI conversations and message history will appear here once connected to the database.</div></div>
-        <div class="previewbox">Private conversation history must be protected by admin-only database policies. Do not expose service-role credentials in browser code.</div>
+        <div class="field"><label for="aiSearch">Search by name, username or conversation ID</label><input id="aiSearch" placeholder="Search conversations"></div>
+        <div class="card"><div id="aiInbox" class="empty">Loading AI conversations…</div></div>
+        <div class="card">
+          <h3 id="aiThreadTitle" style="margin-top:0">AI chat history</h3>
+          <div id="aiThread" class="empty">Choose an AI conversation to view its history.</div>
+        </div>
+        <div class="previewbox">AI conversations are read-only in this admin panel. AI replies are not generated from this screen.</div>
       </section>
 
       <section id="admin-users" class="adminsection">
         <h2>User management</h2>
-        <div class="field"><label>Search users</label><input id="userSearch" placeholder="Search by name, username or email"></div>
-        <div class="card"><div class="empty">User search and account status will appear here once connected to a secure admin backend.</div></div>
+        <div class="field"><label for="userSearch">Search by name, username or user ID</label><input id="userSearch" placeholder="Search users"></div>
+        <div class="card"><div id="userList" class="empty">Loading users…</div></div>
       </section>
       <div class="footer">Aashiverse Admin · Restricted access</div>
     </div>
@@ -454,6 +460,13 @@
       document.querySelectorAll(".admintab").forEach(b =>
         b.classList.toggle("active", b.dataset.adminTab === name));
       window.scrollTo({top:0,behavior:"smooth"});
+      if (profile?.role === "admin") {
+        if (name === "overview") loadAdminStats();
+        if (name === "messages") loadConversations("real_person");
+        if (name === "ai") loadConversations("ai");
+        if (name === "users") loadAdminUsers();
+        if (name === "posts") loadAdminPosts();
+      }
     }
     async function getProfile(current) {
       const {data,error} = await db.from("profiles")
@@ -503,6 +516,7 @@
         $("adminGreeting").textContent = "Signed in as " + (p.full_name || p.username || current.email);
         show("adminApp");
         showAdminTab("overview");
+        await loadAdminStats();
         return;
       }
       if (!p || p.account_status === "suspended") {
@@ -667,9 +681,231 @@
       e.preventDefault();
       notice("postMessage","The post editor UI is ready. Publishing is not connected yet; we will add secure publishing and image upload next.");
     });
-    $("sendPersonalReply").onclick=()=>{
-      notice("adminNotice","Reply sending is not connected yet. No message has been sent.");
+    // Admin dashboard data: all output is created with textContent to avoid HTML injection.
+    let adminConversations = [], selectedPersonalConversation = null;
+    let selectedAIConversation = null, adminProfiles = new Map(), adminMessages = new Map();
+
+    function adminError(message) {
+      notice("adminNotice", message || "Something went wrong while loading dashboard data.", "error");
+    }
+    function clearAdminNotice() { hideNotice("adminNotice"); }
+    function profileLabel(id) {
+      const p = adminProfiles.get(id);
+      if (!p) return "User " + String(id || "").slice(0,8);
+      return p.full_name || p.display_name || (p.username ? "@"+p.username : "Aashiverse Member");
+    }
+    function addText(parent, tag, text, className) {
+      const el = document.createElement(tag);
+      el.textContent = text == null ? "" : String(text);
+      if (className) el.className = className;
+      parent.appendChild(el);
+      return el;
+    }
+    function formatDate(value) {
+      if (!value) return "Date unavailable";
+      const d = new Date(value);
+      return Number.isNaN(d.getTime()) ? "" : d.toLocaleString();
+    }
+    async function loadAdminStats() {
+      clearAdminNotice();
+      const queries = await Promise.all([
+        db.from("profiles").select("id", {count:"exact", head:true}),
+        db.from("posts").select("id", {count:"exact", head:true}),
+        db.from("conversations").select("id", {count:"exact", head:true}).eq("type","real_person"),
+        db.from("conversations").select("id", {count:"exact", head:true}).eq("type","ai")
+      ]);
+      const labels = ["statUsers","statPosts","statPersonal","statAI"];
+      let failed = false;
+      queries.forEach((result,i) => {
+        if (result.error) { $(labels[i]).textContent = "—"; failed = true; }
+        else $(labels[i]).textContent = String(result.count ?? 0);
+      });
+      if (failed) adminError("Some dashboard counters could not load. Check the admin SELECT policies for the affected table.");
+    }
+    async function loadAdminProfiles() {
+      const {data,error} = await db.from("profiles")
+        .select("id,full_name,display_name,username,account_status,profile_completed,created_at,role")
+        .order("created_at",{ascending:false}).limit(1000);
+      if (error) throw error;
+      adminProfiles = new Map((data || []).map(p => [p.id,p]));
+      return data || [];
+    }
+    async function loadConversations(type) {
+      const list = type === "ai" ? $("aiInbox") : $("personalInbox");
+      list.textContent = "Loading conversations…";
+      clearAdminNotice();
+      try {
+        await loadAdminProfiles();
+        const {data,error} = await db.from("conversations")
+          .select("id,user_id,type,created_at,updated_at,last_message_at")
+          .eq("type",type).order("last_message_at",{ascending:false,nullsFirst:false})
+          .limit(500);
+        if (error) throw error;
+        adminConversations = data || [];
+        const {data:messages,error:messageError} = await db.from("messages")
+          .select("id,conversation_id,sender_type,body,image_url,message_type,is_ai_generated,created_at")
+          .order("created_at",{ascending:false}).limit(5000);
+        if (messageError) throw messageError;
+        adminMessages = new Map();
+        (messages || []).forEach(m => {
+          if (!adminMessages.has(m.conversation_id)) adminMessages.set(m.conversation_id,[]);
+          adminMessages.get(m.conversation_id).push(m);
+        });
+        // The query is newest-first; reverse each thread for chronological display.
+        adminMessages.forEach((arr,id) => adminMessages.set(id,arr.slice().reverse()));
+        renderConversationList(type);
+      } catch (err) {
+        console.error("Conversation load error",err);
+        list.textContent = "Could not load conversations. " + (err.message || "Check database policies.");
+        adminError("Inbox error: " + (err.message || "Unable to load conversations."));
+      }
+    }
+    function renderConversationList(type) {
+      const list = type === "ai" ? $("aiInbox") : $("personalInbox");
+      const search = (type === "ai" ? $("aiSearch").value : "").trim().toLowerCase();
+      list.replaceChildren();
+      const conversations = adminConversations.filter(c => c.type === type).filter(c => {
+        const p = adminProfiles.get(c.user_id);
+        const hay = [c.id,c.user_id,p?.full_name,p?.display_name,p?.username].join(" ").toLowerCase();
+        return hay.includes(search);
+      });
+      if (!conversations.length) {
+        list.className = "empty";
+        list.textContent = search ? "No conversations match this search." : "No conversations found yet.";
+        return;
+      }
+      list.className = "";
+      conversations.forEach(c => {
+        const row = document.createElement("div"); row.className = "adminlistitem";
+        const msgs = adminMessages.get(c.id) || [];
+        const last = msgs[msgs.length-1];
+        addText(row,"h3",profileLabel(c.user_id));
+        addText(row,"p",(last ? (last.body || (last.image_url ? "Image message" : "Message")) : "No messages yet") +
+          " · " + formatDate(last?.created_at || c.last_message_at || c.created_at));
+        const button = addText(row,"button",type === "ai" ? "View AI chat" : "Open conversation","btn secondary");
+        button.type = "button";
+        button.onclick = () => {
+          if (type === "ai") { selectedAIConversation = c.id; renderThread(c,"ai"); }
+          else { selectedPersonalConversation = c.id; renderThread(c,"personal"); }
+        };
+        list.appendChild(row);
+      });
+    }
+    function renderThread(conversation, mode) {
+      const isAI = mode === "ai";
+      const target = $(isAI ? "aiThread" : "personalThread");
+      const title = $(isAI ? "aiThreadTitle" : "personalThreadTitle");
+      title.textContent = profileLabel(conversation.user_id) + (isAI ? " · AI conversation" : " · Personal conversation");
+      target.replaceChildren();
+      target.className = "";
+      const messages = adminMessages.get(conversation.id) || [];
+      if (!messages.length) addText(target,"div","No messages in this conversation yet.","empty");
+      messages.forEach(m => {
+        const bubble = document.createElement("div");
+        bubble.style.cssText = "padding:11px 12px;border:1px solid var(--border);border-radius:12px;margin:8px 0;background:" +
+          ((m.sender_type === "admin" || m.sender_type === "aashi") ? "var(--soft)" : "var(--surface)") + ";";
+        const sender = m.sender_type === "user" ? "User" : m.sender_type === "admin" ? "You (admin)" : m.sender_type === "aashi" ? (m.is_ai_generated ? "Aashi AI" : "Aashi") : m.sender_type;
+        addText(bubble,"strong",sender);
+        addText(bubble,"div",m.body || (m.image_url ? "[Image message — image viewing will be connected in the image step]" : "[Empty message]"));
+        if (m.image_url) addText(bubble,"div",m.image_url,"small muted");
+        addText(bubble,"div",formatDate(m.created_at),"small muted");
+        target.appendChild(bubble);
+      });
+      if (!isAI) $("sendPersonalReply").disabled = false;
+    }
+    async function loadAdminUsers() {
+      const list = $("userList"); list.textContent = "Loading users…"; clearAdminNotice();
+      try {
+        const users = await loadAdminProfiles();
+        const {data:subs,error:subError} = await db.from("subscriptions")
+          .select("user_id,status,starts_at,ends_at,plan_id,plans(price_inr)")
+          .limit(2000);
+        if (subError) console.warn("Subscription status unavailable",subError);
+        const now = Date.now(), active = new Set();
+        (subs || []).forEach(sub => {
+          const price = Number(sub.plans?.price_inr || 0);
+          const started = !sub.starts_at || new Date(sub.starts_at).getTime() <= now;
+          const notEnded = !sub.ends_at || new Date(sub.ends_at).getTime() > now;
+          if (sub.status === "active" && price > 0 && started && notEnded) active.add(sub.user_id);
+        });
+        renderAdminUsers(users,active);
+        if (subError) adminError("Users loaded, but subscription status could not be checked: " + subError.message);
+      } catch(err) {
+        console.error("Users load error",err);
+        list.textContent = "Could not load users. " + (err.message || "");
+        adminError("User list error: " + (err.message || "Unable to load users."));
+      }
+    }
+    function renderAdminUsers(users,active) {
+      const list = $("userList"), search = $("userSearch").value.trim().toLowerCase();
+      list.replaceChildren();
+      const filtered = users.filter(p => [p.id,p.full_name,p.display_name,p.username,p.account_status,p.role].join(" ").toLowerCase().includes(search));
+      if (!filtered.length) { list.className = "empty"; list.textContent = search ? "No users match this search." : "No users found."; return; }
+      list.className = "";
+      filtered.forEach(p => {
+        const row = document.createElement("div"); row.className = "adminlistitem";
+        addText(row,"h3",p.full_name || p.display_name || "Aashiverse Member");
+        addText(row,"p",(p.username ? "@"+p.username+" · " : "") + "ID: "+p.id);
+        addText(row,"p","Account: "+(p.account_status || "unknown")+" · "+(active.has(p.id) ? "Paid subscription active" : "Free / no active paid subscription"));
+        list.appendChild(row);
+      });
+    }
+    $("aiSearch").addEventListener("input",() => renderConversationList("ai"));
+    $("userSearch").addEventListener("input",() => loadAdminUsers());
+    $("refreshAdmin").onclick = async () => {
+      await loadAdminStats();
+      if (profile?.role === "admin") {
+        const activeTab = document.querySelector(".admintab.active")?.dataset.adminTab;
+        if (activeTab === "messages") await loadConversations("real_person");
+        if (activeTab === "ai") await loadConversations("ai");
+        if (activeTab === "users") await loadAdminUsers();
+      }
     };
+    $("sendPersonalReply").onclick = async () => {
+      const conversationId = selectedPersonalConversation;
+      const body = $("personalReply").value.trim();
+      if (!conversationId) { adminError("Open a personal conversation before replying."); return; }
+      if (!body) { adminError("Write a message before sending."); return; }
+      const button = $("sendPersonalReply"); busy(button,true,"Sending…"); clearAdminNotice();
+      try {
+        const {error} = await db.from("messages").insert({
+          conversation_id:conversationId, sender_type:"admin", body,
+          message_type:"text", is_ai_generated:false
+        });
+        if (error) throw error;
+        $("personalReply").value = "";
+        await loadConversations("real_person");
+        const conversation = adminConversations.find(c => c.id === conversationId);
+        if (conversation) renderThread(conversation,"personal");
+        notice("adminNotice","Reply sent successfully.","success");
+      } catch(err) {
+        console.error("Reply send error",err);
+        adminError("Reply was not sent: " + (err.message || "Check the message INSERT policy and required database fields."));
+      } finally {
+        busy(button,false,"Send Reply");
+        button.disabled = !selectedPersonalConversation;
+      }
+    };
+    async function loadAdminPosts() {
+      const list = $("adminPostList"); list.textContent = "Loading posts…";
+      try {
+        const {data,error} = await db.from("posts").select("id,caption,image_url,visibility,comments_enabled,created_at")
+          .order("created_at",{ascending:false}).limit(100);
+        if (error) throw error;
+        list.replaceChildren();
+        if (!data?.length) { list.className = "empty"; list.textContent = "No posts found yet."; return; }
+        list.className = "";
+        data.forEach(post => {
+          const row = document.createElement("div"); row.className = "adminlistitem";
+          addText(row,"h3",post.caption || "(No caption)");
+          addText(row,"p",(post.visibility === "everyone" ? "Public" : "Subscribers only")+" · "+formatDate(post.created_at));
+          if (post.image_url) addText(row,"p",post.image_url,"small muted");
+          list.appendChild(row);
+        });
+      } catch(err) {
+        list.textContent = "Could not load posts: " + (err.message || "");
+      }
+    }
 
     async function init(){
       try{
