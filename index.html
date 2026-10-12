@@ -857,13 +857,23 @@
               .select("id,user_id,body,created_at").eq("post_id",post.id)
               .order("created_at",{ascending:true}).limit(50);
             if(commentError)throw commentError;
+            const authorIds=[...new Set((rows||[]).map(r=>r.user_id).filter(Boolean))];
+            let authors=new Map();
+            if(authorIds.length){
+              const {data:authorRows,error:authorError}=await db.from("comment_author_profiles")
+                .select("id,full_name,display_name,username").in("id",authorIds);
+              if(!authorError) authors=new Map((authorRows||[]).map(a=>[a.id,a]));
+            }
             comments.innerHTML="";
             (rows||[]).forEach(row=>{
               const line=document.createElement("div");
               line.className="comment-item";
+              const author=authors.get(row.user_id);
+              const name=document.createElement("strong");
+              name.textContent=(author?.full_name||author?.display_name||(author?.username?"@"+author.username:"Member"))+" ";
               const text=document.createElement("span");
               text.textContent=row.body||"";
-              line.appendChild(text);comments.appendChild(line);
+              line.append(name,text);comments.appendChild(line);
             });
           } catch(e) {
             console.warn("Comments could not load",e);
@@ -1255,13 +1265,40 @@
         list.replaceChildren();
         if (!data?.length) { list.className = "empty"; list.textContent = "No posts found yet."; return; }
         list.className = "";
-        data.forEach(post => {
+        for (const post of data) {
           const row = document.createElement("div"); row.className = "adminlistitem";
-          addText(row,"h3",post.caption || "(No caption)");
+          const heading = addText(row,"h3",post.caption || "(No caption)");
+          heading.style.cursor="pointer";
+          heading.title="Tap to view post comments and reply";
           addText(row,"p",(post.visibility === "everyone" ? "Public" : "Subscribers only")+" · "+formatDate(post.created_at));
-          if (post.image_url) addText(row,"p",post.image_url,"small muted");
+          if (post.image_url) {
+            const preview=document.createElement("img");
+            preview.src=post.image_url; preview.alt="Post image"; preview.loading="lazy";
+            preview.style.cssText="display:block;width:100%;max-width:260px;max-height:240px;object-fit:contain;border-radius:10px;margin:8px 0;cursor:pointer;background:var(--surface2)";
+            preview.onclick=()=>openImageModal(post.image_url); row.appendChild(preview);
+          }
+          const detail=document.createElement("div"); detail.className="hidden";
+          const commentsTitle=addText(detail,"h4","Comments and replies");
+          const commentList=addText(detail,"div","Loading comments…","admin-comments-list");
+          const replyForm=document.createElement("form"); replyForm.className="comment-form";
+          const replyInput=document.createElement("input"); replyInput.maxLength=1000; replyInput.placeholder="Reply as Aashi…"; replyInput.required=true;
+          const replyButton=document.createElement("button"); replyButton.type="submit"; replyButton.textContent="Reply";
+          replyForm.append(replyInput,replyButton); detail.appendChild(replyForm); row.appendChild(detail);
+          async function refreshPostComments(){
+            commentList.textContent="Loading comments…";
+            const {data:rows,error:ce}=await db.from("post_comments").select("id,user_id,body,created_at").eq("post_id",post.id).order("created_at",{ascending:true}).limit(100);
+            if(ce){commentList.textContent="Could not load comments: "+ce.message;return;}
+            commentList.replaceChildren();
+            const ids=[...new Set((rows||[]).map(r=>r.user_id).filter(Boolean))];
+            let authors=new Map();
+            if(ids.length){const {data:aa}=await db.from("comment_author_profiles").select("id,full_name,display_name,username").in("id",ids);authors=new Map((aa||[]).map(a=>[a.id,a]));}
+            if(!rows?.length){commentList.textContent="No comments yet.";return;}
+            rows.forEach(c=>{const line=document.createElement("div");line.className="adminlistitem";const a=authors.get(c.user_id);addText(line,"strong",(c.user_id===user?.id?"Aashi":a?.full_name||a?.display_name||(a?.username?"@"+a.username:"Member"))+" · ");addText(line,"span",c.body||"");addText(line,"p",formatDate(c.created_at));commentList.appendChild(line);});
+          }
+          heading.onclick=()=>{detail.classList.toggle("hidden");if(!detail.classList.contains("hidden"))refreshPostComments();};
+          replyForm.onsubmit=async e=>{e.preventDefault();const body=replyInput.value.trim();if(!body)return;replyButton.disabled=true;try{const {error:re}=await db.from("post_comments").insert({post_id:post.id,user_id:user.id,body});if(re)throw re;replyInput.value="";await refreshPostComments();}catch(err){adminError("Reply failed: "+(err.message||"Check post_comments INSERT policy."));}finally{replyButton.disabled=false;}};
           list.appendChild(row);
-        });
+        }
       } catch(err) {
         list.textContent = "Could not load posts: " + (err.message || "");
       }
