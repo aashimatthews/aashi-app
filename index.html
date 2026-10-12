@@ -211,6 +211,32 @@
     </div>
   </section>
 
+
+  <!-- PASSWORD RESET -->
+  <section id="resetPasswordScreen" class="authwrap hidden">
+    <div class="authcard">
+      <div class="authbrand">
+        <div class="mark">✦</div>
+        <h1>Choose a New Password</h1>
+        <p>Set a new password for your Aashiverse account.</p>
+      </div>
+      <div id="resetPasswordMessage" class="notice hidden"></div>
+      <form id="resetPasswordForm">
+        <div class="field">
+          <label for="newPassword">New password</label>
+          <input id="newPassword" type="password" required minlength="8" autocomplete="new-password" placeholder="At least 8 characters">
+        </div>
+        <div class="field">
+          <label for="confirmNewPassword">Confirm new password</label>
+          <input id="confirmNewPassword" type="password" required minlength="8" autocomplete="new-password" placeholder="Enter the password again">
+        </div>
+        <button id="saveNewPassword" class="btn primary" type="submit">Save New Password</button>
+      </form>
+      <button id="returnToLogin" class="btn outline" type="button" style="margin-top:10px">Return to Login</button>
+      <p class="note">Use this screen only after opening a valid password-recovery link from your email.</p>
+    </div>
+  </section>
+
   <!-- PROFILE COMPLETION -->
   <section id="setupScreen" class="authwrap hidden">
     <div class="authcard">
@@ -408,11 +434,11 @@
     const SUPABASE_KEY = "sb_publishable_FeLoF94jwdOXWLXDAFE7gg_i_hpT2Vk";
     const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     const $ = id => document.getElementById(id);
-    let user = null, profile = null, authMode = "login";
+    let user = null, profile = null, authMode = "login", recoveryMode = false;
     const isAdminPath = () => location.pathname.replace(/\/+$/, "") === "/adminaashi";
 
     function hideAll() {
-      ["loading","authScreen","setupScreen","customerApp","adminLogin","adminApp"]
+      ["loading","authScreen","resetPasswordScreen","setupScreen","customerApp","adminLogin","adminApp"]
         .forEach(id => $(id).classList.add("hidden"));
     }
     function show(id) { hideAll(); $(id).classList.remove("hidden"); }
@@ -580,10 +606,57 @@
       const email=$("email").value.trim();
       if(!email){notice("authMessage","Enter your email address first.","error");return;}
       try {
-        const {error}=await db.auth.resetPasswordForEmail(email,{redirectTo:location.origin});
+        const {error}=await db.auth.resetPasswordForEmail(email,{redirectTo:location.origin + "/"});
         if(error)throw error;
-        notice("authMessage","If the email is registered, a reset link will be sent.","success");
-      } catch(e){notice("authMessage",e.message,"error");}
+        notice("authMessage","Password recovery email sent. Open its link to choose a new password.","success");
+      } catch(e){notice("authMessage",e.message||"Could not send the recovery email.","error");}
+    };
+
+    // Supabase recovery links create a temporary recovery session. Show a dedicated
+    // form instead of routing that session straight into the customer/admin app.
+    function showPasswordReset() {
+      recoveryMode = true;
+      show("resetPasswordScreen");
+      hideNotice("resetPasswordMessage");
+    }
+
+    $("resetPasswordForm").addEventListener("submit", async e => {
+      e.preventDefault();
+      hideNotice("resetPasswordMessage");
+      const password = $("newPassword").value;
+      const confirm = $("confirmNewPassword").value;
+      if (password.length < 8) {
+        notice("resetPasswordMessage", "Choose a password with at least 8 characters.", "error");
+        return;
+      }
+      if (password !== confirm) {
+        notice("resetPasswordMessage", "The passwords do not match.", "error");
+        return;
+      }
+      const button = $("saveNewPassword");
+      busy(button, true, "Saving password...");
+      try {
+        const {data:sessionData,error:sessionError} = await db.auth.getSession();
+        if (sessionError) throw sessionError;
+        if (!sessionData.session) throw new Error("This recovery link is no longer valid. Request a new password-reset email and open the newest link.");
+        const {error} = await db.auth.updateUser({password});
+        if (error) throw error;
+        notice("resetPasswordMessage", "Your password has been updated successfully. You can now return to login and use your new password.", "success");
+        $("resetPasswordForm").classList.add("hidden");
+        $("returnToLogin").textContent = "Return to Login";
+      } catch(err) {
+        notice("resetPasswordMessage", err.message || "Could not update your password. Request a new recovery email and try again.", "error");
+      } finally {
+        busy(button, false, "Save New Password");
+      }
+    });
+
+    $("returnToLogin").onclick = async () => {
+      try { await db.auth.signOut(); } catch (_) {}
+      recoveryMode = false;
+      $("resetPasswordForm").classList.remove("hidden");
+      $("resetPasswordForm").reset();
+      show(isAdminPath() ? "adminLogin" : "authScreen");
     };
 
     $("setupForm").addEventListener("submit",async e=>{
@@ -912,19 +985,29 @@
         let saved="light";
         try{saved=localStorage.getItem("aashiverse-theme")||"light";}catch(_){}
         setTheme(saved);
-        const {data,error}=await db.auth.getSession();
-        if(error)throw error;
-        if(data.session?.user){
-          await routeSignedIn(data.session.user);
-        }else{
-          show(isAdminPath()?"adminLogin":"authScreen");
-        }
+        // Register the recovery listener before checking the existing session.
         db.auth.onAuthStateChange((event,session)=>{
-          if(event==="SIGNED_OUT"){
+          if(event === "PASSWORD_RECOVERY") {
+            showPasswordReset();
+            return;
+          }
+          if(event==="SIGNED_OUT" && !recoveryMode){
             user=null;profile=null;
             show(isAdminPath()?"adminLogin":"authScreen");
           }
         });
+        const hashParams = new URLSearchParams((location.hash || "").replace(/^#/, ""));
+        const queryParams = new URLSearchParams(location.search || "");
+        const hasRecoveryLink = hashParams.get("type") === "recovery" || queryParams.get("type") === "recovery";
+        const {data,error}=await db.auth.getSession();
+        if(error)throw error;
+        if(hasRecoveryLink) {
+          showPasswordReset();
+        } else if(data.session?.user){
+          await routeSignedIn(data.session.user);
+        }else{
+          show(isAdminPath()?"adminLogin":"authScreen");
+        }
       }catch(err){
         console.error(err);
         show(isAdminPath()?"adminLogin":"authScreen");
