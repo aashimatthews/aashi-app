@@ -799,6 +799,7 @@
           feed.innerHTML='<div class="empty">No posts yet. New posts from Aashi will appear here.</div>';
           return;
         }
+        const latestSubscribersPostId = data.find(p=>p.visibility === "subscribers")?.id || null;
         for (const post of data) {
           const card=document.createElement("article");
           card.className="card post"; card.dataset.postId=post.id;
@@ -809,6 +810,12 @@
           const posted=document.createElement("span");
           posted.textContent="· "+timeAgo(post.created_at);
           meta.append(author,posted);
+          if(post.visibility === "subscribers" && post.id === latestSubscribersPostId){
+            const exclusive=document.createElement("span");
+            exclusive.textContent="EXCLUSIVE";
+            exclusive.style.cssText="display:inline-flex;align-items:center;margin-left:8px;padding:4px 9px;border-radius:6px;background:#ffe1ec;color:#b4235a;font-size:11px;font-weight:800;letter-spacing:.7px;line-height:1.2;vertical-align:middle";
+            meta.appendChild(exclusive);
+          }
           card.appendChild(meta);
 
           const lockedPost = post.visibility === "subscribers" && !subscribed;
@@ -854,6 +861,9 @@
           likeCount.className="muted small";
           likeCount.textContent="";
           actions.append(like,likeCount);
+          if(lockedPost){
+            actions.style.display="none";
+          }
           card.appendChild(actions);
 
           const comments=document.createElement("div");
@@ -867,7 +877,7 @@
           const commentButton=document.createElement("button");
           commentButton.type="submit";commentButton.textContent="Post";
           commentForm.append(commentInput,commentButton);
-          if(post.comments_enabled===false) {
+          if(post.comments_enabled===false || lockedPost) {
             commentForm.classList.add("hidden");
           }
           card.append(comments,commentForm);
@@ -883,6 +893,7 @@
             like.classList.toggle("liked",liked);
             likeCount.textContent=count?count+" "+(count===1?"like":"likes"):"";
             like.onclick=async()=>{
+              if(lockedPost){alert("Only active subscribers can like subscribers-only posts.");return;}
               if(!user){alert("Please log in to like posts.");return;}
               like.disabled=true;
               try {
@@ -938,6 +949,7 @@
 
           commentForm.onsubmit=async e=>{
             e.preventDefault();
+            if(lockedPost){alert("Only active subscribers can comment on subscribers-only posts.");return;}
             const body=commentInput.value.trim();
             if(!body)return;
             if(!user){alert("Please log in to comment.");return;}
