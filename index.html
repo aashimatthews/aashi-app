@@ -402,14 +402,16 @@
           <div id="postMessage" class="notice hidden"></div>
           <form id="postForm">
             <div class="field"><label>Post caption</label><textarea id="postCaption" required maxlength="5000" placeholder="Write your caption..."></textarea></div>
-            <div class="field"><label>Post image URL</label><input id="postImage" type="url" placeholder="https://..."></div>
+            <div class="field"><label>Upload post image to ImageKit</label><input id="postImageFile" type="file" accept="image/jpeg,image/png,image/webp,image/avif"><p class="note">JPEG, PNG, WebP or AVIF. Maximum 3 MB per image.</p></div>
+            <div class="field"><label>Or use an existing image URL (optional)</label><input id="postImage" type="url" placeholder="https://..."></div>
+            <div id="postUploadStatus" class="notice hidden" aria-live="polite"></div>
             <div class="field"><label>Visibility</label>
               <select id="postVisibility"><option value="everyone">Public</option><option value="subscribers">Subscribers only</option></select>
             </div>
             <label class="small muted"><input id="commentsEnabled" type="checkbox" checked> Enable comments</label>
             <button class="btn primary" type="submit" style="margin-top:14px">Publish Post</button>
           </form>
-          <p class="note">The form is ready as a UI preview. Publishing will be connected to the posts table and image storage in the next step.</p>
+          <p class="note">Uploaded public feed images are stored on ImageKit. Private chat images will be configured separately.</p>
         </div>
         <h2>Manage posts</h2>
         <div class="card"><div id="adminPostList" class="empty">Your published posts will appear here once connected.</div></div>
@@ -780,9 +782,90 @@
     document.querySelectorAll("[data-go-tab]").forEach(b=>
       b.addEventListener("click",()=>showAdminTab(b.dataset.goTab)));
 
-    $("postForm").addEventListener("submit",e=>{
+    function fileAsDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error("Could not read the selected image."));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    $("postForm").addEventListener("submit", async e => {
       e.preventDefault();
-      notice("postMessage","The post editor UI is ready. Publishing is not connected yet; we will add secure publishing and image upload next.");
+      hideNotice("postMessage");
+      hideNotice("postUploadStatus");
+      const button = e.submitter || $("postForm").querySelector('button[type="submit"]');
+      const caption = $("postCaption").value.trim();
+      const file = $("postImageFile").files[0];
+      let imageUrl = $("postImage").value.trim();
+      if (!caption) {
+        notice("postMessage", "Please enter a caption.", "error");
+        return;
+      }
+      if (!file && !imageUrl) {
+        notice("postMessage", "Choose an image to upload or enter an existing image URL.", "error");
+        return;
+      }
+      if (file && !["image/jpeg", "image/png", "image/webp", "image/avif"].includes(file.type)) {
+        notice("postMessage", "Choose a JPEG, PNG, WebP or AVIF image.", "error");
+        return;
+      }
+      if (file && file.size > 3 * 1024 * 1024) {
+        notice("postMessage", "The image must be 3 MB or smaller.", "error");
+        return;
+      }
+      busy(button, true, file ? "Uploading image…" : "Publishing…");
+      try {
+        const { data: sessionData, error: sessionError } = await db.auth.getSession();
+        if (sessionError) throw sessionError;
+        const accessToken = sessionData.session?.access_token;
+        if (!accessToken || profile?.role !== "admin") {
+          throw new Error("Please sign in with your administrator account again.");
+        }
+        if (file) {
+          notice("postUploadStatus", "Uploading image to ImageKit…");
+          const payload = {
+            file: await fileAsDataUrl(file),
+            fileName: file.name,
+            mimeType: file.type
+          };
+          const uploadResponse = await fetch("/api/upload-image", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${accessToken}`
+            },
+            body: JSON.stringify(payload)
+          });
+          const uploadResult = await uploadResponse.json().catch(() => ({}));
+          if (!uploadResponse.ok || !uploadResult.url) {
+            throw new Error(uploadResult.error || "Image upload failed.");
+          }
+          imageUrl = uploadResult.url;
+          notice("postUploadStatus", "Image uploaded successfully. Publishing post…", "success");
+        }
+        const { error: insertError } = await db.from("posts").insert({
+          author_id: user.id,
+          caption,
+          image_url: imageUrl,
+          visibility: $("postVisibility").value,
+          comments_enabled: $("commentsEnabled").checked
+        });
+        if (insertError) throw insertError;
+        $("postCaption").value = "";
+        $("postImage").value = "";
+        $("postImageFile").value = "";
+        notice("postMessage", "Post published successfully.", "success");
+        hideNotice("postUploadStatus");
+        await loadAdminPosts();
+        await loadAdminStats();
+      } catch (err) {
+        console.error("Post publish error", err);
+        notice("postMessage", "Could not publish the post: " + (err.message || "Please try again."), "error");
+      } finally {
+        busy(button, false, "Publish Post");
+      }
     });
     // Admin dashboard data: all output is created with textContent to avoid HTML injection.
     let adminConversations = [], selectedPersonalConversation = null;
