@@ -765,12 +765,34 @@
       if(e.target.matches(".post-image,.image-modal img"))e.preventDefault();
     });
 
+    async function hasActivePaidSubscription() {
+      if (!user) return false;
+      const now = new Date().toISOString();
+      const { data, error } = await db.from("subscriptions")
+        .select("user_id,starts_at,ends_at,plans(price_inr)")
+        .eq("user_id", user.id).eq("status", "active").limit(100);
+      if (error) {
+        console.warn("Subscription status could not be checked", error);
+        return false;
+      }
+      return (data || []).some(sub =>
+        Number(sub.plans?.price_inr || 0) > 0 &&
+        (!sub.starts_at || sub.starts_at <= now) &&
+        (!sub.ends_at || sub.ends_at > now)
+      );
+    }
+
     async function loadPublicPosts() {
       const feed=$("feed");
       try {
-        const {data,error}=await db.from("posts")
-          .select("id,caption,image_url,visibility,created_at,comments_enabled")
-          .eq("visibility","everyone").order("created_at",{ascending:false}).limit(30);
+        const [postsResult, subscribed] = await Promise.all([
+          db.from("posts")
+            .select("id,caption,image_url,visibility,created_at,comments_enabled")
+            .in("visibility",["everyone","subscribers"])
+            .order("created_at",{ascending:false}).limit(30),
+          hasActivePaidSubscription()
+        ]);
+        const {data,error} = postsResult;
         if(error)throw error;
         feed.innerHTML="";
         if(!data?.length){
@@ -789,12 +811,32 @@
           meta.append(author,posted);
           card.appendChild(meta);
 
+          const lockedPost = post.visibility === "subscribers" && !subscribed;
           if(post.image_url){
+            const imageWrap=document.createElement("div");
+            imageWrap.style.cssText="position:relative;margin-bottom:13px;border-radius:12px;overflow:hidden;background:var(--surface2)";
             const img=document.createElement("img");
             img.className="post-image";img.src=post.image_url;
-            img.alt="Aashi's post";img.loading="lazy";img.draggable=false;
-            img.addEventListener("click",()=>openImageModal(post.image_url));
-            card.appendChild(img);
+            img.alt=lockedPost ? "Subscribers-only post preview" : "Aashi's post";
+            img.loading="lazy";img.draggable=false;
+            if(lockedPost){
+              img.style.cssText="filter:blur(9px);transform:scale(1.04);cursor:not-allowed;pointer-events:none;margin:0;width:100%;";
+              const overlay=document.createElement("div");
+              overlay.style.cssText="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:18px;text-align:center;background:rgba(15,29,52,.25);color:white";
+              const label=document.createElement("strong");
+              label.textContent="🔒 Subscribe to view";
+              label.style.cssText="font-size:18px;text-shadow:0 1px 4px rgba(0,0,0,.5)";
+              const button=document.createElement("button");
+              button.type="button";button.className="btn primary";button.style.cssText="width:auto;max-width:100%;background:#fff;color:#244678;border-color:#fff";
+              button.textContent="Subscriptions coming soon";
+              button.onclick=()=>alert("Subscriptions will start soon. This post is currently available to subscribers only.");
+              overlay.append(label,button);
+              imageWrap.append(img,overlay);
+            } else {
+              img.addEventListener("click",()=>openImageModal(post.image_url));
+              imageWrap.appendChild(img);
+            }
+            card.appendChild(imageWrap);
           }
 
           const caption=document.createElement("p");
