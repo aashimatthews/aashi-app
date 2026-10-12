@@ -62,8 +62,22 @@
       color:var(--primary);font-size:25px;overflow:hidden}
     .avatar img{width:100%;height:100%;object-fit:cover}
     .welcome h3{font-size:17px;margin:0 0 5px}
-    .post-image{width:100%;aspect-ratio:16/9;object-fit:cover;
-      border-radius:12px;background:var(--surface2);display:block;margin-bottom:13px}
+    .post-image{width:100%;height:auto;max-height:none;object-fit:contain;
+      border-radius:12px;background:var(--surface2);display:block;margin-bottom:13px;cursor:zoom-in}
+    .postmeta{display:flex;align-items:center;gap:7px;margin-bottom:12px;font-size:13px;color:var(--muted)}
+    .postmeta strong{color:var(--text);font-size:14px}
+    .post-actions{display:flex;align-items:center;gap:14px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)}
+    .like-button{border:0;background:transparent;color:var(--text);font-weight:700;padding:8px 0}
+    .like-button.liked{color:#d7355a}
+    .comment-form{display:flex;gap:8px;margin-top:10px}
+    .comment-form input{flex:1;min-width:0;border:1px solid var(--border);border-radius:10px;padding:10px;background:var(--bg);color:var(--text)}
+    .comment-form button{border:0;border-radius:10px;padding:9px 12px;background:var(--primary);color:white;font-weight:700}
+    .comment-list{margin-top:10px;font-size:13px;line-height:1.5}
+    .comment-item{padding:5px 0;overflow-wrap:anywhere}
+    .image-modal{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;padding:18px}
+    .image-modal.open{display:flex}
+    .image-modal img{display:block;max-width:100%;max-height:88vh;width:auto;height:auto;object-fit:contain;user-select:none;-webkit-user-drag:none}
+    .image-modal-close{position:absolute;top:16px;right:16px;width:44px;height:44px;border:1px solid #777;border-radius:50%;background:#222;color:white;font-size:26px}
     .posttag{display:inline-block;background:var(--soft);color:var(--primary);
       padding:6px 10px;border-radius:20px;font-size:11px;font-weight:700;
       margin-bottom:10px}
@@ -287,8 +301,8 @@
     <main>
       <section id="home" class="screen active">
         <div class="hero">
-          <div class="eyebrow">Welcome to Aashiverse</div>
-          <h1 id="welcomeText">Welcome!</h1>
+          <div class="eyebrow" style="font-size:clamp(22px,5vw,30px);letter-spacing:0;text-transform:none;opacity:1">Welcome to Aashiverse</div>
+          <h1 id="welcomeText" style="font-weight:400">Welcome!</h1>
           <p>Your Aashiverse journey starts here.</p>
         </div>
         <div class="sectionhead">
@@ -459,6 +473,11 @@
     </div>
   </div>
 
+  <div id="imageModal" class="image-modal" role="dialog" aria-modal="true" aria-label="Full image viewer">
+    <button id="imageModalClose" class="image-modal-close" aria-label="Close image">×</button>
+    <img id="imageModalImg" alt="Full-size Aashi post" draggable="false">
+  </div>
+
   <script>
     // Use only the Supabase project URL and publishable browser key.
     // Never place a service-role key in this file.
@@ -542,7 +561,8 @@
     function renderCustomer(current,p) {
       const name = p.full_name || p.display_name || current.user_metadata?.full_name || "Aashiverse Member";
       const handle = p.username ? "@"+p.username : "@member";
-      $("welcomeText").textContent = "Welcome, " + name + "!";
+      $("welcomeText").textContent = name;
+      $("welcomeText").style.fontWeight = "700";
       $("profileName").textContent = name;
       $("profileHandle").textContent = handle;
       $("profileFullName").textContent = name;
@@ -709,11 +729,39 @@
       }finally{busy(b,false,"Save and Continue");}
     });
 
+    function timeAgo(value) {
+      const seconds=Math.max(0,Math.floor((Date.now()-new Date(value).getTime())/1000));
+      if(seconds<60)return "just now";
+      if(seconds<3600)return Math.floor(seconds/60)+" mins ago";
+      if(seconds<86400)return Math.floor(seconds/3600)+" hours ago";
+      const days=Math.floor(seconds/86400);
+      if(days<30)return days+" days ago";
+      if(days<365)return Math.floor(days/30)+" months ago";
+      return Math.floor(days/365)+" years ago";
+    }
+
+    function openImageModal(url) {
+      $("imageModalImg").src=url;
+      $("imageModal").classList.add("open");
+      document.body.style.overflow="hidden";
+    }
+    function closeImageModal() {
+      $("imageModal").classList.remove("open");
+      $("imageModalImg").removeAttribute("src");
+      document.body.style.overflow="";
+    }
+    $("imageModalClose").onclick=closeImageModal;
+    $("imageModal").addEventListener("click",e=>{if(e.target===$("imageModal"))closeImageModal();});
+    document.addEventListener("keydown",e=>{if(e.key==="Escape")closeImageModal();});
+    document.addEventListener("contextmenu",e=>{
+      if(e.target.matches(".post-image,.image-modal img"))e.preventDefault();
+    });
+
     async function loadPublicPosts() {
       const feed=$("feed");
       try {
         const {data,error}=await db.from("posts")
-          .select("id,caption,image_url,visibility,created_at")
+          .select("id,caption,image_url,visibility,created_at,comments_enabled")
           .eq("visibility","everyone").order("created_at",{ascending:false}).limit(30);
         if(error)throw error;
         feed.innerHTML="";
@@ -721,30 +769,129 @@
           feed.innerHTML='<div class="empty">No posts yet. New posts from Aashi will appear here.</div>';
           return;
         }
-        data.forEach(post=>{
+        for (const post of data) {
           const card=document.createElement("article");
           card.className="card post";
-          const tag=document.createElement("span");
-          tag.className="posttag";tag.textContent="AASHIVERSE";
-          card.appendChild(tag);
+          const meta=document.createElement("div");
+          meta.className="postmeta";
+          const author=document.createElement("strong");
+          author.textContent="Aashi";
+          const posted=document.createElement("span");
+          posted.textContent="· "+timeAgo(post.created_at);
+          meta.append(author,posted);
+          card.appendChild(meta);
+
           if(post.image_url){
             const img=document.createElement("img");
             img.className="post-image";img.src=post.image_url;
-            img.alt="Aashi's post";img.loading="lazy";
+            img.alt="Aashi's post";img.loading="lazy";img.draggable=false;
+            img.addEventListener("click",()=>openImageModal(post.image_url));
             card.appendChild(img);
           }
-          const title=document.createElement("h3");
-          title.textContent="Aashi’s Feed";card.appendChild(title);
+
           const caption=document.createElement("p");
-          caption.textContent=post.caption||"";card.appendChild(caption);
+          caption.className="post-caption";
+          caption.textContent=post.caption||"";
+          card.appendChild(caption);
+
+          const actions=document.createElement("div");
+          actions.className="post-actions";
+          const like=document.createElement("button");
+          like.className="like-button";
+          like.type="button";
+          like.textContent="♡ Like";
+          const likeCount=document.createElement("span");
+          likeCount.className="muted small";
+          likeCount.textContent="";
+          actions.append(like,likeCount);
+          card.appendChild(actions);
+
+          const comments=document.createElement("div");
+          comments.className="comment-list";
+          const commentForm=document.createElement("form");
+          commentForm.className="comment-form";
+          const commentInput=document.createElement("input");
+          commentInput.type="text";commentInput.maxLength=1000;
+          commentInput.placeholder="Write a comment...";
+          commentInput.setAttribute("aria-label","Write a comment");
+          const commentButton=document.createElement("button");
+          commentButton.type="submit";commentButton.textContent="Post";
+          commentForm.append(commentInput,commentButton);
+          if(post.comments_enabled===false) {
+            commentForm.classList.add("hidden");
+          }
+          card.append(comments,commentForm);
           feed.appendChild(card);
-        });
+
+          try {
+            const {data:likes,error:likesError}=await db.from("post_likes")
+              .select("user_id").eq("post_id",post.id);
+            if(likesError)throw likesError;
+            const count=likes?.length||0;
+            const liked=!!likes?.some(x=>x.user_id===user?.id);
+            like.textContent=(liked?"♥ Liked":"♡ Like");
+            like.classList.toggle("liked",liked);
+            likeCount.textContent=count?count+" "+(count===1?"like":"likes"):"";
+            like.onclick=async()=>{
+              if(!user){alert("Please log in to like posts.");return;}
+              like.disabled=true;
+              try {
+                if(liked) {
+                  const {error}=await db.from("post_likes").delete().eq("post_id",post.id).eq("user_id",user.id);
+                  if(error)throw error;
+                } else {
+                  const {error}=await db.from("post_likes").insert({post_id:post.id,user_id:user.id});
+                  if(error)throw error;
+                }
+                await loadPublicPosts();
+              } catch(e){alert("Could not update like. Check post_likes table permissions.");}
+              finally{like.disabled=false;}
+            };
+          } catch(e) {
+            likeCount.textContent="";
+            like.onclick=()=>alert("Likes are not available yet. Check post_likes table permissions.");
+          }
+
+          try {
+            const {data:rows,error:commentError}=await db.from("post_comments")
+              .select("id,user_id,body,created_at").eq("post_id",post.id)
+              .order("created_at",{ascending:true}).limit(50);
+            if(commentError)throw commentError;
+            comments.innerHTML="";
+            (rows||[]).forEach(row=>{
+              const line=document.createElement("div");
+              line.className="comment-item";
+              const text=document.createElement("span");
+              text.textContent=row.body||"";
+              line.appendChild(text);comments.appendChild(line);
+            });
+          } catch(e) {
+            console.warn("Comments could not load",e);
+          }
+
+          commentForm.onsubmit=async e=>{
+            e.preventDefault();
+            const body=commentInput.value.trim();
+            if(!body)return;
+            if(!user){alert("Please log in to comment.");return;}
+            commentButton.disabled=true;
+            try {
+              const {error}=await db.from("post_comments").insert({
+                post_id:post.id,user_id:user.id,body
+              });
+              if(error)throw error;
+              commentInput.value="";
+              await loadPublicPosts();
+            } catch(err) {
+              alert("Could not post comment. Check post_comments table columns and insert permissions.");
+            } finally {commentButton.disabled=false;}
+          };
+        }
       } catch(err) {
         console.error("Feed error",err);
         feed.innerHTML='<div class="empty">The feed could not load. Please try again later.</div>';
       }
     }
-
     document.querySelectorAll(".navbtn").forEach(b=>
       b.addEventListener("click",()=>showCustomerScreen(b.dataset.screen)));
     $("theme").onclick=toggleTheme;
